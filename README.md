@@ -1,0 +1,2 @@
+# LegumexStoreFrontend
+Legumex Store Frontend
