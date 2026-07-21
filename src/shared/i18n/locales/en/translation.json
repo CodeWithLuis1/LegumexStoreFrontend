@@ -1,0 +1,177 @@
+{
+    "common": {
+        "save": "Save",
+        "saving": "Saving...",
+        "invalidField": "Invalid field",
+        "loading": "Loading...",
+        "loadError": "Could not load the information",
+        "actions": "Actions",
+        "edit": "Edit",
+        "back": "Back",
+        "selectPlaceholder": "Select an option"
+    },
+    "errors": {
+        "unexpected_response": "The server response does not have the expected format",
+        "zod": {
+            "invalid_type": "Invalid data type",
+            "too_small": "The value is too small",
+            "too_big": "The value is too big",
+            "invalid_format": "The format is invalid",
+            "invalid_value": "Value not allowed",
+            "custom": "Invalid value"
+        }
+    },
+    "notFound": {
+        "message": "The page you're looking for doesn't exist",
+        "backLink": "Back to home"
+    },
+    "addin": {
+        "form": {
+            "displayName": "Name",
+            "fullDescription": "Description",
+            "costPerServing": "Cost per serving"
+        },
+        "list": {
+            "title": "Add-ins",
+            "createLink": "Create add-in"
+        },
+        "create": {
+            "title": "Create add-in"
+        },
+        "edit": {
+            "title": "Edit add-in"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No add-ins registered"
+        }
+    },
+    "attribute": {
+        "form": {
+            "attributeName": "Attribute name",
+            "dataType": "Data type",
+            "unitLabel": "Unit label",
+            "dataTypeOptions": {
+                "string": "Text",
+                "number": "Number",
+                "boolean": "Yes/No",
+                "date": "Date"
+            }
+        },
+        "list": {
+            "title": "Attributes",
+            "createLink": "Create attribute"
+        },
+        "create": {
+            "title": "Create attribute"
+        },
+        "edit": {
+            "title": "Edit attribute"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No attributes registered"
+        }
+    },
+    "category": {
+        "form": {
+            "displayName": "Name",
+            "urlSlug": "URL slug",
+            "fullDescription": "Description",
+            "displayOrder": "Display order",
+            "defaultMargin": "Default margin (%)"
+        },
+        "list": {
+            "title": "Categories",
+            "createLink": "Create category"
+        },
+        "create": {
+            "title": "Create category"
+        },
+        "edit": {
+            "title": "Edit category"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No categories registered"
+        }
+    },
+    "productType": {
+        "form": {
+            "typeCode": "Code",
+            "displayName": "Name"
+        },
+        "list": {
+            "title": "Product types",
+            "createLink": "Create product type"
+        },
+        "create": {
+            "title": "Create product type"
+        },
+        "edit": {
+            "title": "Edit product type"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No product types registered"
+        }
+    },
+    "unit": {
+        "form": {
+            "unitCode": "Code",
+            "displayName": "Name",
+            "unitType": "Unit type",
+            "baseFactor": "Base factor",
+            "unitTypeOptions": {
+                "weight": "Weight",
+                "volume": "Volume",
+                "count": "Count"
+            }
+        },
+        "list": {
+            "title": "Units",
+            "createLink": "Create unit"
+        },
+        "create": {
+            "title": "Create unit"
+        },
+        "edit": {
+            "title": "Edit unit"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No units registered"
+        }
+    },
+    "ingredient": {
+        "form": {
+            "displayName": "Name",
+            "urlSlug": "URL slug",
+            "ingredientType": "Ingredient type",
+            "costPerUnit": "Cost per unit",
+            "costUnitId": "Cost unit",
+            "isOrganicAvailable": "Organic available",
+            "isMixable": "Mixable",
+            "ingredientTypeOptions": {
+                "fruit": "Fruit",
+                "vegetable": "Vegetable",
+                "pulp": "Pulp",
+                "other": "Other"
+            }
+        },
+        "list": {
+            "title": "Ingredients",
+            "createLink": "Create ingredient"
+        },
+        "create": {
+            "title": "Create ingredient"
+        },
+        "edit": {
+            "title": "Edit ingredient"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No ingredients registered"
+        }
+    }
+}

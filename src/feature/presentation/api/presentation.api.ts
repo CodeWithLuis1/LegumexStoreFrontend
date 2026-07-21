@@ -1,0 +1,54 @@
+import api from "@/shared/api/api"
+import { handleApiError } from "@/shared/api/handleApiError"
+import { apiItemResponseSchema, apiListResponseSchema, apiMessageResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
+import { responsePresentationSchema } from "@/feature/presentation/schema/presentation.schema"
+import type { CreatePresentationInput, UpdatePresentationInput } from "@/feature/presentation/schema/presentation.schema"
+
+const presentationListResponseSchema = apiListResponseSchema(responsePresentationSchema)
+const presentationItemResponseSchema = apiItemResponseSchema(responsePresentationSchema)
+const presentationMutationResponseSchema = apiMutationResponseSchema(responsePresentationSchema)
+
+export async function getPresentationsAPI() {
+    try {
+        const { data } = await api.get("/presentations")
+        return presentationListResponseSchema.parse(data)
+    } catch (error) {
+        handleApiError(error)
+    }
+}
+
+export async function getPresentationByIdAPI(id: number) {
+    try {
+        const { data } = await api.get(`/presentations/${id}`)
+        return presentationItemResponseSchema.parse(data)
+    } catch (error) {
+        handleApiError(error)
+    }
+}
+
+export async function createPresentationAPI(formData: CreatePresentationInput) {
+    try {
+        const { data } = await api.post("/presentations", formData)
+        return presentationMutationResponseSchema.parse(data)
+    } catch (error) {
+        handleApiError(error)
+    }
+}
+
+export async function updatePresentationAPI(id: number, formData: UpdatePresentationInput) {
+    try {
+        const { data } = await api.put(`/presentations/${id}`, formData)
+        return presentationMutationResponseSchema.parse(data)
+    } catch (error) {
+        handleApiError(error)
+    }
+}
+
+export async function deletePresentationAPI(id: number) {
+    try {
+        const { data } = await api.delete(`/presentations/${id}`)
+        return apiMessageResponseSchema.parse(data)
+    } catch (error) {
+        handleApiError(error)
+    }
+}

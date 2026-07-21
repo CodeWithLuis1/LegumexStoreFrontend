@@ -1,0 +1,177 @@
+{
+    "common": {
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "invalidField": "Campo inválido",
+        "loading": "Cargando...",
+        "loadError": "No se pudo cargar la información",
+        "actions": "Acciones",
+        "edit": "Editar",
+        "back": "Regresar",
+        "selectPlaceholder": "Selecciona una opción"
+    },
+    "errors": {
+        "unexpected_response": "La respuesta del servidor no tiene el formato esperado",
+        "zod": {
+            "invalid_type": "Tipo de dato inválido",
+            "too_small": "El valor es demasiado corto",
+            "too_big": "El valor es demasiado largo",
+            "invalid_format": "El formato no es válido",
+            "invalid_value": "Valor no permitido",
+            "custom": "Valor inválido"
+        }
+    },
+    "notFound": {
+        "message": "La página que buscas no existe",
+        "backLink": "Volver al inicio"
+    },
+    "addin": {
+        "form": {
+            "displayName": "Nombre",
+            "fullDescription": "Descripción",
+            "costPerServing": "Costo por porción"
+        },
+        "list": {
+            "title": "Adicionales",
+            "createLink": "Crear adicional"
+        },
+        "create": {
+            "title": "Crear adicional"
+        },
+        "edit": {
+            "title": "Editar adicional"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay adicionales registrados"
+        }
+    },
+    "attribute": {
+        "form": {
+            "attributeName": "Nombre del atributo",
+            "dataType": "Tipo de dato",
+            "unitLabel": "Etiqueta de unidad",
+            "dataTypeOptions": {
+                "string": "Texto",
+                "number": "Número",
+                "boolean": "Sí/No",
+                "date": "Fecha"
+            }
+        },
+        "list": {
+            "title": "Atributos",
+            "createLink": "Crear atributo"
+        },
+        "create": {
+            "title": "Crear atributo"
+        },
+        "edit": {
+            "title": "Editar atributo"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay atributos registrados"
+        }
+    },
+    "category": {
+        "form": {
+            "displayName": "Nombre",
+            "urlSlug": "Slug de URL",
+            "fullDescription": "Descripción",
+            "displayOrder": "Orden de visualización",
+            "defaultMargin": "Margen por defecto (%)"
+        },
+        "list": {
+            "title": "Categorías",
+            "createLink": "Crear categoría"
+        },
+        "create": {
+            "title": "Crear categoría"
+        },
+        "edit": {
+            "title": "Editar categoría"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay categorías registradas"
+        }
+    },
+    "productType": {
+        "form": {
+            "typeCode": "Código",
+            "displayName": "Nombre"
+        },
+        "list": {
+            "title": "Tipos de producto",
+            "createLink": "Crear tipo de producto"
+        },
+        "create": {
+            "title": "Crear tipo de producto"
+        },
+        "edit": {
+            "title": "Editar tipo de producto"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay tipos de producto registrados"
+        }
+    },
+    "unit": {
+        "form": {
+            "unitCode": "Código",
+            "displayName": "Nombre",
+            "unitType": "Tipo de unidad",
+            "baseFactor": "Factor base",
+            "unitTypeOptions": {
+                "weight": "Peso",
+                "volume": "Volumen",
+                "count": "Conteo"
+            }
+        },
+        "list": {
+            "title": "Unidades",
+            "createLink": "Crear unidad"
+        },
+        "create": {
+            "title": "Crear unidad"
+        },
+        "edit": {
+            "title": "Editar unidad"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay unidades registradas"
+        }
+    },
+    "ingredient": {
+        "form": {
+            "displayName": "Nombre",
+            "urlSlug": "Slug de URL",
+            "ingredientType": "Tipo de ingrediente",
+            "costPerUnit": "Costo por unidad",
+            "costUnitId": "Unidad de costo",
+            "isOrganicAvailable": "Disponible orgánico",
+            "isMixable": "Se puede mezclar",
+            "ingredientTypeOptions": {
+                "fruit": "Fruta",
+                "vegetable": "Vegetal",
+                "pulp": "Pulpa",
+                "other": "Otro"
+            }
+        },
+        "list": {
+            "title": "Ingredientes",
+            "createLink": "Crear ingrediente"
+        },
+        "create": {
+            "title": "Crear ingrediente"
+        },
+        "edit": {
+            "title": "Editar ingrediente"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay ingredientes registrados"
+        }
+    }
+}
