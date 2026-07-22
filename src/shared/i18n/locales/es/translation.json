@@ -7,8 +7,12 @@
         "loadError": "No se pudo cargar la información",
         "actions": "Acciones",
         "edit": "Editar",
+        "delete": "Eliminar",
+        "cancel": "Cancelar",
         "back": "Regresar",
-        "selectPlaceholder": "Selecciona una opción"
+        "selectPlaceholder": "Selecciona una opción",
+        "yes": "Sí",
+        "no": "No"
     },
     "errors": {
         "unexpected_response": "La respuesta del servidor no tiene el formato esperado",
@@ -172,6 +176,165 @@
         "table": {
             "searchPlaceholder": "Buscar por nombre...",
             "empty": "No hay ingredientes registrados"
+        }
+    },
+    "subCategory": {
+        "form": {
+            "categoryId": "Categoría",
+            "displayName": "Nombre",
+            "urlSlug": "Slug de URL",
+            "fullDescription": "Descripción",
+            "displayOrder": "Orden de visualización"
+        },
+        "list": {
+            "title": "Subcategorías",
+            "createLink": "Crear subcategoría"
+        },
+        "create": {
+            "title": "Crear subcategoría"
+        },
+        "edit": {
+            "title": "Editar subcategoría"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay subcategorías registradas"
+        }
+    },
+    "packaging": {
+        "form": {
+            "displayName": "Nombre",
+            "packagingMaterial": "Material",
+            "capacityValue": "Capacidad",
+            "capacityUnitId": "Unidad de capacidad",
+            "unitCost": "Costo unitario"
+        },
+        "list": {
+            "title": "Empaques",
+            "createLink": "Crear empaque"
+        },
+        "create": {
+            "title": "Crear empaque"
+        },
+        "edit": {
+            "title": "Editar empaque"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay empaques registrados"
+        }
+    },
+    "presentation": {
+        "form": {
+            "displayLabel": "Nombre",
+            "netWeightGrams": "Peso neto (g)",
+            "displayValue": "Valor a mostrar",
+            "displayUnitId": "Unidad a mostrar",
+            "categoryId": "Categoría"
+        },
+        "list": {
+            "title": "Presentaciones",
+            "createLink": "Crear presentación"
+        },
+        "create": {
+            "title": "Crear presentación"
+        },
+        "edit": {
+            "title": "Editar presentación"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay presentaciones registradas"
+        }
+    },
+    "product": {
+        "form": {
+            "subCategoryId": "Subcategoría",
+            "productTypeId": "Tipo de producto",
+            "displayName": "Nombre",
+            "urlSlug": "Slug de URL",
+            "fullDescription": "Descripción",
+            "imageUrl": "URL de imagen",
+            "displayOrder": "Orden de visualización",
+            "isOrganic": "Orgánico",
+            "isCustomizable": "Personalizable"
+        },
+        "list": {
+            "title": "Productos",
+            "createLink": "Crear producto"
+        },
+        "create": {
+            "title": "Crear producto"
+        },
+        "edit": {
+            "title": "Editar producto"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay productos registrados"
+        }
+    },
+    "productVariant": {
+        "form": {
+            "presentationId": "Presentación",
+            "packagingId": "Empaque",
+            "skuCode": "SKU",
+            "unitPrice": "Precio unitario",
+            "unitCost": "Costo unitario",
+            "isPriceManual": "Precio manual",
+            "minimumOrderQuantity": "Cantidad mínima de pedido",
+            "addButton": "Agregar variante"
+        },
+        "list": {
+            "title": "Variantes"
+        },
+        "table": {
+            "empty": "No hay variantes registradas"
+        }
+    },
+    "productIngredient": {
+        "form": {
+            "ingredientId": "Ingrediente",
+            "proportionPercent": "Proporción (%)",
+            "quantityValue": "Cantidad",
+            "quantityUnitId": "Unidad de cantidad",
+            "displayOrder": "Orden de visualización",
+            "addButton": "Agregar ingrediente"
+        },
+        "list": {
+            "title": "Ingredientes"
+        },
+        "table": {
+            "empty": "No hay ingredientes registrados"
+        }
+    },
+    "productAddin": {
+        "form": {
+            "addinId": "Adicional",
+            "isDefault": "Predeterminado",
+            "addButton": "Agregar adicional"
+        },
+        "list": {
+            "title": "Adicionales"
+        },
+        "table": {
+            "empty": "No hay adicionales registrados"
+        }
+    },
+    "productAttribute": {
+        "form": {
+            "attributeId": "Atributo",
+            "value": "Valor",
+            "valueString": "Valor (texto)",
+            "valueNumber": "Valor (número)",
+            "valueBoolean": "Valor (Sí/No)",
+            "addButton": "Agregar atributo"
+        },
+        "list": {
+            "title": "Atributos"
+        },
+        "table": {
+            "empty": "No hay atributos registrados"
         }
     }
 }

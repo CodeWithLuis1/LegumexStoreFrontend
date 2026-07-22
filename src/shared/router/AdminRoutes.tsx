@@ -34,6 +34,16 @@ const EditCategoryPage = lazy(() =>
     import("@/feature/category/page/editCategory.page").then((m) => ({ default: m.EditCategoryPage }))
 )
 
+const SubCategoryListPage = lazy(() =>
+    import("@/feature/category/page/subCategory.page").then((m) => ({ default: m.SubCategoryListPage }))
+)
+const CreateSubCategoryPage = lazy(() =>
+    import("@/feature/category/page/createSubCategory.page").then((m) => ({ default: m.CreateSubCategoryPage }))
+)
+const EditSubCategoryPage = lazy(() =>
+    import("@/feature/category/page/editSubCategory.page").then((m) => ({ default: m.EditSubCategoryPage }))
+)
+
 const ProductTypeListPage = lazy(() =>
     import("@/feature/product-type/page/productType.page").then((m) => ({ default: m.ProductTypeListPage }))
 )
@@ -64,6 +74,36 @@ const EditIngredientPage = lazy(() =>
     import("@/feature/ingredient/page/editIngredient.page").then((m) => ({ default: m.EditIngredientPage }))
 )
 
+const PackagingListPage = lazy(() =>
+    import("@/feature/packaging/page/packaging.page").then((m) => ({ default: m.PackagingListPage }))
+)
+const CreatePackagingPage = lazy(() =>
+    import("@/feature/packaging/page/createPackaging.page").then((m) => ({ default: m.CreatePackagingPage }))
+)
+const EditPackagingPage = lazy(() =>
+    import("@/feature/packaging/page/editPackaging.page").then((m) => ({ default: m.EditPackagingPage }))
+)
+
+const PresentationListPage = lazy(() =>
+    import("@/feature/presentation/page/presentation.page").then((m) => ({ default: m.PresentationListPage }))
+)
+const CreatePresentationPage = lazy(() =>
+    import("@/feature/presentation/page/createPresentation.page").then((m) => ({ default: m.CreatePresentationPage }))
+)
+const EditPresentationPage = lazy(() =>
+    import("@/feature/presentation/page/editPresentation.page").then((m) => ({ default: m.EditPresentationPage }))
+)
+
+const ProductListPage = lazy(() =>
+    import("@/feature/product/page/product.page").then((m) => ({ default: m.ProductListPage }))
+)
+const CreateProductPage = lazy(() =>
+    import("@/feature/product/page/createProduct.page").then((m) => ({ default: m.CreateProductPage }))
+)
+const EditProductPage = lazy(() =>
+    import("@/feature/product/page/editProduct.page").then((m) => ({ default: m.EditProductPage }))
+)
+
 const routes = [
     { path: "/addins", component: AddinListPage },
     { path: "/addins/create", component: CreateAddinPage },
@@ -77,6 +117,10 @@ const routes = [
     { path: "/categories/create", component: CreateCategoryPage },
     { path: "/categories/:categoryId/edit", component: EditCategoryPage },
 
+    { path: "/sub-categories", component: SubCategoryListPage },
+    { path: "/sub-categories/create", component: CreateSubCategoryPage },
+    { path: "/sub-categories/:subCategoryId/edit", component: EditSubCategoryPage },
+
     { path: "/product-types", component: ProductTypeListPage },
     { path: "/product-types/create", component: CreateProductTypePage },
     { path: "/product-types/:productTypeId/edit", component: EditProductTypePage },
@@ -88,12 +132,24 @@ const routes = [
     { path: "/ingredients", component: IngredientListPage },
     { path: "/ingredients/create", component: CreateIngredientPage },
     { path: "/ingredients/:ingredientId/edit", component: EditIngredientPage },
+
+    { path: "/packagings", component: PackagingListPage },
+    { path: "/packagings/create", component: CreatePackagingPage },
+    { path: "/packagings/:packagingId/edit", component: EditPackagingPage },
+
+    { path: "/presentations", component: PresentationListPage },
+    { path: "/presentations/create", component: CreatePresentationPage },
+    { path: "/presentations/:presentationId/edit", component: EditPresentationPage },
+
+    { path: "/products", component: ProductListPage },
+    { path: "/products/create", component: CreateProductPage },
+    { path: "/products/:productId/edit", component: EditProductPage },
 ]
 
 export default function AdminRoutes() {
     return (
         <Route element={<AppLayout />}>
-            <Route path="/" element={<Navigate to="/addins" replace />} />
+            <Route path="/" element={<Navigate to="/products" replace />} />
             <Route
                 path="*"
                 element={

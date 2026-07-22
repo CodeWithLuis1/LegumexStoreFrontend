@@ -7,8 +7,12 @@
         "loadError": "Could not load the information",
         "actions": "Actions",
         "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
         "back": "Back",
-        "selectPlaceholder": "Select an option"
+        "selectPlaceholder": "Select an option",
+        "yes": "Yes",
+        "no": "No"
     },
     "errors": {
         "unexpected_response": "The server response does not have the expected format",
@@ -172,6 +176,165 @@
         "table": {
             "searchPlaceholder": "Search by name...",
             "empty": "No ingredients registered"
+        }
+    },
+    "subCategory": {
+        "form": {
+            "categoryId": "Category",
+            "displayName": "Name",
+            "urlSlug": "URL slug",
+            "fullDescription": "Description",
+            "displayOrder": "Display order"
+        },
+        "list": {
+            "title": "Subcategories",
+            "createLink": "Create subcategory"
+        },
+        "create": {
+            "title": "Create subcategory"
+        },
+        "edit": {
+            "title": "Edit subcategory"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No subcategories registered"
+        }
+    },
+    "packaging": {
+        "form": {
+            "displayName": "Name",
+            "packagingMaterial": "Material",
+            "capacityValue": "Capacity",
+            "capacityUnitId": "Capacity unit",
+            "unitCost": "Unit cost"
+        },
+        "list": {
+            "title": "Packagings",
+            "createLink": "Create packaging"
+        },
+        "create": {
+            "title": "Create packaging"
+        },
+        "edit": {
+            "title": "Edit packaging"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No packagings registered"
+        }
+    },
+    "presentation": {
+        "form": {
+            "displayLabel": "Name",
+            "netWeightGrams": "Net weight (g)",
+            "displayValue": "Display value",
+            "displayUnitId": "Display unit",
+            "categoryId": "Category"
+        },
+        "list": {
+            "title": "Presentations",
+            "createLink": "Create presentation"
+        },
+        "create": {
+            "title": "Create presentation"
+        },
+        "edit": {
+            "title": "Edit presentation"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No presentations registered"
+        }
+    },
+    "product": {
+        "form": {
+            "subCategoryId": "Subcategory",
+            "productTypeId": "Product type",
+            "displayName": "Name",
+            "urlSlug": "URL slug",
+            "fullDescription": "Description",
+            "imageUrl": "Image URL",
+            "displayOrder": "Display order",
+            "isOrganic": "Organic",
+            "isCustomizable": "Customizable"
+        },
+        "list": {
+            "title": "Products",
+            "createLink": "Create product"
+        },
+        "create": {
+            "title": "Create product"
+        },
+        "edit": {
+            "title": "Edit product"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name...",
+            "empty": "No products registered"
+        }
+    },
+    "productVariant": {
+        "form": {
+            "presentationId": "Presentation",
+            "packagingId": "Packaging",
+            "skuCode": "SKU",
+            "unitPrice": "Unit price",
+            "unitCost": "Unit cost",
+            "isPriceManual": "Manual price",
+            "minimumOrderQuantity": "Minimum order quantity",
+            "addButton": "Add variant"
+        },
+        "list": {
+            "title": "Variants"
+        },
+        "table": {
+            "empty": "No variants registered"
+        }
+    },
+    "productIngredient": {
+        "form": {
+            "ingredientId": "Ingredient",
+            "proportionPercent": "Proportion (%)",
+            "quantityValue": "Quantity",
+            "quantityUnitId": "Quantity unit",
+            "displayOrder": "Display order",
+            "addButton": "Add ingredient"
+        },
+        "list": {
+            "title": "Ingredients"
+        },
+        "table": {
+            "empty": "No ingredients registered"
+        }
+    },
+    "productAddin": {
+        "form": {
+            "addinId": "Add-in",
+            "isDefault": "Default",
+            "addButton": "Add add-in"
+        },
+        "list": {
+            "title": "Add-ins"
+        },
+        "table": {
+            "empty": "No add-ins registered"
+        }
+    },
+    "productAttribute": {
+        "form": {
+            "attributeId": "Attribute",
+            "value": "Value",
+            "valueString": "Value (text)",
+            "valueNumber": "Value (number)",
+            "valueBoolean": "Value (Yes/No)",
+            "addButton": "Add attribute"
+        },
+        "list": {
+            "title": "Attributes"
+        },
+        "table": {
+            "empty": "No attributes registered"
         }
     }
 }

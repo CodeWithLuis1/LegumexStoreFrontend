@@ -9,7 +9,6 @@ export function handleApiError(error: unknown): never {
     }
 
     if (error instanceof ZodError) {
-        console.error("Unexpected response shape from backend:", error.issues)
         throw new Error(i18n.t("errors.unexpected_response"))
     }
 
