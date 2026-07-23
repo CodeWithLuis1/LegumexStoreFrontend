@@ -9,7 +9,7 @@ export function AddinListPage() {
 
     return (
         <PageContainer className="max-w-4xl">
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("addin.list.title")}</h1>
                 <Link to="/addins/create" className={buttonClassName("primary")}>
                     {t("addin.list.createLink")}

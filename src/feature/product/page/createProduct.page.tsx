@@ -43,7 +43,7 @@ export function CreateProductPage() {
 
     return (
         <PageContainer>
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("product.create.title")}</h1>
                 <Link to="/products" className={buttonClassName("secondary")}>
                     {t("common.back")}
