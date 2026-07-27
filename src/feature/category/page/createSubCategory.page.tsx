@@ -30,7 +30,7 @@ export function CreateSubCategoryPage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["subCategories"] })
             toast.success(data.message)
-            navigate("/sub-categories")
+            navigate("/admin/sub-categories")
         },
         onError: (error) => {
             toast.error(error.message)
@@ -45,7 +45,7 @@ export function CreateSubCategoryPage() {
         <PageContainer>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("subCategory.create.title")}</h1>
-                <Link to="/sub-categories" className={buttonClassName("secondary")}>
+                <Link to="/admin/sub-categories" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>

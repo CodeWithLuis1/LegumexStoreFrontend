@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react"
 import { Navigate, Route } from "react-router-dom"
 import { AppLayout } from "@/shared/layout/AppLayout"
 import { Spinner } from "@/shared/component/spinner.component"
-import { NotFoundPage } from "@/shared/page/notFound.page"
 
 const AddinListPage = lazy(() =>
     import("@/feature/addin/page/addin.page").then((m) => ({ default: m.AddinListPage }))
@@ -105,59 +104,51 @@ const EditProductPage = lazy(() =>
 )
 
 const routes = [
-    { path: "/addins", component: AddinListPage },
-    { path: "/addins/create", component: CreateAddinPage },
-    { path: "/addins/:addinId/edit", component: EditAddinPage },
+    { path: "addins", component: AddinListPage },
+    { path: "addins/create", component: CreateAddinPage },
+    { path: "addins/:addinId/edit", component: EditAddinPage },
 
-    { path: "/attributes", component: AttributeListPage },
-    { path: "/attributes/create", component: CreateAttributePage },
-    { path: "/attributes/:attributeId/edit", component: EditAttributePage },
+    { path: "attributes", component: AttributeListPage },
+    { path: "attributes/create", component: CreateAttributePage },
+    { path: "attributes/:attributeId/edit", component: EditAttributePage },
 
-    { path: "/categories", component: CategoryListPage },
-    { path: "/categories/create", component: CreateCategoryPage },
-    { path: "/categories/:categoryId/edit", component: EditCategoryPage },
+    { path: "categories", component: CategoryListPage },
+    { path: "categories/create", component: CreateCategoryPage },
+    { path: "categories/:categoryId/edit", component: EditCategoryPage },
 
-    { path: "/sub-categories", component: SubCategoryListPage },
-    { path: "/sub-categories/create", component: CreateSubCategoryPage },
-    { path: "/sub-categories/:subCategoryId/edit", component: EditSubCategoryPage },
+    { path: "sub-categories", component: SubCategoryListPage },
+    { path: "sub-categories/create", component: CreateSubCategoryPage },
+    { path: "sub-categories/:subCategoryId/edit", component: EditSubCategoryPage },
 
-    { path: "/product-types", component: ProductTypeListPage },
-    { path: "/product-types/create", component: CreateProductTypePage },
-    { path: "/product-types/:productTypeId/edit", component: EditProductTypePage },
+    { path: "product-types", component: ProductTypeListPage },
+    { path: "product-types/create", component: CreateProductTypePage },
+    { path: "product-types/:productTypeId/edit", component: EditProductTypePage },
 
-    { path: "/units", component: UnitListPage },
-    { path: "/units/create", component: CreateUnitPage },
-    { path: "/units/:unitId/edit", component: EditUnitPage },
+    { path: "units", component: UnitListPage },
+    { path: "units/create", component: CreateUnitPage },
+    { path: "units/:unitId/edit", component: EditUnitPage },
 
-    { path: "/ingredients", component: IngredientListPage },
-    { path: "/ingredients/create", component: CreateIngredientPage },
-    { path: "/ingredients/:ingredientId/edit", component: EditIngredientPage },
+    { path: "ingredients", component: IngredientListPage },
+    { path: "ingredients/create", component: CreateIngredientPage },
+    { path: "ingredients/:ingredientId/edit", component: EditIngredientPage },
 
-    { path: "/packagings", component: PackagingListPage },
-    { path: "/packagings/create", component: CreatePackagingPage },
-    { path: "/packagings/:packagingId/edit", component: EditPackagingPage },
+    { path: "packagings", component: PackagingListPage },
+    { path: "packagings/create", component: CreatePackagingPage },
+    { path: "packagings/:packagingId/edit", component: EditPackagingPage },
 
-    { path: "/presentations", component: PresentationListPage },
-    { path: "/presentations/create", component: CreatePresentationPage },
-    { path: "/presentations/:presentationId/edit", component: EditPresentationPage },
+    { path: "presentations", component: PresentationListPage },
+    { path: "presentations/create", component: CreatePresentationPage },
+    { path: "presentations/:presentationId/edit", component: EditPresentationPage },
 
-    { path: "/products", component: ProductListPage },
-    { path: "/products/create", component: CreateProductPage },
-    { path: "/products/:productId/edit", component: EditProductPage },
+    { path: "products", component: ProductListPage },
+    { path: "products/create", component: CreateProductPage },
+    { path: "products/:productId/edit", component: EditProductPage },
 ]
 
 export default function AdminRoutes() {
     return (
-        <Route element={<AppLayout />}>
-            <Route path="/" element={<Navigate to="/products" replace />} />
-            <Route
-                path="*"
-                element={
-                    <Suspense fallback={<Spinner />}>
-                        <NotFoundPage />
-                    </Suspense>
-                }
-            />
+        <Route path="/admin" element={<AppLayout />}>
+            <Route index element={<Navigate to="/admin/products" replace />} />
 
             {routes.map(({ path, component: Component }) => (
                 <Route

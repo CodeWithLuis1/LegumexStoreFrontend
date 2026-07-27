@@ -2,6 +2,10 @@
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
+@import "@fontsource/archivo/700.css";
+@import "@fontsource/archivo/800.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
 
 @theme {
     /* Base */
@@ -16,6 +20,13 @@
     --color-dorado: #e9b93c;
     --color-dorado-hover: #d9a929;
     --color-brote: #a8c544;
+
+    /* Tintes de categoría */
+    --color-cat-vainas: #d9e7bb;
+    --color-cat-cruciferas: #cfe3d6;
+    --color-cat-mini: #f4e2b0;
+    --color-cat-raices: #f2cfa4;
+    --color-cat-iqf: #d6e4ec;
 
     /* Semánticos */
     --color-exito-fg: #2e7d4f;
@@ -37,12 +48,27 @@
     --radius-chip: 6px;
     --shadow-solid: 3px 3px 0 0 var(--color-verde-profundo);
     --shadow-card: 0 1px 2px rgba(15, 46, 30, 0.06), 0 8px 24px rgba(15, 46, 30, 0.05);
+    --shadow-card-hover: 0 12px 32px rgba(15, 46, 30, 0.09);
+    --max-width-site: 1280px;
 
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 body {
     background-color: var(--color-crema);
     color: var(--color-verde-profundo);
     font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

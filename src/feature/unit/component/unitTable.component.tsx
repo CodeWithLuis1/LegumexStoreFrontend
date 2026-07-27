@@ -49,7 +49,7 @@ export function UnitTable() {
                                 <Td>{t(`unit.form.unitTypeOptions.${unit.unitType}`)}</Td>
                                 <Td>
                                     <Link
-                                        to={`/units/${unit.id}/edit`}
+                                        to={`/admin/units/${unit.id}/edit`}
                                         className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
                                     >
                                         {t("common.edit")}

@@ -55,7 +55,7 @@ export function EditCategoryPage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["categories"] })
             toast.success(data.message)
-            navigate("/categories")
+            navigate("/admin/categories")
         },
         onError: (error) => {
             toast.error(error.message)
@@ -70,7 +70,7 @@ export function EditCategoryPage() {
         <PageContainer>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("category.edit.title")}</h1>
-                <Link to="/categories" className={buttonClassName("secondary")}>
+                <Link to="/admin/categories" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>

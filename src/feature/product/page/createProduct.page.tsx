@@ -20,6 +20,8 @@ export function CreateProductPage() {
     const {
         register,
         handleSubmit,
+        setValue,
+        watch,
         formState: { errors },
     } = useForm<CreateProductInput>({
         resolver: zodResolver(createProductSchema),
@@ -30,7 +32,7 @@ export function CreateProductPage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["products"] })
             toast.success(data.message)
-            navigate(`/products/${data.data.id}/edit`)
+            navigate(`/admin/products/${data.data.id}/edit`)
         },
         onError: (error) => {
             toast.error(error.message)
@@ -45,14 +47,14 @@ export function CreateProductPage() {
         <PageContainer>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("product.create.title")}</h1>
-                <Link to="/products" className={buttonClassName("secondary")}>
+                <Link to="/admin/products" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateProductForm register={register} errors={errors} />
+                    <CreateProductForm register={register} errors={errors} setValue={setValue} watch={watch} />
                     <Button type="submit" disabled={createProductMutation.isPending}>
                         {createProductMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

@@ -30,7 +30,7 @@ export function CreateUnitPage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["units"] })
             toast.success(data.message)
-            navigate("/units")
+            navigate("/admin/units")
         },
         onError: (error) => {
             toast.error(error.message)
@@ -45,7 +45,7 @@ export function CreateUnitPage() {
         <PageContainer>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("unit.create.title")}</h1>
-                <Link to="/units" className={buttonClassName("secondary")}>
+                <Link to="/admin/units" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>

@@ -47,6 +47,8 @@ export function EditProductPage() {
         register,
         handleSubmit,
         reset,
+        setValue,
+        watch,
         formState: { errors },
     } = useForm<UpdateProductInput>({
         resolver: zodResolver(updateProductSchema),
@@ -63,7 +65,7 @@ export function EditProductPage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["products"] })
             toast.success(data.message)
-            navigate("/products")
+            navigate("/admin/products")
         },
         onError: (error) => {
             toast.error(error.message)
@@ -78,7 +80,7 @@ export function EditProductPage() {
         <PageContainer className="max-w-4xl">
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("product.edit.title")}</h1>
-                <Link to="/products" className={buttonClassName("secondary")}>
+                <Link to="/admin/products" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>
@@ -89,7 +91,7 @@ export function EditProductPage() {
 
                 {productQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditProductForm register={register} errors={errors} />
+                        <EditProductForm register={register} errors={errors} setValue={setValue} watch={watch} />
                         <Button type="submit" disabled={updateProductMutation.isPending}>
                             {updateProductMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

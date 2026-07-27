@@ -49,7 +49,7 @@ export function PresentationTable() {
                                 <Td>{presentation.netWeightGrams ?? "-"}</Td>
                                 <Td>
                                     <Link
-                                        to={`/presentations/${presentation.id}/edit`}
+                                        to={`/admin/presentations/${presentation.id}/edit`}
                                         className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
                                     >
                                         {t("common.edit")}

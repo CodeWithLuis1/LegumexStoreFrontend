@@ -49,7 +49,7 @@ export function AttributeTable() {
                                 <Td>{t(`attribute.form.dataTypeOptions.${attribute.dataType}`)}</Td>
                                 <Td>
                                     <Link
-                                        to={`/attributes/${attribute.id}/edit`}
+                                        to={`/admin/attributes/${attribute.id}/edit`}
                                         className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
                                     >
                                         {t("common.edit")}

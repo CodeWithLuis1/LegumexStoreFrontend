@@ -30,7 +30,7 @@ export function CreatePresentationPage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["presentations"] })
             toast.success(data.message)
-            navigate("/presentations")
+            navigate("/admin/presentations")
         },
         onError: (error) => {
             toast.error(error.message)
@@ -45,7 +45,7 @@ export function CreatePresentationPage() {
         <PageContainer>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("presentation.create.title")}</h1>
-                <Link to="/presentations" className={buttonClassName("secondary")}>
+                <Link to="/admin/presentations" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>

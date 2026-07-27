@@ -49,7 +49,7 @@ export function IngredientTable() {
                                 <Td>{t(`ingredient.form.ingredientTypeOptions.${ingredient.ingredientType}`)}</Td>
                                 <Td>
                                     <Link
-                                        to={`/ingredients/${ingredient.id}/edit`}
+                                        to={`/admin/ingredients/${ingredient.id}/edit`}
                                         className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
                                     >
                                         {t("common.edit")}

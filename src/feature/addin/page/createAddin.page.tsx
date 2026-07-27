@@ -30,7 +30,7 @@ export function CreateAddinPage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["addins"] })
             toast.success(data.message)
-            navigate("/addins")
+            navigate("/admin/addins")
         },
         onError: (error) => {
             toast.error(error.message)
@@ -45,7 +45,7 @@ export function CreateAddinPage() {
         <PageContainer>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("addin.create.title")}</h1>
-                <Link to="/addins" className={buttonClassName("secondary")}>
+                <Link to="/admin/addins" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>

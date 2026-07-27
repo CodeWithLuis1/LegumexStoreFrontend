@@ -30,7 +30,7 @@ export function CreateAttributePage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["attributes"] })
             toast.success(data.message)
-            navigate("/attributes")
+            navigate("/admin/attributes")
         },
         onError: (error) => {
             toast.error(error.message)
@@ -45,7 +45,7 @@ export function CreateAttributePage() {
         <PageContainer>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("attribute.create.title")}</h1>
-                <Link to="/attributes" className={buttonClassName("secondary")}>
+                <Link to="/admin/attributes" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>

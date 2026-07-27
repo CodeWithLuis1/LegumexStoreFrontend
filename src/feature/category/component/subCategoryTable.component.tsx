@@ -57,7 +57,7 @@ export function SubCategoryTable() {
                                 <Td>{categoryNameById.get(subCategory.categoryId) ?? "-"}</Td>
                                 <Td>
                                     <Link
-                                        to={`/sub-categories/${subCategory.id}/edit`}
+                                        to={`/admin/sub-categories/${subCategory.id}/edit`}
                                         className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
                                     >
                                         {t("common.edit")}

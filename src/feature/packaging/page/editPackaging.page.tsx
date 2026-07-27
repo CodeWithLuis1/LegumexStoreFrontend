@@ -55,7 +55,7 @@ export function EditPackagingPage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["packagings"] })
             toast.success(data.message)
-            navigate("/packagings")
+            navigate("/admin/packagings")
         },
         onError: (error) => {
             toast.error(error.message)
@@ -70,7 +70,7 @@ export function EditPackagingPage() {
         <PageContainer>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("packaging.edit.title")}</h1>
-                <Link to="/packagings" className={buttonClassName("secondary")}>
+                <Link to="/admin/packagings" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>

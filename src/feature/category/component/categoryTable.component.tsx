@@ -49,7 +49,7 @@ export function CategoryTable() {
                                 <Td>{category.urlSlug}</Td>
                                 <Td>
                                     <Link
-                                        to={`/categories/${category.id}/edit`}
+                                        to={`/admin/categories/${category.id}/edit`}
                                         className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
                                     >
                                         {t("common.edit")}

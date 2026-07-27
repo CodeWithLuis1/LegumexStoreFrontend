@@ -48,7 +48,7 @@ export function AddinTable() {
                                 <Td>{addin.displayName}</Td>
                                 <Td>{addin.costPerServing ?? "-"}</Td>
                                 <Td>
-                                    <Link to={`/addins/${addin.id}/edit`} className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta">
+                                    <Link to={`/admin/addins/${addin.id}/edit`} className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta">
                                         {t("common.edit")}
                                     </Link>
                                 </Td>

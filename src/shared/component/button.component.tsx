@@ -1,7 +1,7 @@
 import { forwardRef } from "react"
 import type { ButtonHTMLAttributes } from "react"
 
-type ButtonVariant = "primary" | "secondary"
+type ButtonVariant = "primary" | "secondary" | "dark"
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     variant?: ButtonVariant
@@ -15,6 +15,7 @@ const variantClasses: Record<ButtonVariant, string> = {
         "bg-dorado text-verde-profundo shadow-solid hover:bg-dorado-hover active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
     secondary:
         "border-[1.5px] border-verde-profundo bg-transparent text-verde-profundo hover:bg-verde-profundo hover:text-crema",
+    dark: "bg-crema text-verde-profundo hover:bg-crema/90",
 }
 
 export function buttonClassName(variant: ButtonVariant = "primary", className = ""): string {

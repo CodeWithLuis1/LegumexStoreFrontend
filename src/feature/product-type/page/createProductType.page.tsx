@@ -30,7 +30,7 @@ export function CreateProductTypePage() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["productTypes"] })
             toast.success(data.message)
-            navigate("/product-types")
+            navigate("/admin/product-types")
         },
         onError: (error) => {
             toast.error(error.message)
@@ -45,7 +45,7 @@ export function CreateProductTypePage() {
         <PageContainer>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("productType.create.title")}</h1>
-                <Link to="/product-types" className={buttonClassName("secondary")}>
+                <Link to="/admin/product-types" className={buttonClassName("secondary")}>
                     {t("common.back")}
                 </Link>
             </div>

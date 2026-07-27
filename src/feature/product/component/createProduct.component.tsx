@@ -1,4 +1,4 @@
-import type { FieldErrors, UseFormRegister } from "react-hook-form"
+import type { FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import type { CreateProductInput } from "@/feature/product/schema/product.schema"
 import { getFieldErrorMessage } from "@/shared/i18n/getFieldErrorMessage"
@@ -6,6 +6,7 @@ import { FormField } from "@/shared/component/formField.component"
 import { Input } from "@/shared/component/input.component"
 import { Textarea } from "@/shared/component/textarea.component"
 import { Checkbox } from "@/shared/component/checkbox.component"
+import { ImageUploadField } from "@/shared/component/imageUploadField.component"
 import { toOptionalNumber } from "@/shared/form/toOptionalNumber"
 import { SubCategorySelect } from "@/feature/category/component/subCategorySelect.component"
 import { ProductTypeSelect } from "@/feature/product-type/component/productTypeSelect.component"
@@ -13,9 +14,11 @@ import { ProductTypeSelect } from "@/feature/product-type/component/productTypeS
 type CreateProductFormProps = {
     register: UseFormRegister<CreateProductInput>
     errors: FieldErrors<CreateProductInput>
+    setValue: UseFormSetValue<CreateProductInput>
+    watch: UseFormWatch<CreateProductInput>
 }
 
-export function CreateProductForm({ register, errors }: CreateProductFormProps) {
+export function CreateProductForm({ register, errors, setValue, watch }: CreateProductFormProps) {
     const { t } = useTranslation()
 
     return (
@@ -68,13 +71,13 @@ export function CreateProductForm({ register, errors }: CreateProductFormProps) 
                 <Textarea id="fullDescription" hasError={!!errors.fullDescription} {...register("fullDescription")} />
             </FormField>
 
-            <FormField
+            <ImageUploadField
                 label={t("product.form.imageUrl")}
                 htmlFor="imageUrl"
+                value={watch("imageUrl")}
+                onChange={(value) => setValue("imageUrl", value, { shouldValidate: true, shouldDirty: true })}
                 error={getFieldErrorMessage(t, errors.imageUrl)}
-            >
-                <Input id="imageUrl" hasError={!!errors.imageUrl} {...register("imageUrl")} />
-            </FormField>
+            />
 
             <FormField
                 label={t("product.form.displayOrder")}

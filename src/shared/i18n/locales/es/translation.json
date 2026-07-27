@@ -12,7 +12,20 @@
         "back": "Regresar",
         "selectPlaceholder": "Selecciona una opción",
         "yes": "Sí",
-        "no": "No"
+        "no": "No",
+        "imageCapture": {
+            "addImage": "Agregar foto",
+            "changeImage": "Cambiar foto",
+            "remove": "Quitar",
+            "useCamera": "Usar cámara",
+            "uploadFile": "Subir imagen",
+            "takePhoto": "Tomar foto",
+            "retake": "Tomar otra",
+            "back": "Volver",
+            "cameraError": "No se pudo acceder a la cámara. Verifica los permisos o sube una imagen desde tu dispositivo.",
+            "invalidFile": "Selecciona un archivo de imagen válido",
+            "fileTooLarge": "La imagen es demasiado grande. Máximo 5MB"
+        }
     },
     "errors": {
         "unexpected_response": "La respuesta del servidor no tiene el formato esperado",
@@ -28,6 +41,133 @@
     "notFound": {
         "message": "La página que buscas no existe",
         "backLink": "Volver al inicio"
+    },
+    "site": {
+        "announcementBar": {
+            "message": "Aquí podemos mostrar cualquier información de LEGUMEX STORE. Esto es solo un ejemplo que agregué para realizar pruebas",
+            "dismiss": "Cerrar aviso"
+        },
+        "nav": {
+            "catalog": "Catálogo",
+            "quality": "Calidad",
+            "about": "Nosotros",
+            "contact": "Contacto"
+        },
+        "header": {
+            "search": "Buscar",
+            "request": "Ver solicitud",
+            "cart": "Ver carrito",
+            "cta": "Solicitar cotización",
+            "openMenu": "Abrir menú",
+            "closeMenu": "Cerrar menú"
+        },
+        "footer": {
+            "tagline": "Vegetal fresco y congelado IQF de exportación, del campo a tu cadena de frío.",
+            "catalog": {
+                "title": "Catálogo",
+                "fresh": "Línea fresca",
+                "iqf": "Línea IQF",
+                "compare": "Comparar productos"
+            },
+            "company": {
+                "title": "Empresa",
+                "aboutUs": "Nosotros",
+                "quality": "Calidad",
+                "blog": "Blog"
+            },
+            "support": {
+                "title": "Soporte",
+                "contact": "Contacto",
+                "request": "Mi solicitud",
+                "technicalSheets": "Fichas técnicas"
+            },
+            "newsletter": {
+                "title": "Novedades",
+                "placeholder": "Tu correo electrónico",
+                "submit": "Suscribirme",
+                "success": "Gracias, te avisaremos de novedades"
+            },
+            "copyright": "© {{year}} Legumex. Todos los derechos reservados."
+        }
+    },
+    "home": {
+        "hero": {
+            "eyebrow": "Cosecha 2026–2027",
+            "titleLineOne": "Vegetal fresco y",
+            "titleLineTwo": "congelado de exportación",
+            "description": "Cultivamos, procesamos y despachamos bajo cadena de frío controlada, con trazabilidad completa desde el campo hasta tu puerto de destino.",
+            "primaryAction": "Solicitar cotización",
+            "secondaryAction": "Ver catálogo"
+        },
+        "credentials": {
+            "yearsOperating": "Años de operación",
+            "hectaresManaged": "Hectáreas manejadas",
+            "destinationCountries": "Países de destino",
+            "qualityCertifications": "Certificaciones"
+        },
+        "categories": {
+            "eyebrow": "Líneas de producto",
+            "title": "Categorías",
+            "vainas": {
+                "title": "Arvejas y ejotes",
+                "description": "Vainas planas y arveja china, corte manual y calibre uniforme."
+            },
+            "cruciferas": {
+                "title": "Crucíferas",
+                "description": "Brócoli y coliflor en floretes o entero, color y firmeza consistentes."
+            },
+            "miniVegetales": {
+                "title": "Mini vegetales y mixes",
+                "description": "Formatos baby y combinaciones listas para líneas de proceso."
+            },
+            "raices": {
+                "title": "Raíces y tubérculos",
+                "description": "Papa nativa y raíces seleccionadas por calibre y color de piel."
+            },
+            "iqf": {
+                "title": "Línea IQF",
+                "description": "Congelado individual, sin aglomerados, listo para retail o food service."
+            }
+        },
+        "coldChain": {
+            "fresh": {
+                "title": "Línea fresca",
+                "description": "Cosecha, empaque y despacho en ventanas cortas para llegar en punto óptimo de calidad."
+            },
+            "frozen": {
+                "title": "Línea IQF",
+                "description": "Congelación individual que conserva textura, color y valor nutricional durante todo el año."
+            }
+        },
+        "process": {
+            "eyebrow": "Trazabilidad",
+            "title": "Cómo trabajamos",
+            "harvest": {
+                "title": "Campo y cosecha",
+                "description": "Productores aliados y parcelas propias bajo programa de calibre y punto de corte."
+            },
+            "coldChain": {
+                "title": "Proceso y cadena de frío",
+                "description": "Selección, empaque y enfriado o congelación IQF bajo control continuo de temperatura."
+            },
+            "dispatch": {
+                "title": "Despacho y trazabilidad",
+                "description": "Documentación de exportación y seguimiento de lote desde el campo hasta destino."
+            }
+        },
+        "featured": {
+            "eyebrow": "Selección",
+            "title": "Productos destacados"
+        },
+        "quality": {
+            "eyebrow": "Inocuidad",
+            "title": "Calidad certificada"
+        },
+        "finalCta": {
+            "title": "Hablemos de tu próximo pedido",
+            "description": "Contanos volumen, presentación e incoterm y te respondemos con una cotización en 24 horas.",
+            "action": "Solicitar cotización"
+        }
     },
     "addin": {
         "form": {
@@ -254,10 +394,18 @@
             "displayName": "Nombre",
             "urlSlug": "Slug de URL",
             "fullDescription": "Descripción",
-            "imageUrl": "URL de imagen",
+            "imageUrl": "Fotografía del producto",
             "displayOrder": "Orden de visualización",
             "isOrganic": "Orgánico",
             "isCustomizable": "Personalizable"
+        },
+        "card": {
+            "lineFresh": "Fresco",
+            "lineFrozen": "IQF",
+            "requestQuote": "Cotizar",
+            "badgeNew": "Nuevo",
+            "badgeSeason": "Temporada",
+            "badgeBestseller": "Más vendido"
         },
         "list": {
             "title": "Productos",

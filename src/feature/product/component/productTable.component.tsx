@@ -49,7 +49,7 @@ export function ProductTable() {
                                 <Td>{product.urlSlug}</Td>
                                 <Td>
                                     <Link
-                                        to={`/products/${product.id}/edit`}
+                                        to={`/admin/products/${product.id}/edit`}
                                         className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
                                     >
                                         {t("common.edit")}

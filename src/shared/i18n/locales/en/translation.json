@@ -12,7 +12,20 @@
         "back": "Back",
         "selectPlaceholder": "Select an option",
         "yes": "Yes",
-        "no": "No"
+        "no": "No",
+        "imageCapture": {
+            "addImage": "Add photo",
+            "changeImage": "Change photo",
+            "remove": "Remove",
+            "useCamera": "Use camera",
+            "uploadFile": "Upload image",
+            "takePhoto": "Take photo",
+            "retake": "Retake",
+            "back": "Back",
+            "cameraError": "Could not access the camera. Check permissions or upload an image from your device.",
+            "invalidFile": "Select a valid image file",
+            "fileTooLarge": "The image is too large. Maximum 5MB"
+        }
     },
     "errors": {
         "unexpected_response": "The server response does not have the expected format",
@@ -23,6 +36,133 @@
             "invalid_format": "The format is invalid",
             "invalid_value": "Value not allowed",
             "custom": "Invalid value"
+        }
+    },
+    "site": {
+        "announcementBar": {
+            "message": "Here, we can display any LEGUMEX STORE information. This is just an example that I added for testing purposes.",
+            "dismiss": "Dismiss announcement"
+        },
+        "nav": {
+            "catalog": "Catalog",
+            "quality": "Quality",
+            "about": "About us",
+            "contact": "Contact"
+        },
+        "header": {
+            "search": "Search",
+            "request": "View request",
+            "cart": "View cart",
+            "cta": "Request a quote",
+            "openMenu": "Open menu",
+            "closeMenu": "Close menu"
+        },
+        "footer": {
+            "tagline": "Fresh and IQF frozen vegetables for export, from the field to your cold chain.",
+            "catalog": {
+                "title": "Catalog",
+                "fresh": "Fresh line",
+                "iqf": "IQF line",
+                "compare": "Compare products"
+            },
+            "company": {
+                "title": "Company",
+                "aboutUs": "About us",
+                "quality": "Quality",
+                "blog": "Blog"
+            },
+            "support": {
+                "title": "Support",
+                "contact": "Contact",
+                "request": "My request",
+                "technicalSheets": "Technical sheets"
+            },
+            "newsletter": {
+                "title": "Newsletter",
+                "placeholder": "Your email address",
+                "submit": "Subscribe",
+                "success": "Thanks, we'll keep you posted"
+            },
+            "copyright": "© {{year}} Legumex. All rights reserved."
+        }
+    },
+    "home": {
+        "hero": {
+            "eyebrow": "2026–2027 Harvest",
+            "titleLineOne": "Fresh and frozen",
+            "titleLineTwo": "vegetables for export",
+            "description": "We grow, process and ship under controlled cold chain, with full traceability from the field to your destination port.",
+            "primaryAction": "Request a quote",
+            "secondaryAction": "View catalog"
+        },
+        "credentials": {
+            "yearsOperating": "Years in operation",
+            "hectaresManaged": "Hectares managed",
+            "destinationCountries": "Destination countries",
+            "qualityCertifications": "Certifications"
+        },
+        "categories": {
+            "eyebrow": "Product lines",
+            "title": "Categories",
+            "vainas": {
+                "title": "Peas & pod beans",
+                "description": "Flat pods and snow peas, hand-cut with a consistent caliber."
+            },
+            "cruciferas": {
+                "title": "Cruciferous",
+                "description": "Broccoli and cauliflower, florets or whole, consistent color and firmness."
+            },
+            "miniVegetales": {
+                "title": "Mini vegetables & mixes",
+                "description": "Baby formats and combinations ready for processing lines."
+            },
+            "raices": {
+                "title": "Roots & tubers",
+                "description": "Native potato and roots selected by caliber and skin color."
+            },
+            "iqf": {
+                "title": "IQF line",
+                "description": "Individually quick frozen, free-flowing, ready for retail or food service."
+            }
+        },
+        "coldChain": {
+            "fresh": {
+                "title": "Fresh line",
+                "description": "Harvested, packed and shipped in short windows to arrive at peak quality."
+            },
+            "frozen": {
+                "title": "IQF line",
+                "description": "Individual freezing that preserves texture, color and nutrition all year round."
+            }
+        },
+        "process": {
+            "eyebrow": "Traceability",
+            "title": "How we work",
+            "harvest": {
+                "title": "Field & harvest",
+                "description": "Partner growers and own fields under a caliber and cut-point program."
+            },
+            "coldChain": {
+                "title": "Process & cold chain",
+                "description": "Selection, packing and cooling or IQF freezing under continuous temperature control."
+            },
+            "dispatch": {
+                "title": "Dispatch & traceability",
+                "description": "Export documentation and batch tracking from the field to destination."
+            }
+        },
+        "featured": {
+            "eyebrow": "Selection",
+            "title": "Featured products"
+        },
+        "quality": {
+            "eyebrow": "Food safety",
+            "title": "Certified quality"
+        },
+        "finalCta": {
+            "title": "Let's talk about your next order",
+            "description": "Tell us volume, presentation and incoterm and we'll reply with a quote within 24 hours.",
+            "action": "Request a quote"
         }
     },
     "notFound": {
@@ -254,10 +394,18 @@
             "displayName": "Name",
             "urlSlug": "URL slug",
             "fullDescription": "Description",
-            "imageUrl": "Image URL",
+            "imageUrl": "Product photo",
             "displayOrder": "Display order",
             "isOrganic": "Organic",
             "isCustomizable": "Customizable"
+        },
+        "card": {
+            "lineFresh": "Fresh",
+            "lineFrozen": "IQF",
+            "requestQuote": "Quote",
+            "badgeNew": "New",
+            "badgeSeason": "Season",
+            "badgeBestseller": "Best seller"
         },
         "list": {
             "title": "Products",

@@ -51,7 +51,7 @@ export function PackagingTable() {
                                 <Td>{packaging.unitCost ?? "-"}</Td>
                                 <Td>
                                     <Link
-                                        to={`/packagings/${packaging.id}/edit`}
+                                        to={`/admin/packagings/${packaging.id}/edit`}
                                         className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
                                     >
                                         {t("common.edit")}

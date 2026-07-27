@@ -11,7 +11,7 @@ export function SubCategoryListPage() {
         <PageContainer className="max-w-4xl">
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-semibold text-verde-profundo">{t("subCategory.list.title")}</h1>
-                <Link to="/sub-categories/create" className={buttonClassName("primary")}>
+                <Link to="/admin/sub-categories/create" className={buttonClassName("primary")}>
                     {t("subCategory.list.createLink")}
                 </Link>
             </div>
