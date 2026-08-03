@@ -13,6 +13,7 @@
         "selectPlaceholder": "Selecciona una opción",
         "yes": "Sí",
         "no": "No",
+        "logout": "Cerrar sesión",
         "imageCapture": {
             "addImage": "Agregar foto",
             "changeImage": "Cambiar foto",
@@ -38,6 +39,40 @@
             "custom": "Valor inválido"
         }
     },
+    "auth": {
+        "adminLogin": {
+            "title": "Iniciar sesión",
+            "subtitle": "Ingresa tus credenciales para continuar",
+            "brand": "Legumex Apps",
+            "brandSubtitle": "Panel administrativo",
+            "username": "Usuario",
+            "usernamePlaceholder": "Ingresa tu usuario",
+            "password": "Contraseña",
+            "passwordPlaceholder": "Ingresa tu contraseña",
+            "showPassword": "Mostrar contraseña",
+            "hidePassword": "Ocultar contraseña",
+            "submit": "Iniciar sesión",
+            "submitting": "Iniciando sesión...",
+            "locked": "Cuenta bloqueada",
+            "footer": "© {{year}} Legumex Apps. Todos los derechos reservados."
+        },
+        "customerLogin": {
+            "title": "Iniciar sesión",
+            "subtitle": "Ingresa a tu cuenta para ver precios y cotizar",
+            "brand": "Legumex",
+            "brandSubtitle": "Acceso para clientes",
+            "email": "Correo electrónico",
+            "emailPlaceholder": "tucorreo@empresa.com",
+            "password": "Contraseña",
+            "passwordPlaceholder": "Ingresa tu contraseña",
+            "showPassword": "Mostrar contraseña",
+            "hidePassword": "Ocultar contraseña",
+            "submit": "Iniciar sesión",
+            "submitting": "Iniciando sesión...",
+            "noAccount": "¿No tienes cuenta? Contacta a nuestro equipo de ventas para solicitar acceso.",
+            "backHome": "Volver al inicio"
+        }
+    },
     "notFound": {
         "message": "La página que buscas no existe",
         "backLink": "Volver al inicio"
@@ -60,6 +95,10 @@
             "cta": "Solicitar cotización",
             "openMenu": "Abrir menú",
             "closeMenu": "Cerrar menú"
+        },
+        "quoteRequest": {
+            "title": "Tu solicitud de cotización",
+            "description": "Hola {{name}}, esta sección está en construcción. Muy pronto podrás armar y enviar tu cotización desde aquí."
         },
         "footer": {
             "tagline": "Vegetal fresco y congelado IQF de exportación, del campo a tu cadena de frío.",
@@ -483,6 +522,30 @@
         },
         "table": {
             "empty": "No hay atributos registrados"
+        }
+    },
+    "customer": {
+        "form": {
+            "name": "Nombre",
+            "companyName": "Empresa",
+            "email": "Correo electrónico",
+            "password": "Contraseña",
+            "newPassword": "Nueva contraseña",
+            "newPasswordPlaceholder": "Dejar en blanco para no cambiarla"
+        },
+        "list": {
+            "title": "Clientes",
+            "createLink": "Crear cliente"
+        },
+        "create": {
+            "title": "Crear cliente"
+        },
+        "edit": {
+            "title": "Editar cliente"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre o correo...",
+            "empty": "No hay clientes registrados"
         }
     }
 }

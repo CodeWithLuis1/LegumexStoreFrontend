@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { buttonClassName } from "@/shared/component/button.component"
-// import { LanguageSwitch } from "@/shared/layout/LanguageSwitch"
+import { LanguageSwitch } from "@/shared/layout/LanguageSwitch"
 import { SiteSearchButton } from "@/shared/layout/SiteSearchButton"
 import { SiteRequestButton } from "@/shared/layout/SiteRequestButton"
 
@@ -10,10 +10,10 @@ export function SiteHeaderActions() {
 
     return (
         <div className="flex items-center gap-2">
-            {/* <LanguageSwitch /> */}
+            <LanguageSwitch />
             <SiteSearchButton />
             <SiteRequestButton />
-            <Link to="/catalogo" className={`${buttonClassName("primary")} h-10 px-5 text-xs`}>
+            <Link to="/solicitud" className={`${buttonClassName("primary")} h-10 px-5 text-xs`}>
                 {t("site.header.cta")}
             </Link>
         </div>

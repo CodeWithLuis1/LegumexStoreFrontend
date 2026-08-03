@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react"
 import { Navigate, Route } from "react-router-dom"
 import { AppLayout } from "@/shared/layout/AppLayout"
 import { Spinner } from "@/shared/component/spinner.component"
+import { ProtectedRoute } from "@/shared/auth/ProtectedRoute"
 
 const AddinListPage = lazy(() =>
     import("@/feature/addin/page/addin.page").then((m) => ({ default: m.AddinListPage }))
@@ -103,6 +104,16 @@ const EditProductPage = lazy(() =>
     import("@/feature/product/page/editProduct.page").then((m) => ({ default: m.EditProductPage }))
 )
 
+const CustomerListPage = lazy(() =>
+    import("@/feature/customer/page/customer.page").then((m) => ({ default: m.CustomerListPage }))
+)
+const CreateCustomerPage = lazy(() =>
+    import("@/feature/customer/page/createCustomer.page").then((m) => ({ default: m.CreateCustomerPage }))
+)
+const EditCustomerPage = lazy(() =>
+    import("@/feature/customer/page/editCustomer.page").then((m) => ({ default: m.EditCustomerPage }))
+)
+
 const routes = [
     { path: "addins", component: AddinListPage },
     { path: "addins/create", component: CreateAddinPage },
@@ -143,11 +154,22 @@ const routes = [
     { path: "products", component: ProductListPage },
     { path: "products/create", component: CreateProductPage },
     { path: "products/:productId/edit", component: EditProductPage },
+
+    { path: "customers", component: CustomerListPage },
+    { path: "customers/create", component: CreateCustomerPage },
+    { path: "customers/:customerId/edit", component: EditCustomerPage },
 ]
 
 export default function AdminRoutes() {
     return (
-        <Route path="/admin" element={<AppLayout />}>
+        <Route
+            path="/admin"
+            element={
+                <ProtectedRoute>
+                    <AppLayout />
+                </ProtectedRoute>
+            }
+        >
             <Route index element={<Navigate to="/admin/products" replace />} />
 
             {routes.map(({ path, component: Component }) => (

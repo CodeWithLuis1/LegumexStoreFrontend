@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom"
-import { Blocks, Carrot, FolderTree, Layers, Package, PackageOpen, Ruler, Shapes, ShoppingBag, Tags } from "lucide-react"
+import { Blocks, Carrot, FolderTree, Layers, Package, PackageOpen, Ruler, Shapes, ShoppingBag, Tags, Users } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 const NAV_ITEMS = [
     { url: "/admin/products", labelKey: "product.list.title", icon: ShoppingBag },
+    { url: "/admin/customers", labelKey: "customer.list.title", icon: Users },
     { url: "/admin/categories", labelKey: "category.list.title", icon: FolderTree },
     { url: "/admin/sub-categories", labelKey: "subCategory.list.title", icon: Layers },
     { url: "/admin/product-types", labelKey: "productType.list.title", icon: Shapes },

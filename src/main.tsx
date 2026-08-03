@@ -5,13 +5,19 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import '@/shared/i18n/i18n'
 import { queryClient } from '@/shared/query/queryClient'
+import { AuthProvider } from '@/shared/auth/AuthContext'
+import { CustomerAuthProvider } from '@/shared/auth/customer/CustomerAuthContext'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <CustomerAuthProvider>
+            <App />
+          </CustomerAuthProvider>
+        </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>,

@@ -13,6 +13,7 @@
         "selectPlaceholder": "Select an option",
         "yes": "Yes",
         "no": "No",
+        "logout": "Log out",
         "imageCapture": {
             "addImage": "Add photo",
             "changeImage": "Change photo",
@@ -38,6 +39,40 @@
             "custom": "Invalid value"
         }
     },
+    "auth": {
+        "adminLogin": {
+            "title": "Sign in",
+            "subtitle": "Enter your credentials to continue",
+            "brand": "Legumex Apps",
+            "brandSubtitle": "Admin panel",
+            "username": "Username",
+            "usernamePlaceholder": "Enter your username",
+            "password": "Password",
+            "passwordPlaceholder": "Enter your password",
+            "showPassword": "Show password",
+            "hidePassword": "Hide password",
+            "submit": "Sign in",
+            "submitting": "Signing in...",
+            "locked": "Account locked",
+            "footer": "© {{year}} Legumex Apps. All rights reserved."
+        },
+        "customerLogin": {
+            "title": "Sign in",
+            "subtitle": "Sign in to see pricing and request quotes",
+            "brand": "Legumex",
+            "brandSubtitle": "Customer access",
+            "email": "Email",
+            "emailPlaceholder": "you@company.com",
+            "password": "Password",
+            "passwordPlaceholder": "Enter your password",
+            "showPassword": "Show password",
+            "hidePassword": "Hide password",
+            "submit": "Sign in",
+            "submitting": "Signing in...",
+            "noAccount": "Don't have an account? Contact our sales team to request access.",
+            "backHome": "Back to home"
+        }
+    },
     "site": {
         "announcementBar": {
             "message": "Here, we can display any LEGUMEX STORE information. This is just an example that I added for testing purposes.",
@@ -56,6 +91,10 @@
             "cta": "Request a quote",
             "openMenu": "Open menu",
             "closeMenu": "Close menu"
+        },
+        "quoteRequest": {
+            "title": "Your quote request",
+            "description": "Hi {{name}}, this section is under construction. Soon you'll be able to build and submit your quote from here."
         },
         "footer": {
             "tagline": "Fresh and IQF frozen vegetables for export, from the field to your cold chain.",
@@ -483,6 +522,30 @@
         },
         "table": {
             "empty": "No attributes registered"
+        }
+    },
+    "customer": {
+        "form": {
+            "name": "Name",
+            "companyName": "Company",
+            "email": "Email",
+            "password": "Password",
+            "newPassword": "New password",
+            "newPasswordPlaceholder": "Leave blank to keep it unchanged"
+        },
+        "list": {
+            "title": "Customers",
+            "createLink": "Create customer"
+        },
+        "create": {
+            "title": "Create customer"
+        },
+        "edit": {
+            "title": "Edit customer"
+        },
+        "table": {
+            "searchPlaceholder": "Search by name or email...",
+            "empty": "No customers registered"
         }
     }
 }

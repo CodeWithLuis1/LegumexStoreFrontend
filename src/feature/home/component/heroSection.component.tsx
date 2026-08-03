@@ -22,7 +22,7 @@ export function HeroSection() {
                     <p className="mt-6 max-w-md text-lg leading-relaxed text-texto-suave">{t("home.hero.description")}</p>
 
                     <div className="mt-8 flex flex-wrap items-center gap-6">
-                        <Link to="/catalogo" className={buttonClassName("primary")}>
+                        <Link to="/solicitud" className={buttonClassName("primary")}>
                             {t("home.hero.primaryAction")}
                         </Link>
                         <Link

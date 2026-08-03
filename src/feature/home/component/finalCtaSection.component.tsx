@@ -13,7 +13,7 @@ export function FinalCtaSection() {
                     {t("home.finalCta.title")}
                 </h2>
                 <p className="max-w-xl text-crema/80">{t("home.finalCta.description")}</p>
-                <Link to="/catalogo" className={buttonClassName("dark")}>
+                <Link to="/solicitud" className={buttonClassName("dark")}>
                     {t("home.finalCta.action")}
                 </Link>
             </SiteContainer>

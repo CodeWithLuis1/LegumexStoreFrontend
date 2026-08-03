@@ -3,7 +3,7 @@ import { X } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { buttonClassName } from "@/shared/component/button.component"
 import { SiteNavigation } from "@/shared/layout/SiteNavigation"
-// import { LanguageSwitch } from "@/shared/layout/LanguageSwitch"
+import { LanguageSwitch } from "@/shared/layout/LanguageSwitch"
 
 type SiteMobileMenuProps = {
     isOpen: boolean
@@ -28,11 +28,11 @@ export function SiteMobileMenu({ isOpen, onClose }: SiteMobileMenuProps) {
 
                 <SiteNavigation orientation="vertical" onLinkClick={onClose} />
 
-                <Link to="/catalogo" onClick={onClose} className={`${buttonClassName("primary")} w-full`}>
+                <Link to="/solicitud" onClick={onClose} className={`${buttonClassName("primary")} w-full`}>
                     {t("site.header.cta")}
                 </Link>
 
-                {/* <LanguageSwitch /> */}
+                <LanguageSwitch />
             </div>
         </div>
     )
