@@ -30,6 +30,7 @@ export function EditProductTypePage() {
     const productTypeQuery = useQuery({
         queryKey: ["productType", productTypeId],
         queryFn: () => getProductTypeByIdAPI(productTypeId),
+        retry: false,
     })
 
     const {

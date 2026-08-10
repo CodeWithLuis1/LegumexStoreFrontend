@@ -16,10 +16,7 @@ import { Button, buttonClassName } from "@/shared/component/button.component"
 function toFormValues(category: CategoryResponse): UpdateCategoryInput {
     return {
         displayName: category.displayName,
-        urlSlug: category.urlSlug,
         fullDescription: category.fullDescription ?? undefined,
-        displayOrder: category.displayOrder,
-        defaultMargin: category.defaultMargin !== null ? Number(category.defaultMargin) : undefined,
     }
 }
 
@@ -33,6 +30,7 @@ export function EditCategoryPage() {
     const categoryQuery = useQuery({
         queryKey: ["category", categoryId],
         queryFn: () => getCategoryByIdAPI(categoryId),
+        retry: false,
     })
 
     const {

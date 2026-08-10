@@ -36,7 +36,11 @@ export function CreateCustomerForm({ register, errors }: CreateCustomerFormProps
                 htmlFor="password"
                 error={getFieldErrorMessage(t, errors.password)}
             >
-                <Input id="password" type="password" autoComplete="new-password" hasError={!!errors.password} {...register("password")} />
+                <Input id="password" 
+                    type="password" 
+                    preserveCase
+                    hasError={!!errors.password}
+                    {...register("password")} />
             </FormField>
         </div>
     )

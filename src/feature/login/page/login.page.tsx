@@ -128,6 +128,7 @@ export function LoginPage() {
                   autoFocus
                   hasError={!!errors.username}
                   className="pl-11"
+                  preserveCase
                   {...register("username")}
                 />
               </div>
@@ -147,6 +148,7 @@ export function LoginPage() {
                   autoComplete="current-password"
                   hasError={!!errors.password}
                   className="pl-11 pr-11"
+                  preserveCase
                   {...register("password")}
                 />
                 <button

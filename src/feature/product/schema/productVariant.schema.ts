@@ -6,10 +6,9 @@ export const createProductVariantSchema = z.object({
     presentationId: z.number().int().positive().optional(),
     packagingId: z.number().int().positive().optional(),
     skuCode: z.string().trim().max(60).optional(),
-    unitPrice: z.number().optional(),
-    unitCost: z.number().optional(),
-    isPriceManual: z.boolean().optional(),
     minimumOrderQuantity: z.number().int().optional(),
+    unitsPerPallet: z.number().int().positive().optional(),
+    unitsPerBox: z.number().int().positive().optional(),
 })
 
 export const updateProductVariantSchema = createProductVariantSchema.partial()
@@ -19,10 +18,9 @@ export const responseProductVariantSchema = baseCatalogSchema.extend({
     presentationId: z.number().int().nullable(),
     packagingId: z.number().int().nullable(),
     skuCode: z.string().nullable(),
-    unitPrice: z.string().nullable(),
-    unitCost: z.string().nullable(),
-    isPriceManual: z.boolean(),
     minimumOrderQuantity: z.number().int().nullable(),
+    unitsPerPallet: z.number().int().nullable(),
+    unitsPerBox: z.number().int().nullable(),
 })
 
 export type CreateProductVariantInput = z.infer<typeof createProductVariantSchema>

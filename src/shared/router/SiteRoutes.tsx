@@ -8,6 +8,7 @@ const HomePage = lazy(() => import("@/feature/home/page/home.page").then((m) => 
 const QuoteRequestPage = lazy(() =>
     import("@/feature/quote/page/quoteRequest.page").then((m) => ({ default: m.QuoteRequestPage }))
 )
+const MyQuotesPage = lazy(() => import("@/feature/quote/page/myQuotes.page").then((m) => ({ default: m.MyQuotesPage })))
 
 export default function SiteRoutes() {
     return (
@@ -26,6 +27,16 @@ export default function SiteRoutes() {
                     <CustomerProtectedRoute>
                         <Suspense fallback={<Spinner />}>
                             <QuoteRequestPage />
+                        </Suspense>
+                    </CustomerProtectedRoute>
+                }
+            />
+            <Route
+                path="/mis-cotizaciones"
+                element={
+                    <CustomerProtectedRoute>
+                        <Suspense fallback={<Spinner />}>
+                            <MyQuotesPage />
                         </Suspense>
                     </CustomerProtectedRoute>
                 }

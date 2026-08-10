@@ -7,22 +7,28 @@ import { Select } from "@/shared/component/select.component"
 
 type IngredientSelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
     hasError?: boolean
+    // Productos personalizables solo pueden ofrecer ingredientes marcados como mezclables
+    // (Ingredient.isMixable) -- ej. el chocolate de cobertura no se "mezcla" en %, se aplica
+    // como capa, así que no debe aparecer como opción del pool. El backend revalida esto
+    // igual (ver productIngredient.service.ts), esto es solo para no mostrar opciones inválidas.
+    onlyMixable?: boolean
 }
 
 export const IngredientSelect = forwardRef<HTMLSelectElement, IngredientSelectProps>(function IngredientSelect(
-    { hasError, ...props },
+    { hasError, onlyMixable = false, ...props },
     ref
 ) {
     const { t } = useTranslation()
     const ingredientsQuery = useQuery({ queryKey: ["ingredients"], queryFn: getIngredientsAPI })
-    const ingredients = ingredientsQuery.data?.data ?? []
+    const allIngredients = ingredientsQuery.data?.data ?? []
+    const ingredients = onlyMixable ? allIngredients.filter((ingredient) => ingredient.isMixable) : allIngredients
 
     return (
         <Select ref={ref} hasError={hasError} defaultValue="" {...props}>
             <option value="">{t("common.selectPlaceholder")}</option>
             {ingredients.map((ingredient) => (
                 <option key={ingredient.id} value={ingredient.id}>
-                    {ingredient.displayName}
+                    {ingredient.displayName} — {ingredient.isOrganic ? t("ingredient.organicTag") : t("ingredient.conventionalTag")}
                 </option>
             ))}
         </Select>

@@ -3,16 +3,19 @@ import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { getUnitsAPI } from "@/feature/unit/api/unit.api"
+import { usePermission } from "@/shared/auth/usePermission"
 import { Input } from "@/shared/component/input.component"
 import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
 
 export function UnitTable() {
     const { t } = useTranslation()
+    const { hasPermission } = usePermission()
     const [search, setSearch] = useState("")
 
     const unitsQuery = useQuery({
         queryKey: ["units"],
         queryFn: getUnitsAPI,
+        retry: false,
     })
 
     if (unitsQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
@@ -48,12 +51,14 @@ export function UnitTable() {
                                 <Td>{unit.displayName}</Td>
                                 <Td>{t(`unit.form.unitTypeOptions.${unit.unitType}`)}</Td>
                                 <Td>
-                                    <Link
-                                        to={`/admin/units/${unit.id}/edit`}
-                                        className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                    >
-                                        {t("common.edit")}
-                                    </Link>
+                                    {hasPermission("units:edit") && (
+                                        <Link
+                                            to={`/admin/units/${unit.id}/edit`}
+                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
+                                        >
+                                            {t("common.edit")}
+                                        </Link>
+                                    )}
                                 </Td>
                             </TableRow>
                         ))}

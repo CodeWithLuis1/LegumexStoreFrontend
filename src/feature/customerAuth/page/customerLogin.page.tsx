@@ -126,6 +126,7 @@ export function CustomerLoginPage() {
                                     autoComplete="current-password"
                                     hasError={!!errors.password}
                                     className="pl-11 pr-11"
+                                    preserveCase
                                     {...register("password")}
                                 />
                                 <button

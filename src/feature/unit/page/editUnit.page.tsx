@@ -7,18 +7,20 @@ import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { updateUnitSchema } from "@/feature/unit/schema/unit.schema"
 import type { UnitResponse, UpdateUnitInput } from "@/feature/unit/schema/unit.schema"
+import { UNIT_CATALOG } from "@/feature/unit/constant/unitCatalog"
 import { getUnitByIdAPI, updateUnitAPI } from "@/feature/unit/api/unit.api"
 import { EditUnitForm } from "@/feature/unit/component/editUnit.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
 import { Button, buttonClassName } from "@/shared/component/button.component"
 
-function toFormValues(unit: UnitResponse): UpdateUnitInput {
+// Partial<UpdateUnitInput>: si esta Unidad se creó ANTES de este cambio (displayName libre,
+// ya no existe en este catálogo fijo) no hay ninguna key que le corresponda -- se precarga
+// vacío para que el admin elija una del catálogo actual en vez de forzar un match que no existe.
+function toFormValues(unit: UnitResponse): Partial<UpdateUnitInput> {
+    const matchingEntry = UNIT_CATALOG.find((entry) => entry.displayName === unit.displayName)
     return {
-        unitCode: unit.unitCode,
-        displayName: unit.displayName,
-        unitType: unit.unitType,
-        baseFactor: Number(unit.baseFactor),
+        unitKey: matchingEntry?.key,
     }
 }
 
@@ -32,12 +34,14 @@ export function EditUnitPage() {
     const unitQuery = useQuery({
         queryKey: ["unit", unitId],
         queryFn: () => getUnitByIdAPI(unitId),
+        retry: false,
     })
 
     const {
         register,
         handleSubmit,
         reset,
+        watch,
         formState: { errors },
     } = useForm<UpdateUnitInput>({
         resolver: zodResolver(updateUnitSchema),
@@ -80,7 +84,7 @@ export function EditUnitPage() {
 
                 {unitQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditUnitForm register={register} errors={errors} />
+                        <EditUnitForm register={register} errors={errors} watch={watch} />
                         <Button type="submit" disabled={updateUnitMutation.isPending}>
                             {updateUnitMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

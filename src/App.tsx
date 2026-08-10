@@ -4,7 +4,7 @@ import AppRouter from '@/shared/router/AppRouter'
 function App() {
   return (
     <>
-      <Toaster />
+      <Toaster position="top-center" />
       <AppRouter />
     </>
   )

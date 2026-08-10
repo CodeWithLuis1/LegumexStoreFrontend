@@ -1,24 +1,24 @@
-import type { FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form"
+import type { Control, FieldErrors, UseFormRegister } from "react-hook-form"
+import { Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import type { UpdateProductInput } from "@/feature/product/schema/product.schema"
 import { getFieldErrorMessage } from "@/shared/i18n/getFieldErrorMessage"
 import { FormField } from "@/shared/component/formField.component"
 import { Input } from "@/shared/component/input.component"
-import { Textarea } from "@/shared/component/textarea.component"
+import { Select } from "@/shared/component/select.component"
 import { Checkbox } from "@/shared/component/checkbox.component"
-import { ImageUploadField } from "@/shared/component/imageUploadField.component"
 import { toOptionalNumber } from "@/shared/form/toOptionalNumber"
+import { toBoolean } from "@/shared/form/toBoolean"
 import { SubCategorySelect } from "@/feature/category/component/subCategorySelect.component"
 import { ProductTypeSelect } from "@/feature/product-type/component/productTypeSelect.component"
 
 type EditProductFormProps = {
     register: UseFormRegister<UpdateProductInput>
+    control: Control<UpdateProductInput>
     errors: FieldErrors<UpdateProductInput>
-    setValue: UseFormSetValue<UpdateProductInput>
-    watch: UseFormWatch<UpdateProductInput>
 }
 
-export function EditProductForm({ register, errors, setValue, watch }: EditProductFormProps) {
+export function EditProductForm({ register, control, errors }: EditProductFormProps) {
     const { t } = useTranslation()
 
     return (
@@ -28,10 +28,17 @@ export function EditProductForm({ register, errors, setValue, watch }: EditProdu
                 htmlFor="subCategoryId"
                 error={getFieldErrorMessage(t, errors.subCategoryId)}
             >
-                <SubCategorySelect
-                    id="subCategoryId"
-                    hasError={!!errors.subCategoryId}
-                    {...register("subCategoryId", { setValueAs: toOptionalNumber })}
+                <Controller
+                    name="subCategoryId"
+                    control={control}
+                    render={({ field }) => (
+                        <SubCategorySelect
+                            inputId="subCategoryId"
+                            hasError={!!errors.subCategoryId}
+                            value={field.value}
+                            onChange={field.onChange}
+                        />
+                    )}
                 />
             </FormField>
 
@@ -55,51 +62,28 @@ export function EditProductForm({ register, errors, setValue, watch }: EditProdu
                 <Input id="displayName" hasError={!!errors.displayName} {...register("displayName")} />
             </FormField>
 
-            <FormField
-                label={t("product.form.urlSlug")}
-                htmlFor="urlSlug"
-                error={getFieldErrorMessage(t, errors.urlSlug)}
-            >
-                <Input id="urlSlug" hasError={!!errors.urlSlug} {...register("urlSlug")} />
-            </FormField>
-
-            <FormField
-                label={t("product.form.fullDescription")}
-                htmlFor="fullDescription"
-                error={getFieldErrorMessage(t, errors.fullDescription)}
-            >
-                <Textarea id="fullDescription" hasError={!!errors.fullDescription} {...register("fullDescription")} />
-            </FormField>
-
-            <ImageUploadField
-                label={t("product.form.imageUrl")}
-                htmlFor="imageUrl"
-                value={watch("imageUrl")}
-                onChange={(value) => setValue("imageUrl", value, { shouldValidate: true, shouldDirty: true })}
-                error={getFieldErrorMessage(t, errors.imageUrl)}
-            />
-
-            <FormField
-                label={t("product.form.displayOrder")}
-                htmlFor="displayOrder"
-                error={getFieldErrorMessage(t, errors.displayOrder)}
-            >
-                <Input
-                    id="displayOrder"
-                    type="number"
-                    hasError={!!errors.displayOrder}
-                    {...register("displayOrder", { setValueAs: toOptionalNumber })}
-                />
-            </FormField>
-
             <div className="mb-5 flex gap-6">
                 <Checkbox id="isOrganic" label={t("product.form.isOrganic")} {...register("isOrganic")} />
-                <Checkbox
-                    id="isCustomizable"
-                    label={t("product.form.isCustomizable")}
-                    {...register("isCustomizable")}
-                />
             </div>
+
+            <FormField
+                label={t("product.form.isCustomizable")}
+                htmlFor="isCustomizable"
+                error={getFieldErrorMessage(t, errors.isCustomizable)}
+            >
+                {/* Select con dos opciones fijas en código (no un catálogo con CRUD): no hay
+                    fila que un admin pueda borrar/editar y romper el flag en los productos. */}
+                <Select
+                    id="isCustomizable"
+                    hasError={!!errors.isCustomizable}
+                    defaultValue="false"
+                    {...register("isCustomizable", { setValueAs: toBoolean })}
+                >
+                    <option value="false">{t("product.form.isCustomizableFinished")}</option>
+                    <option value="true">{t("product.form.isCustomizableCustom")}</option>
+                </Select>
+            </FormField>
+            <p className="mb-5 -mt-3 text-sm text-texto-suave">{t("product.form.isCustomizableHint")}</p>
         </div>
     )
 }

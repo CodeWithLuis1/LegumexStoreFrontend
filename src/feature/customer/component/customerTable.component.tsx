@@ -3,16 +3,19 @@ import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { getCustomersAPI } from "@/feature/customer/api/customer.api"
+import { usePermission } from "@/shared/auth/usePermission"
 import { Input } from "@/shared/component/input.component"
 import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
 
 export function CustomerTable() {
     const { t } = useTranslation()
+    const { hasPermission } = usePermission()
     const [search, setSearch] = useState("")
 
     const customersQuery = useQuery({
         queryKey: ["customers"],
         queryFn: getCustomersAPI,
+        retry: false,
     })
 
     if (customersQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
@@ -52,12 +55,14 @@ export function CustomerTable() {
                                 <Td>{customer.companyName ?? "-"}</Td>
                                 <Td>{customer.email}</Td>
                                 <Td>
-                                    <Link
-                                        to={`/admin/customers/${customer.id}/edit`}
-                                        className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                    >
-                                        {t("common.edit")}
-                                    </Link>
+                                    {hasPermission("customers:edit") && (
+                                        <Link
+                                            to={`/admin/customers/${customer.id}/edit`}
+                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
+                                        >
+                                            {t("common.edit")}
+                                        </Link>
+                                    )}
                                 </Td>
                             </TableRow>
                         ))}

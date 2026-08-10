@@ -19,6 +19,7 @@ export function CreatePresentationPage() {
 
     const {
         register,
+        control,
         handleSubmit,
         formState: { errors },
     } = useForm<CreatePresentationInput>({
@@ -52,7 +53,7 @@ export function CreatePresentationPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreatePresentationForm register={register} errors={errors} />
+                    <CreatePresentationForm register={register} control={control} errors={errors} />
                     <Button type="submit" disabled={createPresentationMutation.isPending}>
                         {createPresentationMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

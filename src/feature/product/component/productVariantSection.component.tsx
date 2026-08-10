@@ -19,7 +19,6 @@ import { PresentationSelect } from "@/feature/presentation/component/presentatio
 import { PackagingSelect } from "@/feature/packaging/component/packagingSelect.component"
 import { FormField } from "@/shared/component/formField.component"
 import { Input } from "@/shared/component/input.component"
-import { Checkbox } from "@/shared/component/checkbox.component"
 import { Button } from "@/shared/component/button.component"
 import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
 import { getFieldErrorMessage } from "@/shared/i18n/getFieldErrorMessage"
@@ -33,10 +32,9 @@ function toFormValues(variant: ProductVariantResponse): VariantFormInput {
         presentationId: variant.presentationId ?? undefined,
         packagingId: variant.packagingId ?? undefined,
         skuCode: variant.skuCode ?? undefined,
-        unitPrice: variant.unitPrice !== null ? Number(variant.unitPrice) : undefined,
-        unitCost: variant.unitCost !== null ? Number(variant.unitCost) : undefined,
-        isPriceManual: variant.isPriceManual,
         minimumOrderQuantity: variant.minimumOrderQuantity ?? undefined,
+        unitsPerPallet: variant.unitsPerPallet ?? undefined,
+        unitsPerBox: variant.unitsPerBox ?? undefined,
     }
 }
 
@@ -120,7 +118,8 @@ export function ProductVariantSection({ productId }: { productId: number }) {
                             <Th>{t("productVariant.form.skuCode")}</Th>
                             <Th>{t("productVariant.form.presentationId")}</Th>
                             <Th>{t("productVariant.form.packagingId")}</Th>
-                            <Th>{t("productVariant.form.unitPrice")}</Th>
+                            <Th>{t("productVariant.form.unitsPerPallet")}</Th>
+                            <Th>{t("productVariant.form.unitsPerBox")}</Th>
                             <Th>{t("common.actions")}</Th>
                         </TableRow>
                     </TableHead>
@@ -130,7 +129,8 @@ export function ProductVariantSection({ productId }: { productId: number }) {
                                 <Td>{variant.skuCode ?? "-"}</Td>
                                 <Td>{variant.presentationId ? presentationNameById.get(variant.presentationId) ?? "-" : "-"}</Td>
                                 <Td>{variant.packagingId ? packagingNameById.get(variant.packagingId) ?? "-" : "-"}</Td>
-                                <Td>{variant.unitPrice ?? "-"}</Td>
+                                <Td>{variant.unitsPerPallet ?? "-"}</Td>
+                                <Td>{variant.unitsPerBox ?? "-"}</Td>
                                 <Td className="space-x-3">
                                     <button
                                         type="button"
@@ -149,7 +149,7 @@ export function ProductVariantSection({ productId }: { productId: number }) {
                                 </Td>
                             </TableRow>
                         ))}
-                        {variants.length === 0 && <TableEmpty message={t("productVariant.table.empty")} colSpan={5} />}
+                        {variants.length === 0 && <TableEmpty message={t("productVariant.table.empty")} colSpan={6} />}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -188,34 +188,6 @@ export function ProductVariantSection({ productId }: { productId: number }) {
                 </FormField>
 
                 <FormField
-                    label={t("productVariant.form.unitPrice")}
-                    htmlFor="unitPrice"
-                    error={getFieldErrorMessage(t, errors.unitPrice)}
-                >
-                    <Input
-                        id="unitPrice"
-                        type="number"
-                        step="0.01"
-                        hasError={!!errors.unitPrice}
-                        {...register("unitPrice", { setValueAs: toOptionalNumber })}
-                    />
-                </FormField>
-
-                <FormField
-                    label={t("productVariant.form.unitCost")}
-                    htmlFor="unitCost"
-                    error={getFieldErrorMessage(t, errors.unitCost)}
-                >
-                    <Input
-                        id="unitCost"
-                        type="number"
-                        step="0.01"
-                        hasError={!!errors.unitCost}
-                        {...register("unitCost", { setValueAs: toOptionalNumber })}
-                    />
-                </FormField>
-
-                <FormField
                     label={t("productVariant.form.minimumOrderQuantity")}
                     htmlFor="minimumOrderQuantity"
                     error={getFieldErrorMessage(t, errors.minimumOrderQuantity)}
@@ -228,13 +200,34 @@ export function ProductVariantSection({ productId }: { productId: number }) {
                     />
                 </FormField>
 
-                <div className="mb-5 sm:col-span-2">
-                    <Checkbox
-                        id="isPriceManual"
-                        label={t("productVariant.form.isPriceManual")}
-                        {...register("isPriceManual")}
+                <FormField
+                    label={t("productVariant.form.unitsPerPallet")}
+                    htmlFor="unitsPerPallet"
+                    error={getFieldErrorMessage(t, errors.unitsPerPallet)}
+                >
+                    <Input
+                        id="unitsPerPallet"
+                        type="number"
+                        hasError={!!errors.unitsPerPallet}
+                        {...register("unitsPerPallet", { setValueAs: toOptionalNumber })}
                     />
-                </div>
+                </FormField>
+
+                <FormField
+                    label={t("productVariant.form.unitsPerBox")}
+                    htmlFor="unitsPerBox"
+                    error={getFieldErrorMessage(t, errors.unitsPerBox)}
+                >
+                    <Input
+                        id="unitsPerBox"
+                        type="number"
+                        hasError={!!errors.unitsPerBox}
+                        {...register("unitsPerBox", { setValueAs: toOptionalNumber })}
+                    />
+                </FormField>
+                <p className="mb-5 -mt-3 text-sm text-texto-suave sm:col-span-2">
+                    {t("productVariant.form.unitsPerBoxHint")}
+                </p>
 
                 <div className="flex gap-3 sm:col-span-2">
                     <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>

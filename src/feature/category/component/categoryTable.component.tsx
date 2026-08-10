@@ -3,16 +3,19 @@ import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { getCategoriesAPI } from "@/feature/category/api/category.api"
+import { usePermission } from "@/shared/auth/usePermission"
 import { Input } from "@/shared/component/input.component"
 import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
 
 export function CategoryTable() {
     const { t } = useTranslation()
+    const { hasPermission } = usePermission()
     const [search, setSearch] = useState("")
 
     const categoriesQuery = useQuery({
         queryKey: ["categories"],
         queryFn: getCategoriesAPI,
+        retry: false,
     })
 
     if (categoriesQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
@@ -48,12 +51,14 @@ export function CategoryTable() {
                                 <Td>{category.displayName}</Td>
                                 <Td>{category.urlSlug}</Td>
                                 <Td>
-                                    <Link
-                                        to={`/admin/categories/${category.id}/edit`}
-                                        className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                    >
-                                        {t("common.edit")}
-                                    </Link>
+                                    {hasPermission("categories:edit") && (
+                                        <Link
+                                            to={`/admin/categories/${category.id}/edit`}
+                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
+                                        >
+                                            {t("common.edit")}
+                                        </Link>
+                                    )}
                                 </Td>
                             </TableRow>
                         ))}

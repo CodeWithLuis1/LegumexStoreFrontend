@@ -1,22 +1,26 @@
 import { z } from "zod"
 import { baseCatalogSchema } from "@/shared/schema/baseCatalog.schema"
+import { UNIT_CATALOG_KEYS } from "@/feature/unit/constant/unitCatalog"
 
 const unitTypeEnum = z.enum(["weight", "volume", "count"])
 
+// El admin ya no escribe displayName/unitType/baseFactor a mano: elige unitKey del catálogo
+// fijo (ver constant/unitCatalog.ts) y el backend resuelve los 3 valores desde ahí.
 export const createUnitSchema = z.object({
-    unitCode: z.string().trim().min(1).max(40),
-    displayName: z.string().trim().min(1).max(80),
-    unitType: unitTypeEnum,
-    baseFactor: z.number().positive(),
+    unitKey: z.enum(UNIT_CATALOG_KEYS),
 })
 
-export const updateUnitSchema = createUnitSchema.partial()
+// No hace falta .partial(): unitKey es el único campo y no puede quedar vacío ni siquiera al
+// editar.
+export const updateUnitSchema = createUnitSchema
 
 export const responseUnitSchema = baseCatalogSchema.extend({
     unitCode: z.string(),
     displayName: z.string(),
     unitType: unitTypeEnum,
-    baseFactor: z.string(),
+    // DECIMAL en Postgres: Sequelize lo devuelve como string en un SELECT normal, pero como
+    // número tras un .update() -- z.coerce.number() acepta ambos formatos.
+    baseFactor: z.coerce.number(),
 })
 
 export type CreateUnitInput = z.infer<typeof createUnitSchema>

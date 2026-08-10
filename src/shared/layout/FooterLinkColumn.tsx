@@ -2,7 +2,8 @@ import { Link } from "react-router-dom"
 
 type FooterLink = {
     label: string
-    url: string
+    url?: string
+    external?: boolean
 }
 
 type FooterLinkColumnProps = {
@@ -17,9 +18,24 @@ export function FooterLinkColumn({ title, links }: FooterLinkColumnProps) {
             <ul className="mt-4 space-y-3">
                 {links.map((link) => (
                     <li key={link.label}>
-                        <Link to={link.url} className="text-sm text-crema/85 transition hover:text-dorado">
-                            {link.label}
-                        </Link>
+                        {link.url ? (
+                            link.external ? (
+                                <a
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-crema/85 transition hover:text-dorado"
+                                >
+                                    {link.label}
+                                </a>
+                            ) : (
+                                <Link to={link.url} className="text-sm text-crema/85 transition hover:text-dorado">
+                                    {link.label}
+                                </Link>
+                            )
+                        ) : (
+                            <span className="text-sm text-crema/85">{link.label}</span>
+                        )}
                     </li>
                 ))}
             </ul>

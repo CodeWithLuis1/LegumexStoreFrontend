@@ -5,23 +5,34 @@ const ingredientTypeEnum = z.enum(["fruit", "vegetable", "pulp", "other"])
 
 export const createIngredientSchema = z.object({
     displayName: z.string().trim().min(1).max(120),
-    urlSlug: z.string().trim().min(1).max(120),
     ingredientType: ingredientTypeEnum,
-    isOrganicAvailable: z.boolean().optional(),
+    isOrganic: z.boolean().optional(),
     isMixable: z.boolean().optional(),
-    costPerUnit: z.number().optional(),
-    costUnitId: z.number().int().positive().optional(),
+    // Requeridos: el motor de cotización multiplica costPerUnit * cantidad, y en productos
+    // personalizables además divide por costUnit.baseFactor. Si cualquiera de los dos falta,
+    // el costo de esa línea queda mal (en 0, o sin convertir de gramos) sin ningún aviso.
+    costPerUnit: z.number().nonnegative(),
+    costUnitId: z.number().int().positive(),
 })
 
-export const updateIngredientSchema = createIngredientSchema.partial()
+// .partial() salvo costPerUnit/costUnitId: si se dejaran opcionales aquí, un admin podría
+// editar un ingrediente existente y volver a dejarlos vacíos sin que el formulario lo impida.
+export const updateIngredientSchema = createIngredientSchema.partial().extend({
+    costPerUnit: createIngredientSchema.shape.costPerUnit,
+    costUnitId: createIngredientSchema.shape.costUnitId,
+})
 
 export const responseIngredientSchema = baseCatalogSchema.extend({
     displayName: z.string(),
     urlSlug: z.string(),
     ingredientType: ingredientTypeEnum,
-    isOrganicAvailable: z.boolean(),
+    isOrganic: z.boolean(),
     isMixable: z.boolean(),
-    costPerUnit: z.string().nullable(),
+    // DECIMAL en Postgres: Sequelize lo devuelve como string en un SELECT normal, pero como
+    // número tras un .update() (mismo caso que netWeightGrams/unitCost/baseCost). z.coerce.number()
+    // acepta ambos formatos -- antes esto rompía el PUT con "server response does not have the
+    // expected format" aunque el update sí se guardara en la BD.
+    costPerUnit: z.coerce.number().nullable(),
     costUnitId: z.number().int().nullable(),
 })
 

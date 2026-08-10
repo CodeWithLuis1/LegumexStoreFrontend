@@ -20,6 +20,7 @@ export function CreateUnitPage() {
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors },
     } = useForm<CreateUnitInput>({
         resolver: zodResolver(createUnitSchema),
@@ -52,7 +53,7 @@ export function CreateUnitPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateUnitForm register={register} errors={errors} />
+                    <CreateUnitForm register={register} errors={errors} watch={watch} />
                     <Button type="submit" disabled={createUnitMutation.isPending}>
                         {createUnitMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

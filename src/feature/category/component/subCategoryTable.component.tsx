@@ -4,20 +4,24 @@ import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { getSubCategoriesAPI } from "@/feature/category/api/subCategory.api"
 import { getCategoriesAPI } from "@/feature/category/api/category.api"
+import { usePermission } from "@/shared/auth/usePermission"
 import { Input } from "@/shared/component/input.component"
 import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
 
 export function SubCategoryTable() {
     const { t } = useTranslation()
+    const { hasPermission } = usePermission()
     const [search, setSearch] = useState("")
 
     const subCategoriesQuery = useQuery({
         queryKey: ["subCategories"],
         queryFn: getSubCategoriesAPI,
+        retry: false,
     })
     const categoriesQuery = useQuery({
         queryKey: ["categories"],
         queryFn: getCategoriesAPI,
+        retry: false,
     })
 
     if (subCategoriesQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
@@ -56,12 +60,14 @@ export function SubCategoryTable() {
                                 <Td>{subCategory.displayName}</Td>
                                 <Td>{categoryNameById.get(subCategory.categoryId) ?? "-"}</Td>
                                 <Td>
-                                    <Link
-                                        to={`/admin/sub-categories/${subCategory.id}/edit`}
-                                        className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                    >
-                                        {t("common.edit")}
-                                    </Link>
+                                    {hasPermission("subCategories:edit") && (
+                                        <Link
+                                            to={`/admin/sub-categories/${subCategory.id}/edit`}
+                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
+                                        >
+                                            {t("common.edit")}
+                                        </Link>
+                                    )}
                                 </Td>
                             </TableRow>
                         ))}

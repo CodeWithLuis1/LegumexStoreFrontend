@@ -3,16 +3,25 @@ import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { getPresentationsAPI } from "@/feature/presentation/api/presentation.api"
+import { getCategoriesAPI } from "@/feature/category/api/category.api"
+import { usePermission } from "@/shared/auth/usePermission"
 import { Input } from "@/shared/component/input.component"
 import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
 
 export function PresentationTable() {
     const { t } = useTranslation()
+    const { hasPermission } = usePermission()
     const [search, setSearch] = useState("")
 
     const presentationsQuery = useQuery({
         queryKey: ["presentations"],
         queryFn: getPresentationsAPI,
+        retry: false,
+    })
+
+    const categoriesQuery = useQuery({
+        queryKey: ["categories"],
+        queryFn: getCategoriesAPI,
     })
 
     if (presentationsQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
@@ -21,6 +30,10 @@ export function PresentationTable() {
     const presentations = presentationsQuery.data?.data ?? []
     const filteredPresentations = presentations.filter((presentation) =>
         presentation.displayLabel.toLowerCase().includes(search.toLowerCase())
+    )
+
+    const categoryNameById = new Map(
+        (categoriesQuery.data?.data ?? []).map((category) => [category.id, category.displayName])
     )
 
     return (
@@ -39,6 +52,7 @@ export function PresentationTable() {
                         <TableRow>
                             <Th>{t("presentation.form.displayLabel")}</Th>
                             <Th>{t("presentation.form.netWeightGrams")}</Th>
+                            <Th>{t("presentation.form.categoryId")}</Th>
                             <Th>{t("common.actions")}</Th>
                         </TableRow>
                     </TableHead>
@@ -47,18 +61,21 @@ export function PresentationTable() {
                             <TableRow key={presentation.id}>
                                 <Td>{presentation.displayLabel}</Td>
                                 <Td>{presentation.netWeightGrams ?? "-"}</Td>
+                                <Td>{presentation.categoryId != null ? categoryNameById.get(presentation.categoryId) ?? "-" : "-"}</Td>
                                 <Td>
-                                    <Link
-                                        to={`/admin/presentations/${presentation.id}/edit`}
-                                        className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                    >
-                                        {t("common.edit")}
-                                    </Link>
+                                    {hasPermission("presentations:edit") && (
+                                        <Link
+                                            to={`/admin/presentations/${presentation.id}/edit`}
+                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
+                                        >
+                                            {t("common.edit")}
+                                        </Link>
+                                    )}
                                 </Td>
                             </TableRow>
                         ))}
                         {filteredPresentations.length === 0 && (
-                            <TableEmpty message={t("presentation.table.empty")} colSpan={3} />
+                            <TableEmpty message={t("presentation.table.empty")} colSpan={4} />
                         )}
                     </TableBody>
                 </Table>

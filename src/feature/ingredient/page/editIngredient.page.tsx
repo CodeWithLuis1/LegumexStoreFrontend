@@ -13,14 +13,17 @@ import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
 import { Button, buttonClassName } from "@/shared/component/button.component"
 
-function toFormValues(ingredient: IngredientResponse): UpdateIngredientInput {
+// Partial<UpdateIngredientInput> y no UpdateIngredientInput: costPerUnit/costUnitId son
+// requeridos para GUARDAR, pero un registro viejo de antes de esa regla puede seguir teniendo
+// null en la BD -- hay que poder precargar el form vacío en ese campo para que el admin lo
+// complete, no forzar un valor que no existe.
+function toFormValues(ingredient: IngredientResponse): Partial<UpdateIngredientInput> {
     return {
         displayName: ingredient.displayName,
-        urlSlug: ingredient.urlSlug,
         ingredientType: ingredient.ingredientType,
-        isOrganicAvailable: ingredient.isOrganicAvailable,
+        isOrganic: ingredient.isOrganic,
         isMixable: ingredient.isMixable,
-        costPerUnit: ingredient.costPerUnit !== null ? Number(ingredient.costPerUnit) : undefined,
+        costPerUnit: ingredient.costPerUnit ?? undefined,
         costUnitId: ingredient.costUnitId ?? undefined,
     }
 }
@@ -35,6 +38,7 @@ export function EditIngredientPage() {
     const ingredientQuery = useQuery({
         queryKey: ["ingredient", ingredientId],
         queryFn: () => getIngredientByIdAPI(ingredientId),
+        retry: false,
     })
 
     const {

@@ -15,7 +15,9 @@ export const PackagingSelect = forwardRef<HTMLSelectElement, PackagingSelectProp
 ) {
     const { t } = useTranslation()
     const packagingsQuery = useQuery({ queryKey: ["packagings"], queryFn: getPackagingsAPI })
-    const packagings = packagingsQuery.data?.data ?? []
+    // Solo empaques de rol "unit" -- los de rol "pallet" (caja, parihuela, film, zuncho) se
+    // eligen aparte en Materiales de Paletización (ver palletMaterialSelect.component.tsx).
+    const packagings = (packagingsQuery.data?.data ?? []).filter((packaging) => packaging.packagingRole === "unit")
 
     return (
         <Select ref={ref} hasError={hasError} defaultValue="" {...props}>

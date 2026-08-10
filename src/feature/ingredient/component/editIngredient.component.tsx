@@ -28,14 +28,6 @@ export function EditIngredientForm({ register, errors }: EditIngredientFormProps
             </FormField>
 
             <FormField
-                label={t("ingredient.form.urlSlug")}
-                htmlFor="urlSlug"
-                error={getFieldErrorMessage(t, errors.urlSlug)}
-            >
-                <Input id="urlSlug" hasError={!!errors.urlSlug} {...register("urlSlug")} />
-            </FormField>
-
-            <FormField
                 label={t("ingredient.form.ingredientType")}
                 htmlFor="ingredientType"
                 error={getFieldErrorMessage(t, errors.ingredientType)}
@@ -76,12 +68,13 @@ export function EditIngredientForm({ register, errors }: EditIngredientFormProps
 
             <div className="mb-5 flex gap-6">
                 <Checkbox
-                    id="isOrganicAvailable"
-                    label={t("ingredient.form.isOrganicAvailable")}
-                    {...register("isOrganicAvailable")}
+                    id="isOrganic"
+                    label={t("ingredient.form.isOrganic")}
+                    {...register("isOrganic")}
                 />
                 <Checkbox id="isMixable" label={t("ingredient.form.isMixable")} {...register("isMixable")} />
             </div>
+            <p className="mb-5 -mt-3 text-sm text-texto-suave">{t("ingredient.form.isOrganicHint")}</p>
         </div>
     )
 }

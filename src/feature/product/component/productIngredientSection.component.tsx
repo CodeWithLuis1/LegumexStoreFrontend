@@ -23,21 +23,37 @@ import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, 
 import { getFieldErrorMessage } from "@/shared/i18n/getFieldErrorMessage"
 import { toOptionalNumber } from "@/shared/form/toOptionalNumber"
 
-const ingredientFormSchema = createProductIngredientSchema.omit({ productId: true })
-type IngredientFormInput = z.infer<typeof ingredientFormSchema>
+const baseIngredientFormSchema = createProductIngredientSchema.omit({ productId: true })
+type IngredientFormInput = z.infer<typeof baseIngredientFormSchema>
+
+// Receta fija (!isCustomizable): quantityValue es la cantidad real que quote.service.ts
+// multiplica por el costo -- no puede quedar vacía, o esa materia prima "cuesta" $0 en cada
+// cotización sin ningún aviso. Producto personalizable: este campo no se usa (se usa
+// minPercentage/maxPercentage en su lugar), se queda opcional a propósito.
+function buildIngredientFormSchema(isCustomizable: boolean) {
+    if (isCustomizable) return baseIngredientFormSchema
+    return baseIngredientFormSchema.extend({ quantityValue: z.number().positive() })
+}
 
 function toFormValues(productIngredient: ProductIngredientResponse): IngredientFormInput {
     return {
         ingredientId: productIngredient.ingredientId,
-        proportionPercent:
-            productIngredient.proportionPercent !== null ? Number(productIngredient.proportionPercent) : undefined,
         quantityValue: productIngredient.quantityValue !== null ? Number(productIngredient.quantityValue) : undefined,
         quantityUnitId: productIngredient.quantityUnitId ?? undefined,
+        minPercentage: productIngredient.minPercentage !== null ? Number(productIngredient.minPercentage) : undefined,
+        maxPercentage: productIngredient.maxPercentage !== null ? Number(productIngredient.maxPercentage) : undefined,
         displayOrder: productIngredient.displayOrder,
     }
 }
 
-export function ProductIngredientSection({ productId }: { productId: number }) {
+type ProductIngredientSectionProps = {
+    productId: number
+    // Producto terminado -> receta fija (quantityValue). Producto personalizable ->
+    // pool de ingredientes permitidos con % mín/máx opcionales (ver Product.isCustomizable).
+    isCustomizable: boolean
+}
+
+export function ProductIngredientSection({ productId, isCustomizable }: ProductIngredientSectionProps) {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const [editingId, setEditingId] = useState<number | null>(null)
@@ -58,7 +74,7 @@ export function ProductIngredientSection({ productId }: { productId: number }) {
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm<IngredientFormInput>({ resolver: zodResolver(ingredientFormSchema) })
+    } = useForm<IngredientFormInput>({ resolver: zodResolver(buildIngredientFormSchema(isCustomizable)) })
 
     const invalidate = () => queryClient.invalidateQueries({ queryKey: ["productIngredients"] })
 
@@ -111,15 +127,24 @@ export function ProductIngredientSection({ productId }: { productId: number }) {
         reset({})
     }
 
+    function formatPercentageRange(productIngredient: ProductIngredientResponse): string {
+        const min = productIngredient.minPercentage !== null ? Number(productIngredient.minPercentage) : 0
+        const max = productIngredient.maxPercentage !== null ? Number(productIngredient.maxPercentage) : 100
+        return `${min}% - ${max}%`
+    }
+
     return (
         <div>
+            {isCustomizable && (
+                <p className="mb-4 text-sm text-texto-suave">{t("productIngredient.form.customizableHint")}</p>
+            )}
+
             <TableContainer className="mb-4">
                 <Table>
                     <TableHead>
                         <TableRow>
                             <Th>{t("productIngredient.form.ingredientId")}</Th>
-                            <Th>{t("productIngredient.form.proportionPercent")}</Th>
-                            <Th>{t("productIngredient.form.quantityValue")}</Th>
+                            <Th>{isCustomizable ? t("productIngredient.form.percentageRange") : t("productIngredient.form.quantityValue")}</Th>
                             <Th>{t("common.actions")}</Th>
                         </TableRow>
                     </TableHead>
@@ -127,8 +152,7 @@ export function ProductIngredientSection({ productId }: { productId: number }) {
                         {productIngredients.map((productIngredient) => (
                             <TableRow key={productIngredient.id}>
                                 <Td>{ingredientNameById.get(productIngredient.ingredientId) ?? "-"}</Td>
-                                <Td>{productIngredient.proportionPercent ?? "-"}</Td>
-                                <Td>{productIngredient.quantityValue ?? "-"}</Td>
+                                <Td>{isCustomizable ? formatPercentageRange(productIngredient) : productIngredient.quantityValue ?? "-"}</Td>
                                 <Td className="space-x-3">
                                     <button
                                         type="button"
@@ -148,7 +172,7 @@ export function ProductIngredientSection({ productId }: { productId: number }) {
                             </TableRow>
                         ))}
                         {productIngredients.length === 0 && (
-                            <TableEmpty message={t("productIngredient.table.empty")} colSpan={4} />
+                            <TableEmpty message={t("productIngredient.table.empty")} colSpan={3} />
                         )}
                     </TableBody>
                 </Table>
@@ -163,49 +187,76 @@ export function ProductIngredientSection({ productId }: { productId: number }) {
                     <IngredientSelect
                         id="ingredientId"
                         hasError={!!errors.ingredientId}
+                        onlyMixable={isCustomizable}
                         {...register("ingredientId", { setValueAs: toOptionalNumber })}
                     />
                 </FormField>
 
-                <FormField
-                    label={t("productIngredient.form.quantityUnitId")}
-                    htmlFor="quantityUnitId"
-                    error={getFieldErrorMessage(t, errors.quantityUnitId)}
-                >
-                    <UnitSelect
-                        id="quantityUnitId"
-                        hasError={!!errors.quantityUnitId}
-                        {...register("quantityUnitId", { setValueAs: toOptionalNumber })}
-                    />
-                </FormField>
+                {isCustomizable ? (
+                    <>
+                        <FormField
+                            label={t("productIngredient.form.minPercentage")}
+                            htmlFor="minPercentage"
+                            error={getFieldErrorMessage(t, errors.minPercentage)}
+                        >
+                            <Input
+                                id="minPercentage"
+                                type="number"
+                                step="0.01"
+                                min={0}
+                                max={100}
+                                placeholder="0"
+                                hasError={!!errors.minPercentage}
+                                {...register("minPercentage", { setValueAs: toOptionalNumber })}
+                            />
+                        </FormField>
 
-                <FormField
-                    label={t("productIngredient.form.proportionPercent")}
-                    htmlFor="proportionPercent"
-                    error={getFieldErrorMessage(t, errors.proportionPercent)}
-                >
-                    <Input
-                        id="proportionPercent"
-                        type="number"
-                        step="0.01"
-                        hasError={!!errors.proportionPercent}
-                        {...register("proportionPercent", { setValueAs: toOptionalNumber })}
-                    />
-                </FormField>
+                        <FormField
+                            label={t("productIngredient.form.maxPercentage")}
+                            htmlFor="maxPercentage"
+                            error={getFieldErrorMessage(t, errors.maxPercentage)}
+                        >
+                            <Input
+                                id="maxPercentage"
+                                type="number"
+                                step="0.01"
+                                min={0}
+                                max={100}
+                                placeholder="100"
+                                hasError={!!errors.maxPercentage}
+                                {...register("maxPercentage", { setValueAs: toOptionalNumber })}
+                            />
+                        </FormField>
+                    </>
+                ) : (
+                    <>
+                        <FormField
+                            label={t("productIngredient.form.quantityUnitId")}
+                            htmlFor="quantityUnitId"
+                            error={getFieldErrorMessage(t, errors.quantityUnitId)}
+                        >
+                            <UnitSelect
+                                id="quantityUnitId"
+                                hasError={!!errors.quantityUnitId}
+                                {...register("quantityUnitId", { setValueAs: toOptionalNumber })}
+                            />
+                        </FormField>
 
-                <FormField
-                    label={t("productIngredient.form.quantityValue")}
-                    htmlFor="quantityValue"
-                    error={getFieldErrorMessage(t, errors.quantityValue)}
-                >
-                    <Input
-                        id="quantityValue"
-                        type="number"
-                        step="0.01"
-                        hasError={!!errors.quantityValue}
-                        {...register("quantityValue", { setValueAs: toOptionalNumber })}
-                    />
-                </FormField>
+                        <FormField
+                            label={t("productIngredient.form.quantityValue")}
+                            htmlFor="quantityValue"
+                            error={getFieldErrorMessage(t, errors.quantityValue)}
+                        >
+                            <Input
+                                id="quantityValue"
+                                type="number"
+                                step="0.01"
+                                hasError={!!errors.quantityValue}
+                                {...register("quantityValue", { setValueAs: toOptionalNumber })}
+                            />
+                        </FormField>
+                    </>
+                )}
 
                 <FormField
                     label={t("productIngredient.form.displayOrder")}

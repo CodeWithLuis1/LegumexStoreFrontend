@@ -11,6 +11,8 @@
         "cancel": "Cancelar",
         "back": "Regresar",
         "selectPlaceholder": "Selecciona una opción",
+        "searchPlaceholder": "Escribe para buscar...",
+        "noOptionsFound": "No se encontraron resultados",
         "yes": "Sí",
         "no": "No",
         "logout": "Cerrar sesión",
@@ -77,6 +79,11 @@
         "message": "La página que buscas no existe",
         "backLink": "Volver al inicio"
     },
+    "accessDenied": {
+        "title": "Acceso restringido",
+        "message": "No tienes permiso para ver esta sección. Si crees que es un error, contacta a un administrador.",
+        "backLink": "Volver al panel"
+    },
     "site": {
         "announcementBar": {
             "message": "Aquí podemos mostrar cualquier información de LEGUMEX STORE. Esto es solo un ejemplo que agregué para realizar pruebas",
@@ -98,7 +105,52 @@
         },
         "quoteRequest": {
             "title": "Tu solicitud de cotización",
-            "description": "Hola {{name}}, esta sección está en construcción. Muy pronto podrás armar y enviar tu cotización desde aquí."
+            "description": "Hola {{name}}, arma tu cotización eligiendo producto, cantidad de palets y destino.",
+            "form": {
+                "title": "Datos de la cotización",
+                "product": "Producto",
+                "variant": "Presentación",
+                "requestedPallets": "Palets solicitados",
+                "destination": "Destino",
+                "submit": "Calcular cotización",
+                "modeFinished": "Producto terminado",
+                "modeCustomizable": "Personalizar mi producto",
+                "modeFinishedHint": "Elige entre nuestras presentaciones ya armadas, con receta fija.",
+                "modeCustomizableHint": "Arma tu propio mix: eliges el % de cada ingrediente hasta llegar a 100%.",
+                "noProductsFinished": "Aún no hay productos terminados disponibles para cotizar.",
+                "noProductsCustomizable": "Aún no hay productos personalizables disponibles para cotizar.",
+                "organicBadge": "Orgánico",
+                "mixTitle": "Arma tu mezcla",
+                "mixTotal": "Total: {{total}}%",
+                "mixIncomplete": "La mezcla debe sumar 100% para poder cotizar.",
+                "mixRange": "{{min}}% - {{max}}%",
+                "mixEmpty": "Este producto todavía no tiene ingredientes configurados. Contacta al administrador."
+            },
+            "result": {
+                "empty": "Completa el formulario y calcula tu cotización para ver el desglose de costos aquí.",
+                "destination": "Destino",
+                "total": "Costo total",
+                "pallets": "Palets",
+                "units": "Unidades",
+                "perPallet": "Por palet",
+                "rawMaterials": "Materia prima",
+                "unitPackaging": "Empaque unitario",
+                "palletMaterials": "Materiales de palet",
+                "transport": "Transporte",
+                "unitsQuantity": "{{count}} unidades",
+                "palletsQuantity": "{{count}} palets",
+                "save": "Enviar y guardar cotización",
+                "saving": "Guardando...",
+                "saved": "Cotización guardada"
+            }
+        },
+        "myQuotes": {
+            "navLink": "Mis cotizaciones",
+            "backLink": "Volver a cotizador",
+            "title": "Mis cotizaciones",
+            "description": "Historial de cotizaciones que has guardado.",
+            "empty": "Todavía no has guardado ninguna cotización.",
+            "summary": "{{date}} · {{pallets}} palets · {{destination}}"
         },
         "footer": {
             "tagline": "Vegetal fresco y congelado IQF de exportación, del campo a tu cadena de frío.",
@@ -131,12 +183,11 @@
     },
     "home": {
         "hero": {
-            "eyebrow": "Cosecha 2026–2027",
-            "titleLineOne": "Vegetal fresco y",
-            "titleLineTwo": "congelado de exportación",
-            "description": "Cultivamos, procesamos y despachamos bajo cadena de frío controlada, con trazabilidad completa desde el campo hasta tu puerto de destino.",
-            "primaryAction": "Solicitar cotización",
-            "secondaryAction": "Ver catálogo"
+            "eyebrow": "Espacio de cotizaciones",
+            "titleLineOne": "Bienvenido a",
+            "titleLineTwo": "Legumex",
+            "description": "Solicita tu cotización de vegetales frescos y congelados de exportación, fácil y rápido.",
+            "primaryAction": "Solicitar cotización"
         },
         "credentials": {
             "yearsOperating": "Años de operación",
@@ -208,60 +259,11 @@
             "action": "Solicitar cotización"
         }
     },
-    "addin": {
-        "form": {
-            "displayName": "Nombre",
-            "fullDescription": "Descripción",
-            "costPerServing": "Costo por porción"
-        },
-        "list": {
-            "title": "Adicionales",
-            "createLink": "Crear adicional"
-        },
-        "create": {
-            "title": "Crear adicional"
-        },
-        "edit": {
-            "title": "Editar adicional"
-        },
-        "table": {
-            "searchPlaceholder": "Buscar por nombre...",
-            "empty": "No hay adicionales registrados"
-        }
-    },
-    "attribute": {
-        "form": {
-            "attributeName": "Nombre del atributo",
-            "dataType": "Tipo de dato",
-            "unitLabel": "Etiqueta de unidad",
-            "dataTypeOptions": {
-                "string": "Texto",
-                "number": "Número",
-                "boolean": "Sí/No",
-                "date": "Fecha"
-            }
-        },
-        "list": {
-            "title": "Atributos",
-            "createLink": "Crear atributo"
-        },
-        "create": {
-            "title": "Crear atributo"
-        },
-        "edit": {
-            "title": "Editar atributo"
-        },
-        "table": {
-            "searchPlaceholder": "Buscar por nombre...",
-            "empty": "No hay atributos registrados"
-        }
-    },
     "category": {
         "form": {
             "displayName": "Nombre",
             "urlSlug": "Slug de URL",
             "fullDescription": "Descripción",
-            "displayOrder": "Orden de visualización",
             "defaultMargin": "Margen por defecto (%)"
         },
         "list": {
@@ -304,7 +306,8 @@
             "unitCode": "Código",
             "displayName": "Nombre",
             "unitType": "Tipo de unidad",
-            "baseFactor": "Factor base",
+            "unitKey": "Unidad",
+            "autoFillHint": "Tipo: {{unitType}} · Factor base: {{baseFactor}} (se asigna automáticamente, no se puede editar)",
             "unitTypeOptions": {
                 "weight": "Peso",
                 "volume": "Volumen",
@@ -333,7 +336,8 @@
             "ingredientType": "Tipo de ingrediente",
             "costPerUnit": "Costo por unidad",
             "costUnitId": "Unidad de costo",
-            "isOrganicAvailable": "Disponible orgánico",
+            "isOrganic": "Es la variante orgánica",
+            "isOrganicHint": "Marca esta casilla si esta fila es específicamente la versión orgánica (con su propio costo) — no si el ingrediente \"admite\" ser orgánico. Convencional y orgánico son dos ingredientes separados en el catálogo, ej. \"Piña\" y \"Piña Orgánica\".",
             "isMixable": "Se puede mezclar",
             "ingredientTypeOptions": {
                 "fruit": "Fruta",
@@ -342,6 +346,8 @@
                 "other": "Otro"
             }
         },
+        "organicTag": "Orgánico",
+        "conventionalTag": "Convencional",
         "list": {
             "title": "Ingredientes",
             "createLink": "Crear ingrediente"
@@ -362,8 +368,7 @@
             "categoryId": "Categoría",
             "displayName": "Nombre",
             "urlSlug": "Slug de URL",
-            "fullDescription": "Descripción",
-            "displayOrder": "Orden de visualización"
+            "fullDescription": "Descripción"
         },
         "list": {
             "title": "Subcategorías",
@@ -383,10 +388,12 @@
     "packaging": {
         "form": {
             "displayName": "Nombre",
-            "packagingMaterial": "Material",
-            "capacityValue": "Capacidad",
-            "capacityUnitId": "Unidad de capacidad",
-            "unitCost": "Costo unitario"
+            "packagingRole": "¿Para qué se usa este material?",
+            "packagingRoleOptions": {
+                "unit": "Empaque individual",
+                "pallet": "Material de paletización"
+            },
+            "unitCost": "Costo por unidad (Q)"
         },
         "list": {
             "title": "Empaques",
@@ -407,8 +414,6 @@
         "form": {
             "displayLabel": "Nombre",
             "netWeightGrams": "Peso neto (g)",
-            "displayValue": "Valor a mostrar",
-            "displayUnitId": "Unidad a mostrar",
             "categoryId": "Categoría"
         },
         "list": {
@@ -432,11 +437,11 @@
             "productTypeId": "Tipo de producto",
             "displayName": "Nombre",
             "urlSlug": "Slug de URL",
-            "fullDescription": "Descripción",
-            "imageUrl": "Fotografía del producto",
-            "displayOrder": "Orden de visualización",
             "isOrganic": "Orgánico",
-            "isCustomizable": "Personalizable"
+            "isCustomizable": "Tipo de receta",
+            "isCustomizableFinished": "Terminado (receta fija)",
+            "isCustomizableCustom": "Personalizable (mezcla %)",
+            "isCustomizableHint": "Personalizable: el cliente arma la mezcla de ingredientes por porcentaje al cotizar, en vez de una receta fija."
         },
         "card": {
             "lineFresh": "Fresco",
@@ -466,10 +471,10 @@
             "presentationId": "Presentación",
             "packagingId": "Empaque",
             "skuCode": "SKU",
-            "unitPrice": "Precio unitario",
-            "unitCost": "Costo unitario",
-            "isPriceManual": "Precio manual",
             "minimumOrderQuantity": "Cantidad mínima de pedido",
+            "unitsPerPallet": "Unidades por palet",
+            "unitsPerBox": "Unidades por caja",
+            "unitsPerBoxHint": "Cuántas bolsas/piezas entran en una caja. No afecta el costo, es solo para calcular cuántas cajas necesita el palet.",
             "addButton": "Agregar variante"
         },
         "list": {
@@ -482,46 +487,38 @@
     "productIngredient": {
         "form": {
             "ingredientId": "Ingrediente",
-            "proportionPercent": "Proporción (%)",
             "quantityValue": "Cantidad",
             "quantityUnitId": "Unidad de cantidad",
+            "minPercentage": "% mínimo",
+            "maxPercentage": "% máximo",
+            "percentageRange": "Rango %",
             "displayOrder": "Orden de visualización",
-            "addButton": "Agregar ingrediente"
+            "addButton": "Agregar ingrediente",
+            "customizableHint": "Este producto es personalizable: define aquí qué ingredientes puede elegir el cliente y, si quieres, un rango de % permitido para cada uno."
         },
         "list": {
-            "title": "Ingredientes"
+            "title": "Ingredientes",
+            "titleCustomizable": "Ingredientes permitidos (mezcla %)"
         },
         "table": {
             "empty": "No hay ingredientes registrados"
         }
     },
-    "productAddin": {
+    "productVariantPalletMaterial": {
+        "selectVariant": "Variante",
+        "noVariants": "Primero agrega una variante para poder definir sus materiales de paletización",
+        "boxesPerPalletHint": "Con {{unitsPerBox}} unidades por caja y {{unitsPerPallet}} unidades por palet, este palet necesita {{boxesPerPallet}} cajas.",
         "form": {
-            "addinId": "Adicional",
-            "isDefault": "Predeterminado",
-            "addButton": "Agregar adicional"
+            "packagingId": "Material de palet",
+            "quantityValue": "Cantidad",
+            "quantityUnitId": "Unidad de cantidad",
+            "addButton": "Agregar material"
         },
         "list": {
-            "title": "Adicionales"
+            "title": "Materiales de paletización"
         },
         "table": {
-            "empty": "No hay adicionales registrados"
-        }
-    },
-    "productAttribute": {
-        "form": {
-            "attributeId": "Atributo",
-            "value": "Valor",
-            "valueString": "Valor (texto)",
-            "valueNumber": "Valor (número)",
-            "valueBoolean": "Valor (Sí/No)",
-            "addButton": "Agregar atributo"
-        },
-        "list": {
-            "title": "Atributos"
-        },
-        "table": {
-            "empty": "No hay atributos registrados"
+            "empty": "No hay materiales de paletización registrados"
         }
     },
     "customer": {
@@ -546,6 +543,83 @@
         "table": {
             "searchPlaceholder": "Buscar por nombre o correo...",
             "empty": "No hay clientes registrados"
+        }
+    },
+    "user": {
+        "form": {
+            "name": "Nombre",
+            "username": "Usuario",
+            "roleId": "Rol",
+            "password": "Contraseña",
+            "newPassword": "Nueva contraseña",
+            "newPasswordPlaceholder": "Dejar en blanco para no cambiarla"
+        },
+        "list": {
+            "title": "Usuarios",
+            "createLink": "Crear usuario"
+        },
+        "create": {
+            "title": "Crear usuario"
+        },
+        "edit": {
+            "title": "Editar usuario"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre o usuario...",
+            "empty": "No hay usuarios registrados"
+        }
+    },
+    "role": {
+        "form": {
+            "name": "Nombre del rol"
+        },
+        "list": {
+            "title": "Roles",
+            "createLink": "Crear rol"
+        },
+        "create": {
+            "title": "Crear rol"
+        },
+        "edit": {
+            "title": "Editar rol"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay roles registrados"
+        },
+        "permissions": {
+            "title": "Permisos del rol",
+            "saveButton": "Guardar permisos"
+        }
+    },
+    "adminQuote": {
+        "list": {
+            "title": "Cotizaciones",
+            "description": "Todas las cotizaciones que han guardado los clientes, sin importar cuál.",
+            "searchPlaceholder": "Buscar por cliente, empresa, correo o producto...",
+            "empty": "Todavía no hay ninguna cotización guardada.",
+            "noMatches": "Ninguna cotización coincide con la búsqueda.",
+            "summary": "{{date}} · {{pallets}} palets · {{destination}}"
+        }
+    },
+    "destination": {
+        "form": {
+            "displayName": "Nombre",
+            "baseCost": "Costo de transporte"
+        },
+        "list": {
+            "title": "Destinos",
+            "createLink": "Crear destino"
+        },
+        "create": {
+            "title": "Crear destino"
+        },
+        "edit": {
+            "title": "Editar destino"
+        },
+        "table": {
+            "searchPlaceholder": "Buscar por nombre...",
+            "empty": "No hay destinos registrados"
         }
     }
 }

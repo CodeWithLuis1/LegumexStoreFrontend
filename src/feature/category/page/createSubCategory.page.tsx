@@ -19,6 +19,7 @@ export function CreateSubCategoryPage() {
 
     const {
         register,
+        control,
         handleSubmit,
         formState: { errors },
     } = useForm<CreateSubCategoryInput>({
@@ -52,7 +53,7 @@ export function CreateSubCategoryPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateSubCategoryForm register={register} errors={errors} />
+                    <CreateSubCategoryForm register={register} control={control} errors={errors} />
                     <Button type="submit" disabled={createSubCategoryMutation.isPending}>
                         {createSubCategoryMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

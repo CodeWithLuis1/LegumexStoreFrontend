@@ -13,12 +13,13 @@ import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
 import { Button, buttonClassName } from "@/shared/component/button.component"
 
-function toFormValues(presentation: PresentationResponse): UpdatePresentationInput {
+// Partial<UpdatePresentationInput>: netWeightGrams es requerido para guardar, pero una
+// presentación vieja de antes de esa regla puede tener null en la BD -- se precarga vacía
+// para que el admin la complete en vez de forzar un valor que no existe.
+function toFormValues(presentation: PresentationResponse): Partial<UpdatePresentationInput> {
     return {
         displayLabel: presentation.displayLabel,
-        netWeightGrams: presentation.netWeightGrams !== null ? Number(presentation.netWeightGrams) : undefined,
-        displayValue: presentation.displayValue !== null ? Number(presentation.displayValue) : undefined,
-        displayUnitId: presentation.displayUnitId ?? undefined,
+        netWeightGrams: presentation.netWeightGrams ?? undefined,
         categoryId: presentation.categoryId ?? undefined,
     }
 }
@@ -33,10 +34,12 @@ export function EditPresentationPage() {
     const presentationQuery = useQuery({
         queryKey: ["presentation", presentationId],
         queryFn: () => getPresentationByIdAPI(presentationId),
+        retry: false,
     })
 
     const {
         register,
+        control,
         handleSubmit,
         reset,
         formState: { errors },
@@ -81,7 +84,7 @@ export function EditPresentationPage() {
 
                 {presentationQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditPresentationForm register={register} errors={errors} />
+                        <EditPresentationForm register={register} control={control} errors={errors} />
                         <Button type="submit" disabled={updatePresentationMutation.isPending}>
                             {updatePresentationMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

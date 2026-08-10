@@ -11,8 +11,7 @@ import { getProductByIdAPI, updateProductAPI } from "@/feature/product/api/produ
 import { EditProductForm } from "@/feature/product/component/editProduct.component"
 import { ProductVariantSection } from "@/feature/product/component/productVariantSection.component"
 import { ProductIngredientSection } from "@/feature/product/component/productIngredientSection.component"
-import { ProductAddinSection } from "@/feature/product/component/productAddinSection.component"
-import { ProductAttributeSection } from "@/feature/product/component/productAttributeSection.component"
+import { ProductVariantPalletMaterialSection } from "@/feature/product/component/productVariantPalletMaterialSection.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
 import { Button, buttonClassName } from "@/shared/component/button.component"
@@ -22,12 +21,8 @@ function toFormValues(product: ProductResponse): UpdateProductInput {
         subCategoryId: product.subCategoryId,
         productTypeId: product.productTypeId,
         displayName: product.displayName,
-        urlSlug: product.urlSlug,
-        fullDescription: product.fullDescription ?? undefined,
         isOrganic: product.isOrganic,
         isCustomizable: product.isCustomizable,
-        imageUrl: product.imageUrl ?? undefined,
-        displayOrder: product.displayOrder,
     }
 }
 
@@ -41,14 +36,14 @@ export function EditProductPage() {
     const productQuery = useQuery({
         queryKey: ["product", productId],
         queryFn: () => getProductByIdAPI(productId),
+        retry: false,
     })
 
     const {
         register,
+        control,
         handleSubmit,
         reset,
-        setValue,
-        watch,
         formState: { errors },
     } = useForm<UpdateProductInput>({
         resolver: zodResolver(updateProductSchema),
@@ -91,7 +86,7 @@ export function EditProductPage() {
 
                 {productQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditProductForm register={register} errors={errors} setValue={setValue} watch={watch} />
+                        <EditProductForm register={register} control={control} errors={errors} />
                         <Button type="submit" disabled={updateProductMutation.isPending}>
                             {updateProductMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>
@@ -110,23 +105,21 @@ export function EditProductPage() {
 
                     <Card>
                         <h2 className="mb-4 text-lg font-semibold text-verde-profundo">
-                            {t("productIngredient.list.title")}
+                            {productQuery.data.data.isCustomizable
+                                ? t("productIngredient.list.titleCustomizable")
+                                : t("productIngredient.list.title")}
                         </h2>
-                        <ProductIngredientSection productId={productId} />
+                        <ProductIngredientSection
+                            productId={productId}
+                            isCustomizable={productQuery.data.data.isCustomizable}
+                        />
                     </Card>
 
                     <Card>
                         <h2 className="mb-4 text-lg font-semibold text-verde-profundo">
-                            {t("productAddin.list.title")}
+                            {t("productVariantPalletMaterial.list.title")}
                         </h2>
-                        <ProductAddinSection productId={productId} />
-                    </Card>
-
-                    <Card>
-                        <h2 className="mb-4 text-lg font-semibold text-verde-profundo">
-                            {t("productAttribute.list.title")}
-                        </h2>
-                        <ProductAttributeSection productId={productId} />
+                        <ProductVariantPalletMaterialSection productId={productId} />
                     </Card>
                 </div>
             )}

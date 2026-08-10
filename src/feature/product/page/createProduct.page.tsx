@@ -19,9 +19,8 @@ export function CreateProductPage() {
 
     const {
         register,
+        control,
         handleSubmit,
-        setValue,
-        watch,
         formState: { errors },
     } = useForm<CreateProductInput>({
         resolver: zodResolver(createProductSchema),
@@ -54,7 +53,7 @@ export function CreateProductPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateProductForm register={register} errors={errors} setValue={setValue} watch={watch} />
+                    <CreateProductForm register={register} control={control} errors={errors} />
                     <Button type="submit" disabled={createProductMutation.isPending}>
                         {createProductMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

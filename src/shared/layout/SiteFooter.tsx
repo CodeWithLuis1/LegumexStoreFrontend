@@ -2,27 +2,25 @@ import { useTranslation } from "react-i18next"
 import { SiteContainer } from "@/shared/component/siteContainer.component"
 import { FooterLinkColumn } from "@/shared/layout/FooterLinkColumn"
 import { FooterNewsletterForm } from "@/shared/layout/FooterNewsletterForm"
-// import { FooterSocialLinks } from "@/shared/layout/FooterSocialLinks"
-// import { LanguageSwitch } from "@/shared/layout/LanguageSwitch"
 
 export function SiteFooter() {
     const { t } = useTranslation()
     const currentYear = new Date().getFullYear()
 
     const catalogLinks = [
-        { label: t("site.footer.catalog.fresh"), url: "/catalogo" },
-        { label: t("site.footer.catalog.iqf"), url: "/catalogo" },
-        { label: t("site.footer.catalog.compare"), url: "/comparar" },
+        { label: t("site.footer.catalog.fresh") },
+        { label: t("site.footer.catalog.iqf") },
+        { label: t("site.footer.catalog.compare") },
     ]
     const companyLinks = [
-        { label: t("site.footer.company.aboutUs"), url: "/nosotros" },
-        { label: t("site.footer.company.quality"), url: "/calidad" },
-        { label: t("site.footer.company.blog"), url: "/blog" },
+        { label: t("site.footer.company.aboutUs"), url: "https://agroindustrialegumex.com/about-us/", external: true },
+        { label: t("site.footer.company.quality") },
+        { label: t("site.footer.company.blog") },
     ]
     const supportLinks = [
-        { label: t("site.footer.support.contact"), url: "/contacto" },
-        { label: t("site.footer.support.request"), url: "/solicitud" },
-        { label: t("site.footer.support.technicalSheets"), url: "/catalogo" },
+        { label: t("site.footer.support.contact"), url: "https://agroindustrialegumex.com/contact-us/", external: true },
+        { label: t("site.footer.support.request") },
+        { label: t("site.footer.support.technicalSheets") },
     ]
 
     return (

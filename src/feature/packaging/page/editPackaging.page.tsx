@@ -13,12 +13,13 @@ import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
 import { Button, buttonClassName } from "@/shared/component/button.component"
 
-function toFormValues(packaging: PackagingResponse): UpdatePackagingInput {
+// Partial<UpdatePackagingInput>: packagingRole/unitCost son requeridos para guardar, pero un
+// registro viejo de antes de esa regla puede tener null en la BD -- se precarga vacío para
+// que el admin lo complete en vez de forzar un valor que no existe.
+function toFormValues(packaging: PackagingResponse): Partial<UpdatePackagingInput> {
     return {
         displayName: packaging.displayName,
-        packagingMaterial: packaging.packagingMaterial ?? undefined,
-        capacityValue: packaging.capacityValue !== null ? Number(packaging.capacityValue) : undefined,
-        capacityUnitId: packaging.capacityUnitId ?? undefined,
+        packagingRole: packaging.packagingRole,
         unitCost: packaging.unitCost !== null ? Number(packaging.unitCost) : undefined,
     }
 }
@@ -33,6 +34,7 @@ export function EditPackagingPage() {
     const packagingQuery = useQuery({
         queryKey: ["packaging", packagingId],
         queryFn: () => getPackagingByIdAPI(packagingId),
+        retry: false,
     })
 
     const {

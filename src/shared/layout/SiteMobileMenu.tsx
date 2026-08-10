@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom"
-import { X } from "lucide-react"
+import { X, FileText } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { buttonClassName } from "@/shared/component/button.component"
 import { SiteNavigation } from "@/shared/layout/SiteNavigation"
 import { LanguageSwitch } from "@/shared/layout/LanguageSwitch"
+import { useCustomerAuth } from "@/shared/auth/customer/useCustomerAuth"
 
 type SiteMobileMenuProps = {
     isOpen: boolean
@@ -12,6 +13,7 @@ type SiteMobileMenuProps = {
 
 export function SiteMobileMenu({ isOpen, onClose }: SiteMobileMenuProps) {
     const { t } = useTranslation()
+    const { isAuthenticated } = useCustomerAuth()
 
     if (!isOpen) return null
 
@@ -27,6 +29,17 @@ export function SiteMobileMenu({ isOpen, onClose }: SiteMobileMenuProps) {
                 </div>
 
                 <SiteNavigation orientation="vertical" onLinkClick={onClose} />
+
+                {isAuthenticated && (
+                    <Link
+                        to="/mis-cotizaciones"
+                        onClick={onClose}
+                        className="flex items-center gap-2 text-sm font-medium text-verde-profundo"
+                    >
+                        <FileText size={18} />
+                        {t("site.myQuotes.navLink")}
+                    </Link>
+                )}
 
                 <Link to="/solicitud" onClick={onClose} className={`${buttonClassName("primary")} w-full`}>
                     {t("site.header.cta")}

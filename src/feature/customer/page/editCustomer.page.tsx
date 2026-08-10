@@ -32,6 +32,7 @@ export function EditCustomerPage() {
     const customerQuery = useQuery({
         queryKey: ["customer", customerId],
         queryFn: () => getCustomerByIdAPI(customerId),
+        retry: false,
     })
 
     const {

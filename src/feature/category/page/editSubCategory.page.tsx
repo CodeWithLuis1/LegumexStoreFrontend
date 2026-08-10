@@ -17,9 +17,7 @@ function toFormValues(subCategory: SubCategoryResponse): UpdateSubCategoryInput 
     return {
         categoryId: subCategory.categoryId,
         displayName: subCategory.displayName,
-        urlSlug: subCategory.urlSlug,
         fullDescription: subCategory.fullDescription ?? undefined,
-        displayOrder: subCategory.displayOrder,
     }
 }
 
@@ -33,10 +31,12 @@ export function EditSubCategoryPage() {
     const subCategoryQuery = useQuery({
         queryKey: ["subCategory", subCategoryId],
         queryFn: () => getSubCategoryByIdAPI(subCategoryId),
+        retry: false,
     })
 
     const {
         register,
+        control,
         handleSubmit,
         reset,
         formState: { errors },
@@ -81,7 +81,7 @@ export function EditSubCategoryPage() {
 
                 {subCategoryQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditSubCategoryForm register={register} errors={errors} />
+                        <EditSubCategoryForm register={register} control={control} errors={errors} />
                         <Button type="submit" disabled={updateSubCategoryMutation.isPending}>
                             {updateSubCategoryMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

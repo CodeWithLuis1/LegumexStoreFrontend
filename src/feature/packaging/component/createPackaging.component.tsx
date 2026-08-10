@@ -4,8 +4,8 @@ import type { CreatePackagingInput } from "@/feature/packaging/schema/packaging.
 import { getFieldErrorMessage } from "@/shared/i18n/getFieldErrorMessage"
 import { FormField } from "@/shared/component/formField.component"
 import { Input } from "@/shared/component/input.component"
+import { Select } from "@/shared/component/select.component"
 import { toOptionalNumber } from "@/shared/form/toOptionalNumber"
-import { UnitSelect } from "@/feature/unit/component/unitSelect.component"
 
 type CreatePackagingFormProps = {
     register: UseFormRegister<CreatePackagingInput>
@@ -26,38 +26,16 @@ export function CreatePackagingForm({ register, errors }: CreatePackagingFormPro
             </FormField>
 
             <FormField
-                label={t("packaging.form.packagingMaterial")}
-                htmlFor="packagingMaterial"
-                error={getFieldErrorMessage(t, errors.packagingMaterial)}
+                label={t("packaging.form.packagingRole")}
+                htmlFor="packagingRole"
+                error={getFieldErrorMessage(t, errors.packagingRole)}
             >
-                <Input id="packagingMaterial" hasError={!!errors.packagingMaterial} {...register("packagingMaterial")} />
+                <Select id="packagingRole" hasError={!!errors.packagingRole} defaultValue="unit" {...register("packagingRole")}>
+                    <option value="unit">{t("packaging.form.packagingRoleOptions.unit")}</option>
+                    <option value="pallet">{t("packaging.form.packagingRoleOptions.pallet")}</option>
+                </Select>
             </FormField>
 
-            <FormField
-                label={t("packaging.form.capacityValue")}
-                htmlFor="capacityValue"
-                error={getFieldErrorMessage(t, errors.capacityValue)}
-            >
-                <Input
-                    id="capacityValue"
-                    type="number"
-                    step="0.0001"
-                    hasError={!!errors.capacityValue}
-                    {...register("capacityValue", { setValueAs: toOptionalNumber })}
-                />
-            </FormField>
-
-            <FormField
-                label={t("packaging.form.capacityUnitId")}
-                htmlFor="capacityUnitId"
-                error={getFieldErrorMessage(t, errors.capacityUnitId)}
-            >
-                <UnitSelect
-                    id="capacityUnitId"
-                    hasError={!!errors.capacityUnitId}
-                    {...register("capacityUnitId", { setValueAs: toOptionalNumber })}
-                />
-            </FormField>
 
             <FormField
                 label={t("packaging.form.unitCost")}
