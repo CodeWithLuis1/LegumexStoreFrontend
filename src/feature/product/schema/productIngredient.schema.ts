@@ -9,7 +9,6 @@ export const createProductIngredientSchema = z.object({
     // Solo aplican cuando el producto padre es customizable: ver Product.isCustomizable.
     minPercentage: z.number().min(0).max(100).optional(),
     maxPercentage: z.number().min(0).max(100).optional(),
-    displayOrder: z.number().int().optional(),
 })
 
 export const updateProductIngredientSchema = createProductIngredientSchema.partial()
@@ -23,7 +22,6 @@ export const responseProductIngredientSchema = baseCatalogSchema.extend({
     quantityUnitId: z.number().int().nullable(),
     minPercentage: z.coerce.number().nullable(),
     maxPercentage: z.coerce.number().nullable(),
-    displayOrder: z.number().int(),
 })
 
 export type CreateProductIngredientInput = z.infer<typeof createProductIngredientSchema>

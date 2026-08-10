@@ -11,9 +11,6 @@ type CategorySelectProps = {
     onChange: (value: number | undefined) => void
 }
 
-// Select con búsqueda (react-select) en vez del <select> nativo -- mismo motivo que
-// SubCategorySelect: la lista crece con el catálogo. Controlado (value/onChange), el
-// padre debe envolverlo en un <Controller> de react-hook-form.
 export function CategorySelect({ inputId, hasError, value, onChange }: CategorySelectProps) {
     const { t } = useTranslation()
     const categoriesQuery = useQuery({ queryKey: ["categories"], queryFn: getCategoriesAPI })

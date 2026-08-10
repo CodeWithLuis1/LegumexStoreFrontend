@@ -13,10 +13,6 @@ type SearchableSelectProps = Omit<
     hasError?: boolean
 }
 
-// Select con input de búsqueda (react-select) estilizado con las clases de Tailwind del
-// sistema de diseño en vez de los estilos inline por defecto (prop `unstyled` + `classNames`).
-// Úsalo cuando la lista de opciones es larga (productos, destinos); para listas cortas el
-// <Select> nativo (shared/component/select.component.tsx) sigue siendo más simple.
 export function SearchableSelect({ hasError = false, ...props }: SearchableSelectProps) {
     return (
         <ReactSelect<SearchableSelectOption, false, GroupBase<SearchableSelectOption>>

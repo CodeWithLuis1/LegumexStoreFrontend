@@ -29,9 +29,7 @@ import { toOptionalNumber } from "@/shared/form/toOptionalNumber"
 const palletMaterialFormSchema = createProductVariantPalletMaterialSchema.omit({ productVariantId: true })
 type PalletMaterialFormInput = z.infer<typeof palletMaterialFormSchema>
 
-// Partial<PalletMaterialFormInput>: quantityValue es requerido para guardar, pero una fila
-// vieja de antes de esa regla puede tener null en la BD -- se precarga vacía para que el
-// admin la complete en vez de forzar un valor que no existe.
+
 function toFormValues(item: ProductVariantPalletMaterialResponse): Partial<PalletMaterialFormInput> {
     return {
         packagingId: item.packagingId,
@@ -45,6 +43,10 @@ export function ProductVariantPalletMaterialSection({ productId }: { productId: 
     const queryClient = useQueryClient()
     const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null)
     const [editingId, setEditingId] = useState<number | null>(null)
+    // Fuerza a que el <form> se desmonte/remonte tras guardar -- reset({}) limpia el estado de
+    // react-hook-form, pero los <select> personalizados (PalletMaterialSelect/UnitSelect) son
+    // no controlados; remontarlos garantiza que el DOM quede realmente en blanco.
+    const [formResetKey, setFormResetKey] = useState(0)
 
     const variantsQuery = useQuery({ queryKey: ["productVariants"], queryFn: getProductVariantsAPI })
     const presentationsQuery = useQuery({ queryKey: ["presentations"], queryFn: getPresentationsAPI })
@@ -93,6 +95,7 @@ export function ProductVariantPalletMaterialSection({ productId }: { productId: 
             invalidate()
             toast.success(data.message)
             reset({})
+            setFormResetKey((key) => key + 1)
         },
         onError: (error) => toast.error(error.message),
     })
@@ -105,6 +108,7 @@ export function ProductVariantPalletMaterialSection({ productId }: { productId: 
             toast.success(data.message)
             setEditingId(null)
             reset({})
+            setFormResetKey((key) => key + 1)
         },
         onError: (error) => toast.error(error.message),
     })
@@ -209,7 +213,7 @@ export function ProductVariantPalletMaterialSection({ productId }: { productId: 
                 </Table>
             </TableContainer>
 
-            <form onSubmit={onSubmit} className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
+            <form key={formResetKey} onSubmit={onSubmit} className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
                 <FormField
                     label={t("productVariantPalletMaterial.form.packagingId")}
                     htmlFor="packagingId"

@@ -13,22 +13,7 @@
         "selectPlaceholder": "Select an option",
         "searchPlaceholder": "Type to search...",
         "noOptionsFound": "No results found",
-        "yes": "Yes",
-        "no": "No",
-        "logout": "Log out",
-        "imageCapture": {
-            "addImage": "Add photo",
-            "changeImage": "Change photo",
-            "remove": "Remove",
-            "useCamera": "Use camera",
-            "uploadFile": "Upload image",
-            "takePhoto": "Take photo",
-            "retake": "Retake",
-            "back": "Back",
-            "cameraError": "Could not access the camera. Check permissions or upload an image from your device.",
-            "invalidFile": "Select a valid image file",
-            "fileTooLarge": "The image is too large. Maximum 5MB"
-        }
+        "logout": "Log out"
     },
     "errors": {
         "unexpected_response": "The server response does not have the expected format",
@@ -55,7 +40,6 @@
             "hidePassword": "Hide password",
             "submit": "Sign in",
             "submitting": "Signing in...",
-            "locked": "Account locked",
             "footer": "© {{year}} Legumex Apps. All rights reserved."
         },
         "customerLogin": {
@@ -81,8 +65,6 @@
             "dismiss": "Dismiss announcement"
         },
         "nav": {
-            "catalog": "Catalog",
-            "quality": "Quality",
             "about": "About us",
             "contact": "Contact"
         },
@@ -179,75 +161,6 @@
             "titleLineTwo": "Legumex",
             "description": "Request your quote for fresh and frozen export vegetables, quick and easy.",
             "primaryAction": "Request a quote"
-        },
-        "credentials": {
-            "yearsOperating": "Years in operation",
-            "hectaresManaged": "Hectares managed",
-            "destinationCountries": "Destination countries",
-            "qualityCertifications": "Certifications"
-        },
-        "categories": {
-            "eyebrow": "Product lines",
-            "title": "Categories",
-            "vainas": {
-                "title": "Peas & pod beans",
-                "description": "Flat pods and snow peas, hand-cut with a consistent caliber."
-            },
-            "cruciferas": {
-                "title": "Cruciferous",
-                "description": "Broccoli and cauliflower, florets or whole, consistent color and firmness."
-            },
-            "miniVegetales": {
-                "title": "Mini vegetables & mixes",
-                "description": "Baby formats and combinations ready for processing lines."
-            },
-            "raices": {
-                "title": "Roots & tubers",
-                "description": "Native potato and roots selected by caliber and skin color."
-            },
-            "iqf": {
-                "title": "IQF line",
-                "description": "Individually quick frozen, free-flowing, ready for retail or food service."
-            }
-        },
-        "coldChain": {
-            "fresh": {
-                "title": "Fresh line",
-                "description": "Harvested, packed and shipped in short windows to arrive at peak quality."
-            },
-            "frozen": {
-                "title": "IQF line",
-                "description": "Individual freezing that preserves texture, color and nutrition all year round."
-            }
-        },
-        "process": {
-            "eyebrow": "Traceability",
-            "title": "How we work",
-            "harvest": {
-                "title": "Field & harvest",
-                "description": "Partner growers and own fields under a caliber and cut-point program."
-            },
-            "coldChain": {
-                "title": "Process & cold chain",
-                "description": "Selection, packing and cooling or IQF freezing under continuous temperature control."
-            },
-            "dispatch": {
-                "title": "Dispatch & traceability",
-                "description": "Export documentation and batch tracking from the field to destination."
-            }
-        },
-        "featured": {
-            "eyebrow": "Selection",
-            "title": "Featured products"
-        },
-        "quality": {
-            "eyebrow": "Food safety",
-            "title": "Certified quality"
-        },
-        "finalCta": {
-            "title": "Let's talk about your next order",
-            "description": "Tell us volume, presentation and incoterm and we'll reply with a quote within 24 hours.",
-            "action": "Request a quote"
         }
     },
     "notFound": {
@@ -263,8 +176,7 @@
         "form": {
             "displayName": "Name",
             "urlSlug": "URL slug",
-            "fullDescription": "Description",
-            "defaultMargin": "Default margin (%)"
+            "fullDescription": "Description"
         },
         "list": {
             "title": "Categories",
@@ -332,7 +244,6 @@
     "ingredient": {
         "form": {
             "displayName": "Name",
-            "urlSlug": "URL slug",
             "ingredientType": "Ingredient type",
             "costPerUnit": "Cost per unit",
             "costUnitId": "Cost unit",
@@ -367,7 +278,6 @@
         "form": {
             "categoryId": "Category",
             "displayName": "Name",
-            "urlSlug": "URL slug",
             "fullDescription": "Description"
         },
         "list": {
@@ -443,14 +353,6 @@
             "isCustomizableCustom": "Customizable (% mix)",
             "isCustomizableHint": "Customizable: the customer builds the ingredient mix by percentage when requesting a quote, instead of a fixed recipe."
         },
-        "card": {
-            "lineFresh": "Fresh",
-            "lineFrozen": "IQF",
-            "requestQuote": "Quote",
-            "badgeNew": "New",
-            "badgeSeason": "Season",
-            "badgeBestseller": "Best seller"
-        },
         "list": {
             "title": "Products",
             "createLink": "Create product"
@@ -492,7 +394,6 @@
             "minPercentage": "Min %",
             "maxPercentage": "Max %",
             "percentageRange": "% Range",
-            "displayOrder": "Display order",
             "addButton": "Add ingredient",
             "customizableHint": "This product is customizable: define here which ingredients the customer can choose and, optionally, an allowed % range for each one."
         },

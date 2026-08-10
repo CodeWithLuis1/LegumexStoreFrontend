@@ -7,119 +7,119 @@ import { AccessDenied, PermissionGate } from "@/shared/auth/PermissionGate"
 import { usePermission } from "@/shared/auth/usePermission"
 
 const CategoryListPage = lazy(() =>
-    import("@/feature/category/page/category.page").then((m) => ({ default: m.CategoryListPage }))
+    import("@/feature/category/page/category.page").then((module) => ({ default: module.CategoryListPage }))
 )
 const CreateCategoryPage = lazy(() =>
-    import("@/feature/category/page/createCategory.page").then((m) => ({ default: m.CreateCategoryPage }))
+    import("@/feature/category/page/createCategory.page").then((module) => ({ default: module.CreateCategoryPage }))
 )
 const EditCategoryPage = lazy(() =>
-    import("@/feature/category/page/editCategory.page").then((m) => ({ default: m.EditCategoryPage }))
+    import("@/feature/category/page/editCategory.page").then((module) => ({ default: module.EditCategoryPage }))
 )
 
 const SubCategoryListPage = lazy(() =>
-    import("@/feature/category/page/subCategory.page").then((m) => ({ default: m.SubCategoryListPage }))
+    import("@/feature/category/page/subCategory.page").then((module) => ({ default: module.SubCategoryListPage }))
 )
 const CreateSubCategoryPage = lazy(() =>
-    import("@/feature/category/page/createSubCategory.page").then((m) => ({ default: m.CreateSubCategoryPage }))
+    import("@/feature/category/page/createSubCategory.page").then((module) => ({ default: module.CreateSubCategoryPage }))
 )
 const EditSubCategoryPage = lazy(() =>
-    import("@/feature/category/page/editSubCategory.page").then((m) => ({ default: m.EditSubCategoryPage }))
+    import("@/feature/category/page/editSubCategory.page").then((module) => ({ default: module.EditSubCategoryPage }))
 )
 
 const ProductTypeListPage = lazy(() =>
-    import("@/feature/product-type/page/productType.page").then((m) => ({ default: m.ProductTypeListPage }))
+    import("@/feature/product-type/page/productType.page").then((module) => ({ default: module.ProductTypeListPage }))
 )
 const CreateProductTypePage = lazy(() =>
-    import("@/feature/product-type/page/createProductType.page").then((m) => ({ default: m.CreateProductTypePage }))
+    import("@/feature/product-type/page/createProductType.page").then((module) => ({ default: module.CreateProductTypePage }))
 )
 const EditProductTypePage = lazy(() =>
-    import("@/feature/product-type/page/editProductType.page").then((m) => ({ default: m.EditProductTypePage }))
+    import("@/feature/product-type/page/editProductType.page").then((module) => ({ default: module.EditProductTypePage }))
 )
 
 const UnitListPage = lazy(() =>
-    import("@/feature/unit/page/unit.page").then((m) => ({ default: m.UnitListPage }))
+    import("@/feature/unit/page/unit.page").then((module) => ({ default: module.UnitListPage }))
 )
 const CreateUnitPage = lazy(() =>
-    import("@/feature/unit/page/createUnit.page").then((m) => ({ default: m.CreateUnitPage }))
+    import("@/feature/unit/page/createUnit.page").then((module) => ({ default: module.CreateUnitPage }))
 )
 const EditUnitPage = lazy(() =>
-    import("@/feature/unit/page/editUnit.page").then((m) => ({ default: m.EditUnitPage }))
+    import("@/feature/unit/page/editUnit.page").then((module) => ({ default: module.EditUnitPage }))
 )
 
 const IngredientListPage = lazy(() =>
-    import("@/feature/ingredient/page/ingredient.page").then((m) => ({ default: m.IngredientListPage }))
+    import("@/feature/ingredient/page/ingredient.page").then((module) => ({ default: module.IngredientListPage }))
 )
 const CreateIngredientPage = lazy(() =>
-    import("@/feature/ingredient/page/createIngredient.page").then((m) => ({ default: m.CreateIngredientPage }))
+    import("@/feature/ingredient/page/createIngredient.page").then((module) => ({ default: module.CreateIngredientPage }))
 )
 const EditIngredientPage = lazy(() =>
-    import("@/feature/ingredient/page/editIngredient.page").then((m) => ({ default: m.EditIngredientPage }))
+    import("@/feature/ingredient/page/editIngredient.page").then((module) => ({ default: module.EditIngredientPage }))
 )
 
 const PackagingListPage = lazy(() =>
-    import("@/feature/packaging/page/packaging.page").then((m) => ({ default: m.PackagingListPage }))
+    import("@/feature/packaging/page/packaging.page").then((module) => ({ default: module.PackagingListPage }))
 )
 const CreatePackagingPage = lazy(() =>
-    import("@/feature/packaging/page/createPackaging.page").then((m) => ({ default: m.CreatePackagingPage }))
+    import("@/feature/packaging/page/createPackaging.page").then((module) => ({ default: module.CreatePackagingPage }))
 )
 const EditPackagingPage = lazy(() =>
-    import("@/feature/packaging/page/editPackaging.page").then((m) => ({ default: m.EditPackagingPage }))
+    import("@/feature/packaging/page/editPackaging.page").then((module) => ({ default: module.EditPackagingPage }))
 )
 
 const DestinationListPage = lazy(() =>
-    import("@/feature/destination/page/destination.page").then((m) => ({ default: m.DestinationListPage }))
+    import("@/feature/destination/page/destination.page").then((module) => ({ default: module.DestinationListPage }))
 )
 const CreateDestinationPage = lazy(() =>
-    import("@/feature/destination/page/createDestination.page").then((m) => ({ default: m.CreateDestinationPage }))
+    import("@/feature/destination/page/createDestination.page").then((module) => ({ default: module.CreateDestinationPage }))
 )
 const EditDestinationPage = lazy(() =>
-    import("@/feature/destination/page/editDestination.page").then((m) => ({ default: m.EditDestinationPage }))
+    import("@/feature/destination/page/editDestination.page").then((module) => ({ default: module.EditDestinationPage }))
 )
 
 const PresentationListPage = lazy(() =>
-    import("@/feature/presentation/page/presentation.page").then((m) => ({ default: m.PresentationListPage }))
+    import("@/feature/presentation/page/presentation.page").then((module) => ({ default: module.PresentationListPage }))
 )
 const CreatePresentationPage = lazy(() =>
-    import("@/feature/presentation/page/createPresentation.page").then((m) => ({ default: m.CreatePresentationPage }))
+    import("@/feature/presentation/page/createPresentation.page").then((module) => ({ default: module.CreatePresentationPage }))
 )
 const EditPresentationPage = lazy(() =>
-    import("@/feature/presentation/page/editPresentation.page").then((m) => ({ default: m.EditPresentationPage }))
+    import("@/feature/presentation/page/editPresentation.page").then((module) => ({ default: module.EditPresentationPage }))
 )
 
 const ProductListPage = lazy(() =>
-    import("@/feature/product/page/product.page").then((m) => ({ default: m.ProductListPage }))
+    import("@/feature/product/page/product.page").then((module) => ({ default: module.ProductListPage }))
 )
 const CreateProductPage = lazy(() =>
-    import("@/feature/product/page/createProduct.page").then((m) => ({ default: m.CreateProductPage }))
+    import("@/feature/product/page/createProduct.page").then((module) => ({ default: module.CreateProductPage }))
 )
 const EditProductPage = lazy(() =>
-    import("@/feature/product/page/editProduct.page").then((m) => ({ default: m.EditProductPage }))
+    import("@/feature/product/page/editProduct.page").then((module) => ({ default: module.EditProductPage }))
 )
 
-const UserListPage = lazy(() => import("@/feature/user/page/user.page").then((m) => ({ default: m.UserListPage })))
+const UserListPage = lazy(() => import("@/feature/user/page/user.page").then((module) => ({ default: module.UserListPage })))
 const CreateUserPage = lazy(() =>
-    import("@/feature/user/page/createUser.page").then((m) => ({ default: m.CreateUserPage }))
+    import("@/feature/user/page/createUser.page").then((module) => ({ default: module.CreateUserPage }))
 )
-const EditUserPage = lazy(() => import("@/feature/user/page/editUser.page").then((m) => ({ default: m.EditUserPage })))
+const EditUserPage = lazy(() => import("@/feature/user/page/editUser.page").then((module) => ({ default: module.EditUserPage })))
 
-const RoleListPage = lazy(() => import("@/feature/role/page/role.page").then((m) => ({ default: m.RoleListPage })))
+const RoleListPage = lazy(() => import("@/feature/role/page/role.page").then((module) => ({ default: module.RoleListPage })))
 const CreateRolePage = lazy(() =>
-    import("@/feature/role/page/createRole.page").then((m) => ({ default: m.CreateRolePage }))
+    import("@/feature/role/page/createRole.page").then((module) => ({ default: module.CreateRolePage }))
 )
-const EditRolePage = lazy(() => import("@/feature/role/page/editRole.page").then((m) => ({ default: m.EditRolePage })))
+const EditRolePage = lazy(() => import("@/feature/role/page/editRole.page").then((module) => ({ default: module.EditRolePage })))
 
 const AdminQuoteListPage = lazy(() =>
-    import("@/feature/quote/page/adminQuote.page").then((m) => ({ default: m.AdminQuoteListPage }))
+    import("@/feature/quote/page/adminQuote.page").then((module) => ({ default: module.AdminQuoteListPage }))
 )
 
 const CustomerListPage = lazy(() =>
-    import("@/feature/customer/page/customer.page").then((m) => ({ default: m.CustomerListPage }))
+    import("@/feature/customer/page/customer.page").then((module) => ({ default: module.CustomerListPage }))
 )
 const CreateCustomerPage = lazy(() =>
-    import("@/feature/customer/page/createCustomer.page").then((m) => ({ default: m.CreateCustomerPage }))
+    import("@/feature/customer/page/createCustomer.page").then((module) => ({ default: module.CreateCustomerPage }))
 )
 const EditCustomerPage = lazy(() =>
-    import("@/feature/customer/page/editCustomer.page").then((m) => ({ default: m.EditCustomerPage }))
+    import("@/feature/customer/page/editCustomer.page").then((module) => ({ default: module.EditCustomerPage }))
 )
 
 const routes = [

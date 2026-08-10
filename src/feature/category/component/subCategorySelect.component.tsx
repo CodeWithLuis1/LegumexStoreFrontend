@@ -11,10 +11,6 @@ type SubCategorySelectProps = {
     onChange: (value: number | undefined) => void
 }
 
-// Select con búsqueda (react-select) en vez del <select> nativo: la lista de subcategorías
-// crece con el catálogo y escribir para filtrar es más rápido que scrollear un dropdown.
-// Controlado (value/onChange) porque react-select no se puede spread-conectar con
-// register() de react-hook-form -- el padre debe envolverlo en un <Controller>.
 export function SubCategorySelect({ inputId, hasError, value, onChange }: SubCategorySelectProps) {
     const { t } = useTranslation()
     const subCategoriesQuery = useQuery({ queryKey: ["subCategories"], queryFn: getSubCategoriesAPI })

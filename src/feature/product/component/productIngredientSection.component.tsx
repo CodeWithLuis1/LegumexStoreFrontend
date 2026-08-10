@@ -42,7 +42,6 @@ function toFormValues(productIngredient: ProductIngredientResponse): IngredientF
         quantityUnitId: productIngredient.quantityUnitId ?? undefined,
         minPercentage: productIngredient.minPercentage !== null ? Number(productIngredient.minPercentage) : undefined,
         maxPercentage: productIngredient.maxPercentage !== null ? Number(productIngredient.maxPercentage) : undefined,
-        displayOrder: productIngredient.displayOrder,
     }
 }
 
@@ -57,6 +56,10 @@ export function ProductIngredientSection({ productId, isCustomizable }: ProductI
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const [editingId, setEditingId] = useState<number | null>(null)
+    // Fuerza a que el <form> se desmonte/remonte tras guardar -- reset({}) limpia el estado de
+    // react-hook-form, pero los <select> personalizados (IngredientSelect/UnitSelect) son no
+    // controlados; remontarlos garantiza que el DOM quede realmente en blanco.
+    const [formResetKey, setFormResetKey] = useState(0)
 
     const productIngredientsQuery = useQuery({
         queryKey: ["productIngredients"],
@@ -84,6 +87,7 @@ export function ProductIngredientSection({ productId, isCustomizable }: ProductI
             invalidate()
             toast.success(data.message)
             reset({})
+            setFormResetKey((key) => key + 1)
         },
         onError: (error) => toast.error(error.message),
     })
@@ -96,6 +100,7 @@ export function ProductIngredientSection({ productId, isCustomizable }: ProductI
             toast.success(data.message)
             setEditingId(null)
             reset({})
+            setFormResetKey((key) => key + 1)
         },
         onError: (error) => toast.error(error.message),
     })
@@ -178,7 +183,7 @@ export function ProductIngredientSection({ productId, isCustomizable }: ProductI
                 </Table>
             </TableContainer>
 
-            <form onSubmit={onSubmit} className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
+            <form key={formResetKey} onSubmit={onSubmit} className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
                 <FormField
                     label={t("productIngredient.form.ingredientId")}
                     htmlFor="ingredientId"
@@ -257,19 +262,6 @@ export function ProductIngredientSection({ productId, isCustomizable }: ProductI
                         </FormField>
                     </>
                 )}
-
-                <FormField
-                    label={t("productIngredient.form.displayOrder")}
-                    htmlFor="displayOrder"
-                    error={getFieldErrorMessage(t, errors.displayOrder)}
-                >
-                    <Input
-                        id="displayOrder"
-                        type="number"
-                        hasError={!!errors.displayOrder}
-                        {...register("displayOrder", { setValueAs: toOptionalNumber })}
-                    />
-                </FormField>
 
                 <div className="flex gap-3 sm:col-span-2">
                     <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>

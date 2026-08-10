@@ -42,6 +42,10 @@ export function ProductVariantSection({ productId }: { productId: number }) {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const [editingId, setEditingId] = useState<number | null>(null)
+    // Fuerza a que el <form> se desmonte/remonte tras guardar -- reset({}) limpia el estado de
+    // react-hook-form, pero los <select> personalizados (PresentationSelect/PackagingSelect) son
+    // no controlados; remontarlos garantiza que el DOM quede realmente en blanco.
+    const [formResetKey, setFormResetKey] = useState(0)
 
     const variantsQuery = useQuery({ queryKey: ["productVariants"], queryFn: getProductVariantsAPI })
     const presentationsQuery = useQuery({ queryKey: ["presentations"], queryFn: getPresentationsAPI })
@@ -66,6 +70,7 @@ export function ProductVariantSection({ productId }: { productId: number }) {
             invalidate()
             toast.success(data.message)
             reset({})
+            setFormResetKey((key) => key + 1)
         },
         onError: (error) => toast.error(error.message),
     })
@@ -78,6 +83,7 @@ export function ProductVariantSection({ productId }: { productId: number }) {
             toast.success(data.message)
             setEditingId(null)
             reset({})
+            setFormResetKey((key) => key + 1)
         },
         onError: (error) => toast.error(error.message),
     })
@@ -154,7 +160,7 @@ export function ProductVariantSection({ productId }: { productId: number }) {
                 </Table>
             </TableContainer>
 
-            <form onSubmit={onSubmit} className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
+            <form key={formResetKey} onSubmit={onSubmit} className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
                 <FormField
                     label={t("productVariant.form.presentationId")}
                     htmlFor="presentationId"

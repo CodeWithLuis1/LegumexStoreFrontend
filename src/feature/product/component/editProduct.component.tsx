@@ -71,8 +71,7 @@ export function EditProductForm({ register, control, errors }: EditProductFormPr
                 htmlFor="isCustomizable"
                 error={getFieldErrorMessage(t, errors.isCustomizable)}
             >
-                {/* Select con dos opciones fijas en código (no un catálogo con CRUD): no hay
-                    fila que un admin pueda borrar/editar y romper el flag en los productos. */}
+
                 <Select
                     id="isCustomizable"
                     hasError={!!errors.isCustomizable}

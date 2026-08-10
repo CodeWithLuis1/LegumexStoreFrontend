@@ -13,22 +13,7 @@
         "selectPlaceholder": "Selecciona una opción",
         "searchPlaceholder": "Escribe para buscar...",
         "noOptionsFound": "No se encontraron resultados",
-        "yes": "Sí",
-        "no": "No",
-        "logout": "Cerrar sesión",
-        "imageCapture": {
-            "addImage": "Agregar foto",
-            "changeImage": "Cambiar foto",
-            "remove": "Quitar",
-            "useCamera": "Usar cámara",
-            "uploadFile": "Subir imagen",
-            "takePhoto": "Tomar foto",
-            "retake": "Tomar otra",
-            "back": "Volver",
-            "cameraError": "No se pudo acceder a la cámara. Verifica los permisos o sube una imagen desde tu dispositivo.",
-            "invalidFile": "Selecciona un archivo de imagen válido",
-            "fileTooLarge": "La imagen es demasiado grande. Máximo 5MB"
-        }
+        "logout": "Cerrar sesión"
     },
     "errors": {
         "unexpected_response": "La respuesta del servidor no tiene el formato esperado",
@@ -55,7 +40,6 @@
             "hidePassword": "Ocultar contraseña",
             "submit": "Iniciar sesión",
             "submitting": "Iniciando sesión...",
-            "locked": "Cuenta bloqueada",
             "footer": "© {{year}} Legumex Apps. Todos los derechos reservados."
         },
         "customerLogin": {
@@ -90,8 +74,6 @@
             "dismiss": "Cerrar aviso"
         },
         "nav": {
-            "catalog": "Catálogo",
-            "quality": "Calidad",
             "about": "Nosotros",
             "contact": "Contacto"
         },
@@ -188,83 +170,13 @@
             "titleLineTwo": "Legumex",
             "description": "Solicita tu cotización de vegetales frescos y congelados de exportación, fácil y rápido.",
             "primaryAction": "Solicitar cotización"
-        },
-        "credentials": {
-            "yearsOperating": "Años de operación",
-            "hectaresManaged": "Hectáreas manejadas",
-            "destinationCountries": "Países de destino",
-            "qualityCertifications": "Certificaciones"
-        },
-        "categories": {
-            "eyebrow": "Líneas de producto",
-            "title": "Categorías",
-            "vainas": {
-                "title": "Arvejas y ejotes",
-                "description": "Vainas planas y arveja china, corte manual y calibre uniforme."
-            },
-            "cruciferas": {
-                "title": "Crucíferas",
-                "description": "Brócoli y coliflor en floretes o entero, color y firmeza consistentes."
-            },
-            "miniVegetales": {
-                "title": "Mini vegetales y mixes",
-                "description": "Formatos baby y combinaciones listas para líneas de proceso."
-            },
-            "raices": {
-                "title": "Raíces y tubérculos",
-                "description": "Papa nativa y raíces seleccionadas por calibre y color de piel."
-            },
-            "iqf": {
-                "title": "Línea IQF",
-                "description": "Congelado individual, sin aglomerados, listo para retail o food service."
-            }
-        },
-        "coldChain": {
-            "fresh": {
-                "title": "Línea fresca",
-                "description": "Cosecha, empaque y despacho en ventanas cortas para llegar en punto óptimo de calidad."
-            },
-            "frozen": {
-                "title": "Línea IQF",
-                "description": "Congelación individual que conserva textura, color y valor nutricional durante todo el año."
-            }
-        },
-        "process": {
-            "eyebrow": "Trazabilidad",
-            "title": "Cómo trabajamos",
-            "harvest": {
-                "title": "Campo y cosecha",
-                "description": "Productores aliados y parcelas propias bajo programa de calibre y punto de corte."
-            },
-            "coldChain": {
-                "title": "Proceso y cadena de frío",
-                "description": "Selección, empaque y enfriado o congelación IQF bajo control continuo de temperatura."
-            },
-            "dispatch": {
-                "title": "Despacho y trazabilidad",
-                "description": "Documentación de exportación y seguimiento de lote desde el campo hasta destino."
-            }
-        },
-        "featured": {
-            "eyebrow": "Selección",
-            "title": "Productos destacados"
-        },
-        "quality": {
-            "eyebrow": "Inocuidad",
-            "title": "Calidad certificada"
-        },
-        "finalCta": {
-            "title": "Hablemos de tu próximo pedido",
-            "description": "Contanos volumen, presentación e incoterm y te respondemos con una cotización en 24 horas.",
-            "action": "Solicitar cotización"
         }
     },
     "category": {
         "form": {
             "displayName": "Nombre",
             "urlSlug": "Slug de URL",
-            "fullDescription": "Descripción",
-            "defaultMargin": "Margen por defecto (%)"
+            "fullDescription": "Descripción"
         },
         "list": {
             "title": "Categorías",
@@ -332,7 +244,6 @@
     "ingredient": {
         "form": {
             "displayName": "Nombre",
-            "urlSlug": "Slug de URL",
             "ingredientType": "Tipo de ingrediente",
             "costPerUnit": "Costo por unidad",
             "costUnitId": "Unidad de costo",
@@ -367,7 +278,6 @@
         "form": {
             "categoryId": "Categoría",
             "displayName": "Nombre",
-            "urlSlug": "Slug de URL",
             "fullDescription": "Descripción"
         },
         "list": {
@@ -443,14 +353,6 @@
             "isCustomizableCustom": "Personalizable (mezcla %)",
             "isCustomizableHint": "Personalizable: el cliente arma la mezcla de ingredientes por porcentaje al cotizar, en vez de una receta fija."
         },
-        "card": {
-            "lineFresh": "Fresco",
-            "lineFrozen": "IQF",
-            "requestQuote": "Cotizar",
-            "badgeNew": "Nuevo",
-            "badgeSeason": "Temporada",
-            "badgeBestseller": "Más vendido"
-        },
         "list": {
             "title": "Productos",
             "createLink": "Crear producto"
@@ -492,7 +394,6 @@
             "minPercentage": "% mínimo",
             "maxPercentage": "% máximo",
             "percentageRange": "Rango %",
-            "displayOrder": "Orden de visualización",
             "addButton": "Agregar ingrediente",
             "customizableHint": "Este producto es personalizable: define aquí qué ingredientes puede elegir el cliente y, si quieres, un rango de % permitido para cada uno."
         },
