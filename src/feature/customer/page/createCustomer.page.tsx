@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createCustomerSchema } from "@/feature/customer/schema/customer.schema"
 import type { CreateCustomerInput } from "@/feature/customer/schema/customer.schema"
 import { createCustomerAPI } from "@/feature/customer/api/customer.api"
-import { CreateCustomerForm } from "@/feature/customer/component/createCustomer.component"
+import { CustomerForm } from "@/feature/customer/component/customerForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreateCustomerPage() {
     const { t } = useTranslation()
@@ -52,7 +53,7 @@ export function CreateCustomerPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateCustomerForm register={register} errors={errors} />
+                    <CustomerForm register={register} errors={errors} />
                     <Button type="submit" disabled={createCustomerMutation.isPending}>
                         {createCustomerMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

@@ -12,7 +12,8 @@ import { getUnitByIdAPI, updateUnitAPI } from "@/feature/unit/api/unit.api"
 import { EditUnitForm } from "@/feature/unit/component/editUnit.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 // Partial<UpdateUnitInput>: si esta Unidad se creó ANTES de este cambio (displayName libre,
 // ya no existe en este catálogo fijo) no hay ninguna key que le corresponda -- se precarga

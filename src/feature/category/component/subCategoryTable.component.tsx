@@ -1,82 +1,55 @@
-import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { getSubCategoriesAPI } from "@/feature/category/api/subCategory.api"
+import { getSubCategoriesPaginatedAPI, updateSubCategoryStatusAPI } from "@/feature/category/api/subCategory.api"
 import { getCategoriesAPI } from "@/feature/category/api/category.api"
+import type { SubCategoryResponse } from "@/feature/category/schema/subCategory.schema"
 import { usePermission } from "@/shared/auth/usePermission"
-import { Input } from "@/shared/component/input.component"
-import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
+import { PaginatedAdminTable } from "@/shared/component/paginatedAdminTable.component"
+import { EditLink } from "@/shared/component/editLink.component"
+import { StatusBadge } from "@/shared/component/statusBadge.component"
+import { StatusToggleButton } from "@/shared/component/statusToggleButton.component"
+import { useStatusToggle } from "@/shared/hook/useStatusToggle"
 
 export function SubCategoryTable() {
     const { t } = useTranslation()
     const { hasPermission } = usePermission()
-    const [search, setSearch] = useState("")
+    const { isPending, toggle } = useStatusToggle({ mutationFn: updateSubCategoryStatusAPI, invalidateKey: "subCategories" })
 
-    const subCategoriesQuery = useQuery({
-        queryKey: ["subCategories"],
-        queryFn: getSubCategoriesAPI,
-        retry: false,
-    })
-    const categoriesQuery = useQuery({
-        queryKey: ["categories"],
-        queryFn: getCategoriesAPI,
-        retry: false,
-    })
 
-    if (subCategoriesQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
-    if (subCategoriesQuery.isError) return <p className="text-error-fg">{t("common.loadError")}</p>
-
-    const subCategories = subCategoriesQuery.data?.data ?? []
-    const categories = categoriesQuery.data?.data ?? []
-    const categoryNameById = new Map(categories.map((category) => [category.id, category.displayName]))
-
-    const filteredSubCategories = subCategories.filter((subCategory) =>
-        subCategory.displayName.toLowerCase().includes(search.toLowerCase())
-    )
+    const categoriesQuery = useQuery({ queryKey: ["categories"], queryFn: getCategoriesAPI, retry: false })
+    const categoryNameById = new Map((categoriesQuery.data?.data ?? []).map((category) => [category.id, category.displayName]))
 
     return (
-        <div>
-            <Input
-                type="text"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={t("subCategory.table.searchPlaceholder")}
-                className="mb-4 max-w-sm"
-            />
-
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <Th>{t("subCategory.form.displayName")}</Th>
-                            <Th>{t("subCategory.form.categoryId")}</Th>
-                            <Th>{t("common.actions")}</Th>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredSubCategories.map((subCategory) => (
-                            <TableRow key={subCategory.id}>
-                                <Td>{subCategory.displayName}</Td>
-                                <Td>{categoryNameById.get(subCategory.categoryId) ?? "-"}</Td>
-                                <Td>
-                                    {hasPermission("subCategories:edit") && (
-                                        <Link
-                                            to={`/admin/sub-categories/${subCategory.id}/edit`}
-                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                        >
-                                            {t("common.edit")}
-                                        </Link>
-                                    )}
-                                </Td>
-                            </TableRow>
-                        ))}
-                        {filteredSubCategories.length === 0 && (
-                            <TableEmpty message={t("subCategory.table.empty")} colSpan={3} />
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+        <PaginatedAdminTable<SubCategoryResponse>
+            queryKey={["subCategories", "paginated"]}
+            queryFn={getSubCategoriesPaginatedAPI}
+            searchPlaceholder={t("subCategory.table.searchPlaceholder")}
+            emptyMessage={t("subCategory.table.empty")}
+            renderActions={(subCategory) => (
+                <div className="flex items-center gap-4">
+                    <EditLink to={`/admin/sub-categories/${subCategory.id}/edit`} permission="subCategories:edit" />
+                    {hasPermission("subCategories:edit") && (
+                        <StatusToggleButton
+                            isActive={subCategory.isActive}
+                            isPending={isPending}
+                            onToggle={() => toggle(subCategory.id, subCategory.displayName, subCategory.isActive)}
+                        />
+                    )}
+                </div>
+            )}
+            columns={[
+                { key: "displayName", header: t("subCategory.form.displayName"), render: (subCategory) => subCategory.displayName },
+                {
+                    key: "categoryId",
+                    header: t("subCategory.form.categoryId"),
+                    render: (subCategory) => categoryNameById.get(subCategory.categoryId) ?? "-",
+                },
+                {
+                    key: "status",
+                    header: t("common.status"),
+                    render: (subCategory) => <StatusBadge isActive={subCategory.isActive} />,
+                },
+            ]}
+        />
     )
 }

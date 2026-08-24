@@ -1,48 +1,38 @@
 import { useState } from "react"
+import type { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { Link } from "react-router-dom"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { ClipboardList, LogOut, FileText } from "lucide-react"
+import { ClipboardList, LogOut } from "lucide-react"
 import { useCustomerAuth } from "@/shared/auth/customer/useCustomerAuth"
 import { SiteContainer } from "@/shared/component/siteContainer.component"
 import { Spinner } from "@/shared/component/spinner.component"
-import { getQuoteProductsAPI, getQuoteDestinationsAPI, previewQuoteAPI, saveQuoteAPI } from "@/feature/quote/api/quote.api"
+import { getQuoteProductsAPI, getQuoteDestinationsAPI, saveQuoteAPI } from "@/feature/quote/api/quote.api"
 import { QuoteCalculatorForm } from "@/feature/quote/component/quoteCalculatorForm.component"
+import type { QuoteWizardStep } from "@/feature/quote/component/quoteCalculatorForm.component"
 import { QuoteResultCard } from "@/feature/quote/component/quoteResultCard.component"
 import type { CalculateQuoteInput, QuoteCalculation } from "@/feature/quote/schema/quote.schema"
 
 export function QuoteRequestPage() {
     const { t } = useTranslation()
     const { customer, logout } = useCustomerAuth()
-    const queryClient = useQueryClient()
     const [result, setResult] = useState<QuoteCalculation | null>(null)
-    const [lastFormData, setLastFormData] = useState<CalculateQuoteInput | null>(null)
-    const [isResultSaved, setIsResultSaved] = useState(false)
+
+    const [wizardStep, setWizardStep] = useState<QuoteWizardStep>("mode")
 
     const productsQuery = useQuery({ queryKey: ["quoteProducts"], queryFn: getQuoteProductsAPI })
     const destinationsQuery = useQuery({ queryKey: ["quoteDestinations"], queryFn: getQuoteDestinationsAPI })
 
-    const previewMutation = useMutation({
-        mutationFn: previewQuoteAPI,
-        onSuccess: (response) => {
-            if (response) setResult(response.data)
-        },
-        onError: (error) => {
-            setResult(null)
-            toast.error(error.message)
-        },
-    })
 
-    const saveMutation = useMutation({
+    const calculateMutation = useMutation({
         mutationFn: saveQuoteAPI,
         onSuccess: (response) => {
             if (!response) return
-            setIsResultSaved(true)
+            setResult(response.data)
             toast.success(response.message)
-            queryClient.invalidateQueries({ queryKey: ["myQuotes"] })
         },
         onError: (error) => {
+            setResult(null)
             toast.error(error.message)
         },
     })
@@ -52,16 +42,51 @@ export function QuoteRequestPage() {
     const isLoadingCatalog = productsQuery.isLoading || destinationsQuery.isLoading
     const hasCatalogError = productsQuery.isError || destinationsQuery.isError
 
+
     const handleSubmit = (formData: CalculateQuoteInput) => {
         setResult(null)
-        setIsResultSaved(false)
-        setLastFormData(formData)
-        previewMutation.mutate(formData)
+        calculateMutation.mutate(formData)
     }
 
-    const handleSave = () => {
-        if (!lastFormData) return
-        saveMutation.mutate(lastFormData)
+
+    const handleStepChange = (nextStep: QuoteWizardStep) => {
+        setWizardStep(nextStep)
+        if (nextStep !== "details") {
+            setResult(null)
+        }
+    }
+
+    let content: ReactNode
+    if (isLoadingCatalog) {
+        content = <Spinner />
+    } else if (hasCatalogError) {
+        content = <p className="py-12 text-center text-error-fg">{t("common.loadError")}</p>
+    } else if (wizardStep === "details") {
+        content = (
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
+                <QuoteCalculatorForm
+                    products={products}
+                    destinations={destinations}
+                    onSubmit={handleSubmit}
+                    isSubmitting={calculateMutation.isPending}
+                    onStepChange={handleStepChange}
+                />
+                <QuoteResultCard result={result} isPending={calculateMutation.isPending} showCostBreakdown={false} />
+            </div>
+        )
+    } else {
+
+        content = (
+            <div className="mx-auto max-w-3xl">
+                <QuoteCalculatorForm
+                    products={products}
+                    destinations={destinations}
+                    onSubmit={handleSubmit}
+                    isSubmitting={calculateMutation.isPending}
+                    onStepChange={handleStepChange}
+                />
+            </div>
+        )
     }
 
     return (
@@ -79,13 +104,6 @@ export function QuoteRequestPage() {
                     </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-5">
-                    <Link
-                        to="/mis-cotizaciones"
-                        className="flex items-center gap-1.5 text-sm font-medium text-texto-suave transition hover:text-verde-profundo"
-                    >
-                        <FileText size={16} />
-                        {t("site.myQuotes.navLink")}
-                    </Link>
                     <button
                         onClick={logout}
                         type="button"
@@ -97,27 +115,7 @@ export function QuoteRequestPage() {
                 </div>
             </header>
 
-            {isLoadingCatalog ? (
-                <Spinner />
-            ) : hasCatalogError ? (
-                <p className="py-12 text-center text-error-fg">{t("common.loadError")}</p>
-            ) : (
-                <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
-                    <QuoteCalculatorForm
-                        products={products}
-                        destinations={destinations}
-                        onSubmit={handleSubmit}
-                        isSubmitting={previewMutation.isPending}
-                    />
-                    <QuoteResultCard
-                        result={result}
-                        isPending={previewMutation.isPending}
-                        onSave={handleSave}
-                        isSaving={saveMutation.isPending}
-                        isSaved={isResultSaved}
-                    />
-                </div>
-            )}
+            {content}
         </SiteContainer>
     )
 }

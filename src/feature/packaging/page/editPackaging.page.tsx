@@ -8,14 +8,13 @@ import { toast } from "sonner"
 import { updatePackagingSchema } from "@/feature/packaging/schema/packaging.schema"
 import type { PackagingResponse, UpdatePackagingInput } from "@/feature/packaging/schema/packaging.schema"
 import { getPackagingByIdAPI, updatePackagingAPI } from "@/feature/packaging/api/packaging.api"
-import { EditPackagingForm } from "@/feature/packaging/component/editPackaging.component"
+import { PackagingForm } from "@/feature/packaging/component/packagingForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
-// Partial<UpdatePackagingInput>: packagingRole/unitCost son requeridos para guardar, pero un
-// registro viejo de antes de esa regla puede tener null en la BD -- se precarga vacío para
-// que el admin lo complete en vez de forzar un valor que no existe.
+
 function toFormValues(packaging: PackagingResponse): Partial<UpdatePackagingInput> {
     return {
         displayName: packaging.displayName,
@@ -83,7 +82,7 @@ export function EditPackagingPage() {
 
                 {packagingQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditPackagingForm register={register} errors={errors} />
+                        <PackagingForm register={register} errors={errors} />
                         <Button type="submit" disabled={updatePackagingMutation.isPending}>
                             {updatePackagingMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

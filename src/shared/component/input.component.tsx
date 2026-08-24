@@ -5,7 +5,7 @@ import { withUppercase } from "@/shared/form/withUppercase"
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
     hasError?: boolean
     // Escape hatch para campos donde la mayúscula automática es incorrecta (ej. username de
-    // login, que el backend compara exacto). Por defecto todo texto libre se pasa a mayúsculas.
+    // login, que el backend compara exacto). Por defecto el 100% del texto libre se pasa a mayúsculas.
     preserveCase?: boolean
 }
 

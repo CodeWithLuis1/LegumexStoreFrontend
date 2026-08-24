@@ -7,12 +7,11 @@ export const createProductVariantPalletMaterialSchema = z.object({
     // Requerido: quantityPerPallet * requestedPallets es la fórmula directa del costo de esta
     // línea de paletización. Si queda vacío, el material "cuesta" $0 en cada cotización.
     quantityValue: z.number().positive(),
-    quantityUnitId: z.number().int().positive().optional(),
 })
 
 // .partial() salvo quantityValue -- no puede quedar vacío ni siquiera al editar una fila
 // existente.
-export const updateProductVariantPalletMaterialSchema = createProductVariantPalletMaterialSchema.partial().extend({
+const updateProductVariantPalletMaterialSchema = createProductVariantPalletMaterialSchema.partial().extend({
     quantityValue: createProductVariantPalletMaterialSchema.shape.quantityValue,
 })
 
@@ -22,7 +21,6 @@ export const responseProductVariantPalletMaterialSchema = baseCatalogSchema.exte
     // DECIMAL en Postgres: Sequelize lo devuelve como string en un SELECT normal, pero como
     // número tras un .update() -- z.coerce.number() acepta ambos formatos.
     quantityValue: z.coerce.number().nullable(),
-    quantityUnitId: z.number().int().nullable(),
 })
 
 export type CreateProductVariantPalletMaterialInput = z.infer<typeof createProductVariantPalletMaterialSchema>

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import type { FormEvent } from "react"
+import type { SubmitEvent } from "react"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next"
 import { Send } from "lucide-react"
@@ -9,7 +9,7 @@ export function FooterNewsletterForm() {
     const { t } = useTranslation()
     const [emailAddress, setEmailAddress] = useState("")
 
-    function handleSubscribe(event: FormEvent) {
+    function handleSubscribe(event: SubmitEvent) {
         event.preventDefault()
         if (!emailAddress) return
 

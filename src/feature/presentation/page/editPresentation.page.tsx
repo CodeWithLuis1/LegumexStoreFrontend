@@ -8,10 +8,11 @@ import { toast } from "sonner"
 import { updatePresentationSchema } from "@/feature/presentation/schema/presentation.schema"
 import type { PresentationResponse, UpdatePresentationInput } from "@/feature/presentation/schema/presentation.schema"
 import { getPresentationByIdAPI, updatePresentationAPI } from "@/feature/presentation/api/presentation.api"
-import { EditPresentationForm } from "@/feature/presentation/component/editPresentation.component"
+import { PresentationForm } from "@/feature/presentation/component/presentationForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 // Partial<UpdatePresentationInput>: netWeightGrams es requerido para guardar, pero una
 // presentación vieja de antes de esa regla puede tener null en la BD -- se precarga vacía
@@ -84,7 +85,7 @@ export function EditPresentationPage() {
 
                 {presentationQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditPresentationForm register={register} control={control} errors={errors} />
+                        <PresentationForm register={register} control={control} errors={errors} />
                         <Button type="submit" disabled={updatePresentationMutation.isPending}>
                             {updatePresentationMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

@@ -11,7 +11,7 @@ export const createProductIngredientSchema = z.object({
     maxPercentage: z.number().min(0).max(100).optional(),
 })
 
-export const updateProductIngredientSchema = createProductIngredientSchema.partial()
+const updateProductIngredientSchema = createProductIngredientSchema.partial()
 
 export const responseProductIngredientSchema = baseCatalogSchema.extend({
     productId: z.number().int(),

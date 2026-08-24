@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createProductTypeSchema } from "@/feature/product-type/schema/productType.schema"
 import type { CreateProductTypeInput } from "@/feature/product-type/schema/productType.schema"
 import { createProductTypeAPI } from "@/feature/product-type/api/productType.api"
-import { CreateProductTypeForm } from "@/feature/product-type/component/createProductType.component"
+import { ProductTypeForm } from "@/feature/product-type/component/productTypeForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreateProductTypePage() {
     const { t } = useTranslation()
@@ -52,7 +53,7 @@ export function CreateProductTypePage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateProductTypeForm register={register} errors={errors} />
+                    <ProductTypeForm register={register} errors={errors} />
                     <Button type="submit" disabled={createProductTypeMutation.isPending}>
                         {createProductTypeMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

@@ -6,5 +6,3 @@ export const baseCatalogSchema = z.object({
     createdAt: z.string(),
     updatedAt: z.string(),
 })
-
-export type BaseCatalog = z.infer<typeof baseCatalogSchema>

@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createDestinationSchema } from "@/feature/destination/schema/destination.schema"
 import type { CreateDestinationInput } from "@/feature/destination/schema/destination.schema"
 import { createDestinationAPI } from "@/feature/destination/api/destination.api"
-import { CreateDestinationForm } from "@/feature/destination/component/createDestination.component"
+import { DestinationForm } from "@/feature/destination/component/destinationForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreateDestinationPage() {
     const { t } = useTranslation()
@@ -52,7 +53,7 @@ export function CreateDestinationPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateDestinationForm register={register} errors={errors} />
+                    <DestinationForm register={register} errors={errors} />
                     <Button type="submit" disabled={createDestinationMutation.isPending}>
                         {createDestinationMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

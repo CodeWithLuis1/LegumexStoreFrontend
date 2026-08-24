@@ -13,7 +13,13 @@ type SearchableSelectProps = Omit<
     hasError?: boolean
 }
 
-export function SearchableSelect({ hasError = false, ...props }: SearchableSelectProps) {
+function optionClassName(state: { isSelected: boolean; isFocused: boolean }): string {
+    if (state.isSelected) return "bg-verde-profundo text-crema"
+    if (state.isFocused) return "bg-crema text-verde-profundo"
+    return "text-verde-profundo"
+}
+
+export function SearchableSelect({ hasError = false, ...props }: Readonly<SearchableSelectProps>) {
     return (
         <ReactSelect<SearchableSelectOption, false, GroupBase<SearchableSelectOption>>
             unstyled
@@ -32,14 +38,7 @@ export function SearchableSelect({ hasError = false, ...props }: SearchableSelec
                 indicatorSeparator: () => "hidden",
                 menu: () => "z-20 mt-1 overflow-hidden rounded-[10px] border-[1.5px] border-gris-campo bg-hueso shadow-card",
                 menuList: () => "py-1",
-                option: (state) =>
-                    `cursor-pointer px-4 py-2.5 text-sm ${
-                        state.isSelected
-                            ? "bg-verde-profundo text-crema"
-                            : state.isFocused
-                              ? "bg-crema text-verde-profundo"
-                              : "text-verde-profundo"
-                    }`,
+                option: (state) => `cursor-pointer px-4 py-2.5 text-sm ${optionClassName(state)}`,
                 noOptionsMessage: () => "px-4 py-2.5 text-sm text-texto-suave",
             }}
             {...props}

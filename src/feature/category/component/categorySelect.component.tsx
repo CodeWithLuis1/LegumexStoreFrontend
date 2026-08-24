@@ -11,14 +11,16 @@ type CategorySelectProps = {
     onChange: (value: number | undefined) => void
 }
 
-export function CategorySelect({ inputId, hasError, value, onChange }: CategorySelectProps) {
+export function CategorySelect({ inputId, hasError, value, onChange }: Readonly<CategorySelectProps>) {
     const { t } = useTranslation()
     const categoriesQuery = useQuery({ queryKey: ["categories"], queryFn: getCategoriesAPI })
 
-    const options: SearchableSelectOption[] = (categoriesQuery.data?.data ?? []).map((category) => ({
-        value: category.id,
-        label: category.displayName,
-    }))
+    const options: SearchableSelectOption[] = (categoriesQuery.data?.data ?? [])
+        .filter((category) => category.isActive)
+        .map((category) => ({
+            value: category.id,
+            label: category.displayName,
+        }))
 
     return (
         <SearchableSelect

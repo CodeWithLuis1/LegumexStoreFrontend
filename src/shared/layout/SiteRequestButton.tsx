@@ -7,7 +7,7 @@ type SiteRequestButtonProps = {
     itemCount?: number
 }
 
-export function SiteRequestButton({ itemCount = 0 }: SiteRequestButtonProps) {
+export function SiteRequestButton({ itemCount = 0 }: Readonly<SiteRequestButtonProps>) {
     const { t } = useTranslation()
     const RequestIcon = isB2cMode() ? ShoppingCart : ClipboardList
 

@@ -1,0 +1,6 @@
+projectKey=LegumexStore-frontend
+serverUrl=http://localhost:9000
+serverVersion=26.8.0.126808
+dashboardUrl=http://localhost:9000/dashboard?id=LegumexStore-frontend
+ceTaskId=7fb8fe73-c5ec-4816-af9d-cfdc3280f7b2
+ceTaskUrl=http://localhost:9000/api/ce/task?id=7fb8fe73-c5ec-4816-af9d-cfdc3280f7b2

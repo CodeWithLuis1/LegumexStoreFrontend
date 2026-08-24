@@ -8,16 +8,25 @@ import { toast } from "sonner"
 import { updateSubCategorySchema } from "@/feature/category/schema/subCategory.schema"
 import type { SubCategoryResponse, UpdateSubCategoryInput } from "@/feature/category/schema/subCategory.schema"
 import { getSubCategoryByIdAPI, updateSubCategoryAPI } from "@/feature/category/api/subCategory.api"
-import { EditSubCategoryForm } from "@/feature/category/component/editSubCategory.component"
+import { SubCategoryForm } from "@/feature/category/component/subCategoryForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 function toFormValues(subCategory: SubCategoryResponse): UpdateSubCategoryInput {
+    // Ver el mismo comentario en editCategory.page.tsx::toFormValues.
+    const englishTranslation = subCategory.translations.find((translation) => translation.language === "en")
     return {
         categoryId: subCategory.categoryId,
         displayName: subCategory.displayName,
         fullDescription: subCategory.fullDescription ?? undefined,
+        translations: {
+            en: {
+                displayName: englishTranslation?.displayName ?? "",
+                fullDescription: englishTranslation?.fullDescription ?? "",
+            },
+        },
     }
 }
 
@@ -81,7 +90,7 @@ export function EditSubCategoryPage() {
 
                 {subCategoryQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditSubCategoryForm register={register} control={control} errors={errors} />
+                        <SubCategoryForm register={register} control={control} errors={errors} />
                         <Button type="submit" disabled={updateSubCategoryMutation.isPending}>
                             {updateSubCategoryMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

@@ -5,5 +5,3 @@ export const responsePermissionSchema = baseCatalogSchema.extend({
     name: z.string(),
     description: z.string().nullable(),
 })
-
-export type PermissionResponse = z.infer<typeof responsePermissionSchema>

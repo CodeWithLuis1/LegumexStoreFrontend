@@ -1,26 +1,16 @@
 import api from "@/shared/api/api"
 import { handleApiError } from "@/shared/api/handleApiError"
-import { apiItemResponseSchema, apiListResponseSchema, apiMessageResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
+import { apiListResponseSchema, apiMessageResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
 import { responseProductVariantSchema } from "@/feature/product/schema/productVariant.schema"
 import type { CreateProductVariantInput, UpdateProductVariantInput } from "@/feature/product/schema/productVariant.schema"
 
 const productVariantListResponseSchema = apiListResponseSchema(responseProductVariantSchema)
-const productVariantItemResponseSchema = apiItemResponseSchema(responseProductVariantSchema)
 const productVariantMutationResponseSchema = apiMutationResponseSchema(responseProductVariantSchema)
 
 export async function getProductVariantsAPI() {
     try {
         const { data } = await api.get("/product-variants")
         return productVariantListResponseSchema.parse(data)
-    } catch (error) {
-        handleApiError(error)
-    }
-}
-
-export async function getProductVariantByIdAPI(id: number) {
-    try {
-        const { data } = await api.get(`/product-variants/${id}`)
-        return productVariantItemResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
     }

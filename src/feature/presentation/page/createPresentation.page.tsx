@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createPresentationSchema } from "@/feature/presentation/schema/presentation.schema"
 import type { CreatePresentationInput } from "@/feature/presentation/schema/presentation.schema"
 import { createPresentationAPI } from "@/feature/presentation/api/presentation.api"
-import { CreatePresentationForm } from "@/feature/presentation/component/createPresentation.component"
+import { PresentationForm } from "@/feature/presentation/component/presentationForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreatePresentationPage() {
     const { t } = useTranslation()
@@ -53,7 +54,7 @@ export function CreatePresentationPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreatePresentationForm register={register} control={control} errors={errors} />
+                    <PresentationForm register={register} control={control} errors={errors} />
                     <Button type="submit" disabled={createPresentationMutation.isPending}>
                         {createPresentationMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

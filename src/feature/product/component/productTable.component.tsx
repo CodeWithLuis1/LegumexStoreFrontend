@@ -1,73 +1,58 @@
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { getProductsAPI } from "@/feature/product/api/product.api"
+import { getProductsPaginatedAPI, updateProductStatusAPI } from "@/feature/product/api/product.api"
+import type { ProductResponse } from "@/feature/product/schema/product.schema"
 import { usePermission } from "@/shared/auth/usePermission"
-import { Input } from "@/shared/component/input.component"
-import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
+import { PaginatedAdminTable } from "@/shared/component/paginatedAdminTable.component"
+import { EditLink } from "@/shared/component/editLink.component"
+import { StatusBadge } from "@/shared/component/statusBadge.component"
+import { StatusToggleButton } from "@/shared/component/statusToggleButton.component"
+import { useStatusToggle } from "@/shared/hook/useStatusToggle"
+import { formatDateTime } from "@/shared/format/date"
 
 export function ProductTable() {
     const { t } = useTranslation()
     const { hasPermission } = usePermission()
-    const [search, setSearch] = useState("")
-
-    const productsQuery = useQuery({
-        queryKey: ["products"],
-        queryFn: getProductsAPI,
-        retry: false,
-    })
-
-    if (productsQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
-    if (productsQuery.isError) return <p className="text-error-fg">{t("common.loadError")}</p>
-
-    const products = productsQuery.data?.data ?? []
-    const filteredProducts = products.filter((product) =>
-        product.displayName.toLowerCase().includes(search.toLowerCase())
-    )
+    const { isPending, toggle } = useStatusToggle({ mutationFn: updateProductStatusAPI, invalidateKey: "products" })
 
     return (
-        <div>
-            <Input
-                type="text"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={t("product.table.searchPlaceholder")}
-                className="mb-4 max-w-sm"
-            />
-
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <Th>{t("product.form.displayName")}</Th>
-                            <Th>{t("product.form.urlSlug")}</Th>
-                            <Th>{t("common.actions")}</Th>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredProducts.map((product) => (
-                            <TableRow key={product.id}>
-                                <Td>{product.displayName}</Td>
-                                <Td>{product.urlSlug}</Td>
-                                <Td>
-                                    {hasPermission("products:edit") && (
-                                        <Link
-                                            to={`/admin/products/${product.id}/edit`}
-                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                        >
-                                            {t("common.edit")}
-                                        </Link>
-                                    )}
-                                </Td>
-                            </TableRow>
-                        ))}
-                        {filteredProducts.length === 0 && (
-                            <TableEmpty message={t("product.table.empty")} colSpan={3} />
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+        <PaginatedAdminTable<ProductResponse>
+            queryKey={["products", "paginated"]}
+            queryFn={getProductsPaginatedAPI}
+            searchPlaceholder={t("product.table.searchPlaceholder")}
+            emptyMessage={t("product.table.empty")}
+            renderActions={(product) => (
+                <div className="flex items-center gap-4">
+                    <EditLink to={`/admin/products/${product.id}/edit`} permission="products:edit" />
+                    {hasPermission("products:edit") && (
+                        <StatusToggleButton
+                            isActive={product.isActive}
+                            isPending={isPending}
+                            onToggle={() => toggle(product.id, product.displayName, product.isActive)}
+                        />
+                    )}
+                </div>
+            )}
+            columns={[
+                { key: "id", header: t("common.id"), render: (product) => product.id },
+                { key: "displayName", header: t("product.form.displayName"), render: (product) => product.displayName },
+                { key: "urlSlug", header: t("product.form.urlSlug"), render: (product) => product.urlSlug },
+                {
+                    key: "isCustomizable",
+                    header: t("product.form.isCustomizable"),
+                    render: (product) =>
+                        t(product.isCustomizable ? "product.form.isCustomizableCustom" : "product.form.isCustomizableFinished"),
+                },
+                {
+                    key: "status",
+                    header: t("common.status"),
+                    render: (product) => <StatusBadge isActive={product.isActive} />,
+                },
+                {
+                    key: "updatedAt",
+                    header: t("common.updatedAt"),
+                    render: (product) => formatDateTime(product.updatedAt),
+                },
+            ]}
+        />
     )
 }

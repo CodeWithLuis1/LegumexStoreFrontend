@@ -45,6 +45,12 @@ function toFormValues(productIngredient: ProductIngredientResponse): IngredientF
     }
 }
 
+function formatPercentageRange(productIngredient: ProductIngredientResponse): string {
+    const min = productIngredient.minPercentage !== null ? Number(productIngredient.minPercentage) : 0
+    const max = productIngredient.maxPercentage !== null ? Number(productIngredient.maxPercentage) : 100
+    return `${min}% - ${max}%`
+}
+
 type ProductIngredientSectionProps = {
     productId: number
     // Producto terminado -> receta fija (quantityValue). Producto personalizable ->
@@ -52,7 +58,7 @@ type ProductIngredientSectionProps = {
     isCustomizable: boolean
 }
 
-export function ProductIngredientSection({ productId, isCustomizable }: ProductIngredientSectionProps) {
+export function ProductIngredientSection({ productId, isCustomizable }: Readonly<ProductIngredientSectionProps>) {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const [editingId, setEditingId] = useState<number | null>(null)
@@ -130,12 +136,6 @@ export function ProductIngredientSection({ productId, isCustomizable }: ProductI
     function cancelEdit() {
         setEditingId(null)
         reset({})
-    }
-
-    function formatPercentageRange(productIngredient: ProductIngredientResponse): string {
-        const min = productIngredient.minPercentage !== null ? Number(productIngredient.minPercentage) : 0
-        const max = productIngredient.maxPercentage !== null ? Number(productIngredient.maxPercentage) : 100
-        return `${min}% - ${max}%`
     }
 
     return (

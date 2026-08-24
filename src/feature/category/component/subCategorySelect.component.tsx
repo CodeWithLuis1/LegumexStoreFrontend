@@ -11,14 +11,16 @@ type SubCategorySelectProps = {
     onChange: (value: number | undefined) => void
 }
 
-export function SubCategorySelect({ inputId, hasError, value, onChange }: SubCategorySelectProps) {
+export function SubCategorySelect({ inputId, hasError, value, onChange }: Readonly<SubCategorySelectProps>) {
     const { t } = useTranslation()
     const subCategoriesQuery = useQuery({ queryKey: ["subCategories"], queryFn: getSubCategoriesAPI })
 
-    const options: SearchableSelectOption[] = (subCategoriesQuery.data?.data ?? []).map((subCategory) => ({
-        value: subCategory.id,
-        label: subCategory.displayName,
-    }))
+    const options: SearchableSelectOption[] = (subCategoriesQuery.data?.data ?? [])
+        .filter((subCategory) => subCategory.isActive)
+        .map((subCategory) => ({
+            value: subCategory.id,
+            label: subCategory.displayName,
+        }))
 
     return (
         <SearchableSelect

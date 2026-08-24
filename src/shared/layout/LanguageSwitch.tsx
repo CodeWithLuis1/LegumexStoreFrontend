@@ -21,7 +21,7 @@ const triggerToneClasses: Record<LanguageSwitchTone, string> = {
     dark: "border-crema/25 bg-crema/10 text-crema hover:bg-crema/15",
 }
 
-export function LanguageSwitch({ tone = "light" }: LanguageSwitchProps) {
+export function LanguageSwitch({ tone = "light" }: Readonly<LanguageSwitchProps>) {
     const { i18n } = useTranslation()
     const [isOpen, setIsOpen] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -60,7 +60,7 @@ export function LanguageSwitch({ tone = "light" }: LanguageSwitchProps) {
             <button
                 type="button"
                 onClick={() => setIsOpen((open) => !open)}
-                aria-haspopup="listbox"
+                aria-haspopup="menu"
                 aria-expanded={isOpen}
                 className={`flex h-10 items-center gap-2 rounded-full border pl-1.5 pr-3 text-sm font-medium transition ${triggerToneClasses[tone]}`}
             >
@@ -71,15 +71,15 @@ export function LanguageSwitch({ tone = "light" }: LanguageSwitchProps) {
 
             {isOpen && (
                 <div
-                    role="listbox"
+                    role="menu"
                     className="absolute right-0 z-50 mt-2 w-44 rounded-2xl border border-gris-campo bg-hueso p-1.5 shadow-card-hover"
                 >
                     {LANGUAGES.map(({ code, label, Flag }) => (
                         <button
                             key={code}
                             type="button"
-                            role="option"
-                            aria-selected={currentLanguage === code}
+                            role="menuitemradio"
+                            aria-checked={currentLanguage === code}
                             onClick={() => selectLanguage(code)}
                             className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm font-medium transition ${
                                 currentLanguage === code

@@ -108,6 +108,10 @@ const CreateRolePage = lazy(() =>
 )
 const EditRolePage = lazy(() => import("@/feature/role/page/editRole.page").then((module) => ({ default: module.EditRolePage })))
 
+const DashboardPage = lazy(() =>
+    import("@/feature/dashboard/page/dashboard.page").then((module) => ({ default: module.DashboardPage }))
+)
+
 const AdminQuoteListPage = lazy(() =>
     import("@/feature/quote/page/adminQuote.page").then((module) => ({ default: module.AdminQuoteListPage }))
 )
@@ -123,6 +127,8 @@ const EditCustomerPage = lazy(() =>
 )
 
 const routes = [
+    { path: "dashboard", component: DashboardPage, permission: "dashboard:view" },
+
     { path: "quotes", component: AdminQuoteListPage, permission: "quotes:view" },
 
     { path: "categories", component: CategoryListPage, permission: "categories:view" },

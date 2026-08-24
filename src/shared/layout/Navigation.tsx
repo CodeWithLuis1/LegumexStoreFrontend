@@ -3,6 +3,7 @@ import {
     Carrot,
     ClipboardList,
     FolderTree,
+    LayoutDashboard,
     Layers,
     MapPin,
     Package,
@@ -18,6 +19,7 @@ import { useTranslation } from "react-i18next"
 import { usePermission } from "@/shared/auth/usePermission"
 
 const NAV_ITEMS = [
+    { url: "/admin/dashboard", labelKey: "dashboard.title", icon: LayoutDashboard, permission: "dashboard:view" },
     { url: "/admin/quotes", labelKey: "adminQuote.list.title", icon: ClipboardList, permission: "quotes:view" },
     { url: "/admin/products", labelKey: "product.list.title", icon: ShoppingBag, permission: "products:view" },
     { url: "/admin/customers", labelKey: "customer.list.title", icon: Users, permission: "customers:view" },

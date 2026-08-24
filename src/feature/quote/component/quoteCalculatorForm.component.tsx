@@ -1,16 +1,19 @@
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslation } from "react-i18next"
-import { Package } from "lucide-react"
+import { ArrowLeft, ChevronRight, Package, SlidersHorizontal } from "lucide-react"
 import { calculateQuoteSchema } from "@/feature/quote/schema/quote.schema"
 import type { CalculateQuoteInput, QuotableProduct, QuoteDestination } from "@/feature/quote/schema/quote.schema"
+import type { DestinationCountry } from "@/feature/destination/schema/destination.schema"
 import { Card } from "@/shared/component/card.component"
 import { Chip } from "@/shared/component/chip.component"
 import { FormField } from "@/shared/component/formField.component"
 import { Select } from "@/shared/component/select.component"
 import { SearchableSelect } from "@/shared/component/searchableSelect.component"
 import type { SearchableSelectOption } from "@/shared/component/searchableSelect.component"
+import { OptionCards } from "@/shared/component/optionCards.component"
+import type { CardOption } from "@/shared/component/optionCards.component"
 import { Input } from "@/shared/component/input.component"
 import { Button } from "@/shared/component/button.component"
 import { getFieldErrorMessage } from "@/shared/i18n/getFieldErrorMessage"
@@ -21,28 +24,55 @@ type QuoteCalculatorFormProps = {
     destinations: QuoteDestination[]
     onSubmit: (formData: CalculateQuoteInput) => void
     isSubmitting: boolean
+    // El wizard vive dentro de este componente (ver QuoteWizardStep abajo), pero el layout de la
+    // página (feature/quote/page/quoteRequest.page.tsx) necesita saber en qué paso está para
+    // decidir si muestra el panel de resultado al lado (solo tiene sentido en "details") o deja
+    // la galería a pantalla completa.
+    onStepChange?: (step: QuoteWizardStep) => void
 }
 
 const MIX_PERCENTAGE_TOLERANCE = 0.5
 
 // El admin ya clasifica cada producto como terminado o personalizable (Product.isCustomizable);
-// se lo preguntamos al cliente primero para no mezclar ambos catálogos en un solo dropdown.
+// se lo preguntamos al cliente primero para no mezclar ambos catálogos en un solo selector.
 // Es un filtro puramente visual sobre datos que el cliente ya recibió completos: el backend
 // revalida productId/ingredientMix igual sin importar qué modo haya elegido la UI.
 type QuoteMode = "finished" | "customizable"
+
+// Flujo tipo "vitrina": Modo -> Categoría (galería de fotos) -> Producto (galería de fotos) ->
+// Detalles (form corto + resultado). Cada paso ocupa la pantalla completa, no se amontonan
+// todos los selectores en un solo formulario largo.
+export type QuoteWizardStep = "mode" | "category" | "product" | "details"
 
 function variantLabel(variant: QuotableProduct["variants"][number]): string {
     return [variant.presentationLabel, variant.packagingLabel, variant.skuCode].filter(Boolean).join(" · ")
 }
 
-export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmitting }: QuoteCalculatorFormProps) {
+function crumbClassName(isActive: boolean, enabled: boolean): string {
+    if (isActive) return "text-verde-profundo"
+    if (enabled) return "text-texto-suave hover:text-verde-profundo"
+    return "cursor-not-allowed text-gris-campo"
+}
+
+export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmitting, onStepChange }: Readonly<QuoteCalculatorFormProps>) {
     const { t } = useTranslation()
+    const [step, setStep] = useState<QuoteWizardStep>("mode")
     const [mode, setMode] = useState<QuoteMode>("finished")
-    const [selectedProductId, setSelectedProductId] = useState("")
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
+    const [selectedProductId, setSelectedProductId] = useState<number | null>(null)
     // Solo se usa en modo "customizable": % que el cliente arma a mano por ingrediente del
     // pool (ver QuotableProduct.ingredientPool). Vive fuera de react-hook-form porque el set
     // de inputs cambia dinámicamente según el producto seleccionado.
     const [mixPercentages, setMixPercentages] = useState<Record<number, string>>({})
+    // País de destino elegido por el cliente: cada destino pertenece a un solo país (ver
+    // Destination.country), así que el selector de destino solo muestra los que calzan con
+    // este valor. Vive fuera de react-hook-form como el resto de la UI del wizard -- solo
+    // destinationId viaja al backend.
+    const [selectedCountry, setSelectedCountry] = useState<DestinationCountry>("GT")
+
+    useEffect(() => {
+        onStepChange?.(step)
+    }, [step, onStepChange])
 
     const {
         register,
@@ -52,45 +82,87 @@ export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmit
         formState: { errors },
     } = useForm<CalculateQuoteInput>({ resolver: zodResolver(calculateQuoteSchema) })
 
-    const modeProducts = products.filter((product) => product.isCustomizable === (mode === "customizable"))
-    const selectedProduct = modeProducts.find((product) => String(product.id) === selectedProductId)
+    const modeProducts = useMemo(
+        () => products.filter((product) => product.isCustomizable === (mode === "customizable")),
+        [products, mode]
+    )
+
+    // Paso 1 del selector visual: categorías derivadas de los productos del modo elegido (no
+    // hay endpoint aparte -- ver decisión en la memoria del proyecto, SubCategoría queda fuera).
+    const categories = useMemo(() => {
+        const byId = new Map<number, CardOption>()
+        modeProducts.forEach((product) => {
+            if (!byId.has(product.categoryId)) {
+                byId.set(product.categoryId, { value: product.categoryId, text: product.categoryName, imageUrl: product.categoryImageUrl })
+            }
+        })
+        return [...byId.values()].sort((a, b) => a.text.localeCompare(b.text))
+    }, [modeProducts])
+
+    const selectedCategory = categories.find((category) => category.value === selectedCategoryId)
+
+    const categoryProducts = useMemo(
+        () => modeProducts.filter((product) => product.categoryId === selectedCategoryId),
+        [modeProducts, selectedCategoryId]
+    )
+    const productCardOptions: CardOption[] = categoryProducts.map((product) => ({
+        value: product.id,
+        text: product.displayName,
+        imageUrl: product.imageUrl,
+        subtitle: product.productTypeName ?? undefined,
+    }))
+
+    const selectedProduct = categoryProducts.find((product) => product.id === selectedProductId)
     const variants = selectedProduct?.variants ?? []
     const ingredientPool = selectedProduct?.ingredientPool ?? []
 
-    // Listas largas (muchos productos, muchos destinos) -> select con búsqueda.
-    // La variante ya queda corta porque depende del producto elegido, un <Select> nativo alcanza.
-    const productOptions: SearchableSelectOption[] = modeProducts.map((product) => ({
-        value: product.id,
-        label: product.displayName,
-    }))
-    const destinationOptions: SearchableSelectOption[] = destinations.map((destination) => ({
-        value: destination.id,
-        label: destination.displayName,
-    }))
+    const destinationOptions: SearchableSelectOption[] = destinations
+        .filter((destination) => destination.country === selectedCountry)
+        .map((destination) => ({
+            value: destination.id,
+            label: destination.displayName,
+        }))
 
     const mixTotal = ingredientPool.reduce((sum, option) => sum + (Number(mixPercentages[option.ingredientId]) || 0), 0)
     const isMixComplete = Math.abs(mixTotal - 100) <= MIX_PERCENTAGE_TOLERANCE
 
     const resetProductSelection = () => {
-        setSelectedProductId("")
+        setSelectedProductId(null)
         setValue("productVariantId", undefined as unknown as number)
         setMixPercentages({})
     }
 
     const handleModeChange = (nextMode: QuoteMode) => {
-        if (nextMode === mode) return
-        setMode(nextMode)
-        resetProductSelection()
+        if (nextMode !== mode) {
+            setMode(nextMode)
+            setSelectedCategoryId(null)
+            resetProductSelection()
+        }
+        setStep("category")
     }
 
-    const handleProductChange = (option: SearchableSelectOption | null) => {
-        setSelectedProductId(option ? String(option.value) : "")
+    const handleCategoryChange = (categoryId: number) => {
+        setSelectedCategoryId(categoryId)
+        resetProductSelection()
+        setStep("product")
+    }
+
+    const handleProductChange = (productId: number) => {
+        setSelectedProductId(productId)
         setValue("productVariantId", undefined as unknown as number)
         setMixPercentages({})
+        setStep("details")
     }
 
     const handleMixPercentageChange = (ingredientId: number, value: string) => {
         setMixPercentages((current) => ({ ...current, [ingredientId]: value }))
+    }
+
+    // Cambiar de país invalida el destino ya elegido (pertenecía al otro país): se limpia para
+    // no dejar seleccionado un destino que ya no aparece en la lista filtrada.
+    const handleCountryChange = (country: DestinationCountry) => {
+        setSelectedCountry(country)
+        setValue("destinationId", undefined as unknown as number)
     }
 
     const submit = handleSubmit((formData) => {
@@ -104,6 +176,15 @@ export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmit
         onSubmit({ ...formData, ingredientMix })
     })
 
+    // Migas de pan clicables: solo se puede saltar a un paso cuyo requisito previo ya está
+    // resuelto (ej. no se puede ir a "Producto" sin categoría elegida).
+    const crumbs: { key: QuoteWizardStep; label: string; enabled: boolean }[] = [
+        { key: "mode", label: t("site.quoteRequest.form.wizard.steps.mode"), enabled: true },
+        { key: "category", label: t("site.quoteRequest.form.wizard.steps.category"), enabled: true },
+        { key: "product", label: t("site.quoteRequest.form.wizard.steps.product"), enabled: selectedCategoryId !== null },
+        { key: "details", label: t("site.quoteRequest.form.wizard.steps.details"), enabled: selectedProductId !== null },
+    ]
+
     return (
         <Card>
             <div className="mb-5 flex items-center gap-2">
@@ -111,176 +192,283 @@ export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmit
                 <h2 className="font-display text-lg font-bold text-verde-profundo">{t("site.quoteRequest.form.title")}</h2>
             </div>
 
-            <div className="mb-2 grid grid-cols-2 gap-2">
-                <button
-                    type="button"
-                    onClick={() => handleModeChange("finished")}
-                    className={`rounded-[10px] border-[1.5px] px-3 py-2.5 text-sm font-semibold transition ${
-                        mode === "finished"
-                            ? "border-verde-profundo bg-verde-profundo text-crema"
-                            : "border-gris-campo bg-hueso text-texto-suave hover:border-verde-profundo hover:text-verde-profundo"
-                    }`}
-                >
-                    {t("site.quoteRequest.form.modeFinished")}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => handleModeChange("customizable")}
-                    className={`rounded-[10px] border-[1.5px] px-3 py-2.5 text-sm font-semibold transition ${
-                        mode === "customizable"
-                            ? "border-verde-profundo bg-verde-profundo text-crema"
-                            : "border-gris-campo bg-hueso text-texto-suave hover:border-verde-profundo hover:text-verde-profundo"
-                    }`}
-                >
-                    {t("site.quoteRequest.form.modeCustomizable")}
-                </button>
-            </div>
-            <p className="mb-5 text-xs text-texto-suave">
-                {mode === "finished" ? t("site.quoteRequest.form.modeFinishedHint") : t("site.quoteRequest.form.modeCustomizableHint")}
-            </p>
+            <nav className="mb-6 flex flex-wrap items-center gap-1.5 text-sm">
+                {crumbs.map((crumb, index) => (
+                    <div key={crumb.key} className="flex items-center gap-1.5">
+                        {index > 0 && <ChevronRight size={14} className="text-gris-campo" />}
+                        <button
+                            type="button"
+                            disabled={!crumb.enabled}
+                            onClick={() => setStep(crumb.key)}
+                            className={`font-medium transition ${crumbClassName(step === crumb.key, crumb.enabled)}`}
+                        >
+                            {crumb.label}
+                        </button>
+                    </div>
+                ))}
+            </nav>
 
             <form onSubmit={submit}>
-                <FormField label={t("site.quoteRequest.form.product")} htmlFor="productId">
-                    <SearchableSelect
-                        inputId="productId"
-                        options={productOptions}
-                        placeholder={t("common.searchPlaceholder")}
-                        noOptionsMessage={() => t("common.noOptionsFound")}
-                        isClearable
-                        value={productOptions.find((option) => String(option.value) === selectedProductId) ?? null}
-                        onChange={handleProductChange}
-                    />
-                    {modeProducts.length === 0 && (
-                        <p className="mt-1.5 text-sm text-texto-suave">
-                            {mode === "finished" ? t("site.quoteRequest.form.noProductsFinished") : t("site.quoteRequest.form.noProductsCustomizable")}
+                {step === "mode" && (
+                    <div>
+                        <p className="mb-1 font-display text-base font-bold text-verde-profundo">
+                            {t("site.quoteRequest.form.wizard.mode.title")}
                         </p>
-                    )}
-                </FormField>
-
-                {selectedProduct && (selectedProduct.productTypeName || selectedProduct.isOrganic) && (
-                    <div className="mb-5 flex flex-wrap gap-2">
-                        {selectedProduct.productTypeName && <Chip>{selectedProduct.productTypeName}</Chip>}
-                        {selectedProduct.isOrganic && <Chip>{t("site.quoteRequest.form.organicBadge")}</Chip>}
+                        <p className="mb-5 text-sm text-texto-suave">{t("site.quoteRequest.form.wizard.mode.subtitle")}</p>
+                        <OptionCards
+                            options={[
+                                {
+                                    value: "finished",
+                                    text: t("site.quoteRequest.form.modeFinished"),
+                                    subtitle: t("site.quoteRequest.form.modeFinishedHint"),
+                                    icon: <Package size={22} />,
+                                },
+                                {
+                                    value: "customizable",
+                                    text: t("site.quoteRequest.form.modeCustomizable"),
+                                    subtitle: t("site.quoteRequest.form.modeCustomizableHint"),
+                                    icon: <SlidersHorizontal size={22} />,
+                                },
+                            ]}
+                            value={mode}
+                            onChange={(value) => handleModeChange(value as QuoteMode)}
+                            columnsClassName="grid-cols-1 sm:grid-cols-2"
+                            imageHeightClassName="h-16"
+                        />
                     </div>
                 )}
 
-                {mode === "customizable" && selectedProduct && (
-                    <div className="mb-5 rounded-[10px] border border-gris-campo p-4">
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                            <p className="text-sm font-semibold text-verde-profundo">{t("site.quoteRequest.form.mixTitle")}</p>
-                            <p className={`text-sm font-semibold ${isMixComplete ? "text-verde-profundo" : "text-error-fg"}`}>
-                                {t("site.quoteRequest.form.mixTotal", { total: mixTotal })}
+                {step === "category" && (
+                    <div>
+                        <button
+                            type="button"
+                            onClick={() => setStep("mode")}
+                            className="mb-4 flex items-center gap-1 text-sm text-texto-suave transition hover:text-verde-profundo"
+                        >
+                            <ArrowLeft size={14} />
+                            {t("site.quoteRequest.form.wizard.back")}
+                        </button>
+                        <p className="mb-1 font-display text-base font-bold text-verde-profundo">
+                            {t("site.quoteRequest.form.wizard.category.title")}
+                        </p>
+                        <p className="mb-5 text-sm text-texto-suave">{t("site.quoteRequest.form.wizard.category.subtitle")}</p>
+
+                        {categories.length === 0 ? (
+                            <p className="text-sm text-texto-suave">
+                                {mode === "finished" ? t("site.quoteRequest.form.noProductsFinished") : t("site.quoteRequest.form.noProductsCustomizable")}
                             </p>
-                        </div>
-
-                        {ingredientPool.length === 0 ? (
-                            <p className="text-sm text-texto-suave">{t("site.quoteRequest.form.mixEmpty")}</p>
                         ) : (
-                            <div className="space-y-3">
-                                {ingredientPool.map((option) => (
-                                    <div key={option.ingredientId} className="flex items-center justify-between gap-3">
-                                        <div>
-                                            <div className="flex items-center gap-2">
-                                                <p className="text-sm text-verde-profundo">{option.displayName}</p>
-                                                <Chip tone={option.isOrganic ? "fresh" : "neutral"}>
-                                                    {option.isOrganic ? t("ingredient.organicTag") : t("ingredient.conventionalTag")}
-                                                </Chip>
-                                            </div>
-                                            <p className="text-xs text-texto-suave">
-                                                {t("site.quoteRequest.form.mixRange", {
-                                                    min: option.minPercentage,
-                                                    max: option.maxPercentage,
-                                                })}
-                                            </p>
-                                        </div>
-                                        <div className="flex w-24 items-center gap-1">
-                                            <Input
-                                                type="number"
-                                                step="0.1"
-                                                min={option.minPercentage}
-                                                max={option.maxPercentage}
-                                                value={mixPercentages[option.ingredientId] ?? ""}
-                                                onChange={(event) => handleMixPercentageChange(option.ingredientId, event.target.value)}
-                                            />
-                                            <span className="text-sm text-texto-suave">%</span>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        {!isMixComplete && ingredientPool.length > 0 && (
-                            <p className="mt-3 text-xs text-error-fg">{t("site.quoteRequest.form.mixIncomplete")}</p>
-                        )}
-                    </div>
-                )}
-
-                <FormField
-                    label={t("site.quoteRequest.form.variant")}
-                    htmlFor="productVariantId"
-                    error={getFieldErrorMessage(t, errors.productVariantId)}
-                >
-                    <Select
-                        id="productVariantId"
-                        hasError={!!errors.productVariantId}
-                        disabled={!selectedProduct}
-                        defaultValue=""
-                        {...register("productVariantId", { setValueAs: toOptionalNumber })}
-                    >
-                        <option value="">{t("common.selectPlaceholder")}</option>
-                        {variants.map((variant) => (
-                            <option key={variant.id} value={variant.id}>
-                                {variantLabel(variant)}
-                            </option>
-                        ))}
-                    </Select>
-                </FormField>
-
-                <FormField
-                    label={t("site.quoteRequest.form.requestedPallets")}
-                    htmlFor="requestedPallets"
-                    error={getFieldErrorMessage(t, errors.requestedPallets)}
-                >
-                    <Input
-                        id="requestedPallets"
-                        type="number"
-                        min={1}
-                        step={1}
-                        defaultValue={1}
-                        hasError={!!errors.requestedPallets}
-                        {...register("requestedPallets", { setValueAs: toOptionalNumber })}
-                    />
-                </FormField>
-
-                <FormField
-                    label={t("site.quoteRequest.form.destination")}
-                    htmlFor="destinationId"
-                    error={getFieldErrorMessage(t, errors.destinationId)}
-                >
-                    <Controller
-                        name="destinationId"
-                        control={control}
-                        render={({ field }) => (
-                            <SearchableSelect
-                                inputId="destinationId"
-                                hasError={!!errors.destinationId}
-                                options={destinationOptions}
-                                placeholder={t("common.searchPlaceholder")}
-                                noOptionsMessage={() => t("common.noOptionsFound")}
-                                isClearable
-                                value={destinationOptions.find((option) => option.value === field.value) ?? null}
-                                onChange={(selected) => field.onChange(selected?.value ?? undefined)}
+                            <OptionCards
+                                options={categories}
+                                value={selectedCategoryId}
+                                onChange={(value) => handleCategoryChange(Number(value))}
+                                columnsClassName="grid-cols-2 sm:grid-cols-3"
+                                imageHeightClassName="h-44 sm:h-56"
                             />
                         )}
-                    />
-                </FormField>
+                    </div>
+                )}
 
-                <Button
-                    type="submit"
-                    disabled={isSubmitting || (mode === "customizable" && !isMixComplete)}
-                    className="mt-2 w-full"
-                >
-                    {isSubmitting ? t("common.loading") : t("site.quoteRequest.form.submit")}
-                </Button>
+                {step === "product" && selectedCategoryId !== null && (
+                    <div>
+                        <button
+                            type="button"
+                            onClick={() => setStep("category")}
+                            className="mb-4 flex items-center gap-1 text-sm text-texto-suave transition hover:text-verde-profundo"
+                        >
+                            <ArrowLeft size={14} />
+                            {t("site.quoteRequest.form.wizard.back")}
+                        </button>
+                        <p className="mb-1 font-display text-base font-bold text-verde-profundo">
+                            {t("site.quoteRequest.form.wizard.product.title", { category: selectedCategory?.text ?? "" })}
+                        </p>
+                        <p className="mb-5 text-sm text-texto-suave">{t("site.quoteRequest.form.wizard.product.subtitle")}</p>
+
+                        {productCardOptions.length === 0 ? (
+                            <p className="text-sm text-texto-suave">
+                                {mode === "finished" ? t("site.quoteRequest.form.noProductsFinished") : t("site.quoteRequest.form.noProductsCustomizable")}
+                            </p>
+                        ) : (
+                            <OptionCards
+                                options={productCardOptions}
+                                value={selectedProductId}
+                                onChange={(value) => handleProductChange(Number(value))}
+                                columnsClassName="grid-cols-2 sm:grid-cols-3"
+                                imageHeightClassName="h-44 sm:h-56"
+                            />
+                        )}
+                    </div>
+                )}
+
+                {step === "details" && selectedProduct && (
+                    <div>
+                        <button
+                            type="button"
+                            onClick={() => setStep("product")}
+                            className="mb-4 flex items-center gap-1 text-sm text-texto-suave transition hover:text-verde-profundo"
+                        >
+                            <ArrowLeft size={14} />
+                            {t("site.quoteRequest.form.wizard.back")}
+                        </button>
+
+                        <div className="mb-5 flex items-center gap-3 rounded-[10px] border border-gris-campo bg-crema/40 p-3">
+                            {selectedProduct.imageUrl ? (
+                                <img
+                                    src={selectedProduct.imageUrl}
+                                    alt=""
+                                    className="h-14 w-14 shrink-0 rounded-lg object-cover"
+                                />
+                            ) : (
+                                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-gris-campo/20 text-texto-suave">
+                                    <Package size={20} />
+                                </div>
+                            )}
+                            <div>
+                                <p className="text-xs text-texto-suave">{selectedCategory?.text}</p>
+                                <p className="font-semibold text-verde-profundo">{selectedProduct.displayName}</p>
+                            </div>
+                        </div>
+
+                        {(selectedProduct.productTypeName || selectedProduct.isOrganic) && (
+                            <div className="mb-5 flex flex-wrap gap-2">
+                                {selectedProduct.productTypeName && <Chip>{selectedProduct.productTypeName}</Chip>}
+                                {selectedProduct.isOrganic && <Chip>{t("site.quoteRequest.form.organicBadge")}</Chip>}
+                            </div>
+                        )}
+
+                        {mode === "customizable" && (
+                            <div className="mb-5 rounded-[10px] border border-gris-campo p-4">
+                                <div className="mb-3 flex items-center justify-between gap-3">
+                                    <p className="text-sm font-semibold text-verde-profundo">{t("site.quoteRequest.form.mixTitle")}</p>
+                                    <p className={`text-sm font-semibold ${isMixComplete ? "text-verde-profundo" : "text-error-fg"}`}>
+                                        {t("site.quoteRequest.form.mixTotal", { total: mixTotal })}
+                                    </p>
+                                </div>
+
+                                {ingredientPool.length === 0 ? (
+                                    <p className="text-sm text-texto-suave">{t("site.quoteRequest.form.mixEmpty")}</p>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {ingredientPool.map((option) => (
+                                            <div key={option.ingredientId} className="flex items-center justify-between gap-3">
+                                                <div>
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="text-sm text-verde-profundo">{option.displayName}</p>
+                                                        <Chip tone={option.isOrganic ? "fresh" : "neutral"}>
+                                                            {option.isOrganic ? t("ingredient.organicTag") : t("ingredient.conventionalTag")}
+                                                        </Chip>
+                                                    </div>
+                                                    <p className="text-xs text-texto-suave">
+                                                        {t("site.quoteRequest.form.mixRange", {
+                                                            min: option.minPercentage,
+                                                            max: option.maxPercentage,
+                                                        })}
+                                                    </p>
+                                                </div>
+                                                <div className="flex w-24 items-center gap-1">
+                                                    <Input
+                                                        type="number"
+                                                        step="0.1"
+                                                        min={option.minPercentage}
+                                                        max={option.maxPercentage}
+                                                        value={mixPercentages[option.ingredientId] ?? ""}
+                                                        onChange={(event) => handleMixPercentageChange(option.ingredientId, event.target.value)}
+                                                    />
+                                                    <span className="text-sm text-texto-suave">%</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                {!isMixComplete && ingredientPool.length > 0 && (
+                                    <p className="mt-3 text-xs text-error-fg">{t("site.quoteRequest.form.mixIncomplete")}</p>
+                                )}
+                            </div>
+                        )}
+
+                        <FormField
+                            label={t("site.quoteRequest.form.variant")}
+                            htmlFor="productVariantId"
+                            error={getFieldErrorMessage(t, errors.productVariantId)}
+                        >
+                            <Select
+                                id="productVariantId"
+                                hasError={!!errors.productVariantId}
+                                defaultValue=""
+                                {...register("productVariantId", { setValueAs: toOptionalNumber })}
+                            >
+                                <option value="">{t("common.selectPlaceholder")}</option>
+                                {variants.map((variant) => (
+                                    <option key={variant.id} value={variant.id}>
+                                        {variantLabel(variant)}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormField>
+
+                        <FormField
+                            label={t("site.quoteRequest.form.requestedPallets")}
+                            htmlFor="requestedPallets"
+                            error={getFieldErrorMessage(t, errors.requestedPallets)}
+                        >
+                            <Input
+                                id="requestedPallets"
+                                type="number"
+                                min={1}
+                                step={1}
+                                defaultValue={1}
+                                hasError={!!errors.requestedPallets}
+                                {...register("requestedPallets", { setValueAs: toOptionalNumber })}
+                            />
+                        </FormField>
+
+                        <FormField label={t("site.quoteRequest.form.country")} htmlFor="quoteCountry">
+                            <Select
+                                id="quoteCountry"
+                                value={selectedCountry}
+                                onChange={(event) => handleCountryChange(event.target.value as DestinationCountry)}
+                            >
+                                <option value="GT">{t("site.quoteRequest.form.countryOptions.GT")}</option>
+                                <option value="US">{t("site.quoteRequest.form.countryOptions.US")}</option>
+                            </Select>
+                        </FormField>
+
+                        <FormField
+                            label={t("site.quoteRequest.form.destination")}
+                            htmlFor="destinationId"
+                            error={getFieldErrorMessage(t, errors.destinationId)}
+                        >
+                            {destinationOptions.length === 0 ? (
+                                <p className="text-sm text-texto-suave">{t("site.quoteRequest.form.noDestinationsForCountry")}</p>
+                            ) : (
+                                <Controller
+                                    name="destinationId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <SearchableSelect
+                                            inputId="destinationId"
+                                            hasError={!!errors.destinationId}
+                                            options={destinationOptions}
+                                            placeholder={t("common.searchPlaceholder")}
+                                            noOptionsMessage={() => t("common.noOptionsFound")}
+                                            isClearable
+                                            value={destinationOptions.find((option) => option.value === field.value) ?? null}
+                                            onChange={(selected) => field.onChange(selected?.value ?? undefined)}
+                                        />
+                                    )}
+                                />
+                            )}
+                        </FormField>
+
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting || (mode === "customizable" && !isMixComplete)}
+                            className="mt-2 w-full"
+                        >
+                            {isSubmitting ? t("common.loading") : t("site.quoteRequest.form.submit")}
+                        </Button>
+                    </div>
+                )}
             </form>
         </Card>
     )

@@ -1,76 +1,39 @@
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { getPackagingsAPI } from "@/feature/packaging/api/packaging.api"
-import { usePermission } from "@/shared/auth/usePermission"
-import { Input } from "@/shared/component/input.component"
-import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
+import { getPackagingsPaginatedAPI } from "@/feature/packaging/api/packaging.api"
+import type { PackagingResponse } from "@/feature/packaging/schema/packaging.schema"
+import { PaginatedAdminTable } from "@/shared/component/paginatedAdminTable.component"
+import { EditLink } from "@/shared/component/editLink.component"
 import { formatCurrency } from "@/shared/format/currency"
+import { formatDateTime } from "@/shared/format/date"
 
 export function PackagingTable() {
     const { t } = useTranslation()
-    const { hasPermission } = usePermission()
-    const [search, setSearch] = useState("")
-
-    const packagingsQuery = useQuery({
-        queryKey: ["packagings"],
-        queryFn: getPackagingsAPI,
-        retry: false,
-    })
-
-    if (packagingsQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
-    if (packagingsQuery.isError) return <p className="text-error-fg">{t("common.loadError")}</p>
-
-    const packagings = packagingsQuery.data?.data ?? []
-    const filteredPackagings = packagings.filter((packaging) =>
-        packaging.displayName.toLowerCase().includes(search.toLowerCase())
-    )
 
     return (
-        <div>
-            <Input
-                type="text"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={t("packaging.table.searchPlaceholder")}
-                className="mb-4 max-w-sm"
-            />
-
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <Th>{t("packaging.form.displayName")}</Th>
-                            <Th>{t("packaging.form.packagingRole")}</Th>
-                            <Th>{t("packaging.form.unitCost")}</Th>
-                            <Th>{t("common.actions")}</Th>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredPackagings.map((packaging) => (
-                            <TableRow key={packaging.id}>
-                                <Td>{packaging.displayName}</Td>
-                                <Td>{t(`packaging.form.packagingRoleOptions.${packaging.packagingRole}`)}</Td>
-                                <Td>{packaging.unitCost != null ? formatCurrency(Number(packaging.unitCost)) : "-"}</Td>
-                                <Td>
-                                    {hasPermission("packagings:edit") && (
-                                        <Link
-                                            to={`/admin/packagings/${packaging.id}/edit`}
-                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                        >
-                                            {t("common.edit")}
-                                        </Link>
-                                    )}
-                                </Td>
-                            </TableRow>
-                        ))}
-                        {filteredPackagings.length === 0 && (
-                            <TableEmpty message={t("packaging.table.empty")} colSpan={4} />
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+        <PaginatedAdminTable<PackagingResponse>
+            queryKey={["packagings", "paginated"]}
+            queryFn={getPackagingsPaginatedAPI}
+            searchPlaceholder={t("packaging.table.searchPlaceholder")}
+            emptyMessage={t("packaging.table.empty")}
+            renderActions={(packaging) => <EditLink to={`/admin/packagings/${packaging.id}/edit`} permission="packagings:edit" />}
+            columns={[
+                { key: "displayName", header: t("packaging.form.displayName"), render: (packaging) => packaging.displayName },
+                {
+                    key: "packagingRole",
+                    header: t("packaging.form.packagingRole"),
+                    render: (packaging) => t(`packaging.form.packagingRoleOptions.${packaging.packagingRole}`),
+                },
+                {
+                    key: "unitCost",
+                    header: t("packaging.form.unitCost"),
+                    render: (packaging) => (packaging.unitCost != null ? formatCurrency(Number(packaging.unitCost)) : "-"),
+                },
+                {
+                    key: "updatedAt",
+                    header: t("common.updatedAt"),
+                    render: (packaging) => formatDateTime(packaging.updatedAt),
+                },
+            ]}
+        />
     )
 }

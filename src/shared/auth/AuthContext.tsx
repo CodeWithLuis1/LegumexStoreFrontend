@@ -1,19 +1,11 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import type { ReactNode } from "react"
 import type { AuthUser } from "@/shared/auth/authUser.type"
 import { clearAuthSession, readAuthSession, writeAuthSession } from "@/shared/auth/authStorage"
 import { AUTH_SESSION_EXPIRED_EVENT } from "@/shared/auth/authEvents"
+import { AuthContext } from "@/shared/auth/authContextValue"
 
-type AuthContextValue = {
-    user: AuthUser | null
-    isAuthenticated: boolean
-    login: (session: { token: string; user: AuthUser }) => void
-    logout: () => void
-}
-
-export const AuthContext = createContext<AuthContextValue | null>(null)
-
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     const [user, setUser] = useState<AuthUser | null>(() => readAuthSession()?.user ?? null)
 
     const login = useCallback((session: { token: string; user: AuthUser }) => {

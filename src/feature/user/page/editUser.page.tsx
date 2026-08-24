@@ -8,10 +8,11 @@ import { toast } from "sonner"
 import { updateUserSchema } from "@/feature/user/schema/user.schema"
 import type { UserResponse, UpdateUserInput } from "@/feature/user/schema/user.schema"
 import { getUserByIdAPI, updateUserAPI } from "@/feature/user/api/user.api"
-import { EditUserForm } from "@/feature/user/component/editUser.component"
+import { UserForm } from "@/feature/user/component/userForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 function toFormValues(user: UserResponse): UpdateUserInput {
     return {
@@ -80,7 +81,7 @@ export function EditUserPage() {
 
                 {userQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditUserForm register={register} errors={errors} />
+                        <UserForm register={register} errors={errors} isEditing />
                         <Button type="submit" disabled={updateUserMutation.isPending}>
                             {updateUserMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

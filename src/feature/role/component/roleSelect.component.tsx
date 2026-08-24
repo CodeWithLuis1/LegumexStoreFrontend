@@ -9,7 +9,10 @@ type RoleSelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
     hasError?: boolean
 }
 
-export const RoleSelect = forwardRef<HTMLSelectElement, RoleSelectProps>(function RoleSelect({ hasError, ...props }, ref) {
+export const RoleSelect = forwardRef<HTMLSelectElement, RoleSelectProps>(function RoleSelect(
+    { hasError, ...props }: Readonly<RoleSelectProps>,
+    ref,
+) {
     const { t } = useTranslation()
     const rolesQuery = useQuery({ queryKey: ["roles"], queryFn: getRolesAPI })
     const roles = rolesQuery.data?.data ?? []

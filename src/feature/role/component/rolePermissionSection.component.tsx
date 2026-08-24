@@ -7,7 +7,7 @@ import { getRolePermissionsAPI, syncRolePermissionsAPI } from "@/feature/role/ap
 import { Checkbox } from "@/shared/component/checkbox.component"
 import { Button } from "@/shared/component/button.component"
 
-export function RolePermissionSection({ roleId }: { roleId: number }) {
+export function RolePermissionSection({ roleId }: Readonly<{ roleId: number }>) {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())

@@ -1,20 +1,22 @@
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { getRolesAPI } from "@/feature/role/api/role.api"
+import { getRolesPaginatedAPI } from "@/feature/role/api/role.api"
 import { usePermission } from "@/shared/auth/usePermission"
 import { Input } from "@/shared/component/input.component"
 import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
+import { PaginationComponent } from "@/shared/component/pagination.component"
+import { usePaginatedSearch } from "@/shared/hook/usePaginatedSearch"
 
 export function RoleTable() {
     const { t } = useTranslation()
     const { hasPermission } = usePermission()
-    const [search, setSearch] = useState("")
+    const { page, setPage, searchInput, setSearchInput, debouncedSearch } = usePaginatedSearch()
 
     const rolesQuery = useQuery({
-        queryKey: ["roles"],
-        queryFn: getRolesAPI,
+        queryKey: ["roles", "paginated", page, debouncedSearch],
+        queryFn: () => getRolesPaginatedAPI({ page, search: debouncedSearch }),
+        placeholderData: keepPreviousData,
         retry: false,
     })
 
@@ -22,14 +24,14 @@ export function RoleTable() {
     if (rolesQuery.isError) return <p className="text-error-fg">{t("common.loadError")}</p>
 
     const roles = rolesQuery.data?.data ?? []
-    const filteredRoles = roles.filter((role) => role.name.toLowerCase().includes(search.toLowerCase()))
+    const totalPages = rolesQuery.data?.meta.totalPages ?? 1
 
     return (
         <div>
             <Input
                 type="text"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
                 placeholder={t("role.table.searchPlaceholder")}
                 className="mb-4 max-w-sm"
             />
@@ -43,7 +45,7 @@ export function RoleTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredRoles.map((role) => (
+                        {roles.map((role) => (
                             <TableRow key={role.id}>
                                 <Td>{role.name}</Td>
                                 <Td>
@@ -58,9 +60,10 @@ export function RoleTable() {
                                 </Td>
                             </TableRow>
                         ))}
-                        {filteredRoles.length === 0 && <TableEmpty message={t("role.table.empty")} colSpan={2} />}
+                        {roles.length === 0 && <TableEmpty message={t("role.table.empty")} colSpan={2} />}
                     </TableBody>
                 </Table>
+                <PaginationComponent currentPage={page} totalPages={totalPages} onPageChange={setPage} />
             </TableContainer>
         </div>
     )

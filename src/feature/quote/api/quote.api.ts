@@ -1,19 +1,16 @@
 import customerApi from "@/shared/api/customerApi"
 import { handleApiError } from "@/shared/api/handleApiError"
-import { apiItemResponseSchema, apiListResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
+import { apiListResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
 import {
     quotableProductSchema,
     quoteDestinationSchema,
-    quoteCalculationSchema,
     savedQuoteSchema,
 } from "@/feature/quote/schema/quote.schema"
 import type { CalculateQuoteInput } from "@/feature/quote/schema/quote.schema"
 
 const quoteProductListResponseSchema = apiListResponseSchema(quotableProductSchema)
 const quoteDestinationListResponseSchema = apiListResponseSchema(quoteDestinationSchema)
-const quoteCalculationResponseSchema = apiItemResponseSchema(quoteCalculationSchema)
 const saveQuoteResponseSchema = apiMutationResponseSchema(savedQuoteSchema)
-const myQuotesResponseSchema = apiListResponseSchema(savedQuoteSchema)
 
 export async function getQuoteProductsAPI() {
     try {
@@ -33,28 +30,13 @@ export async function getQuoteDestinationsAPI() {
     }
 }
 
-export async function previewQuoteAPI(formData: CalculateQuoteInput) {
-    try {
-        const { data } = await customerApi.post("/quotes/preview", formData)
-        return quoteCalculationResponseSchema.parse(data)
-    } catch (error) {
-        handleApiError(error)
-    }
-}
-
+// Único endpoint de cálculo del lado cliente: calcula y guarda en el mismo paso (el cliente ya
+// no ve un botón aparte de "guardar" -- ver quoteRequest.page.tsx). El listado de cotizaciones
+// guardadas ahora solo existe del lado admin (adminQuote.api.ts).
 export async function saveQuoteAPI(formData: CalculateQuoteInput) {
     try {
         const { data } = await customerApi.post("/quotes", formData)
         return saveQuoteResponseSchema.parse(data)
-    } catch (error) {
-        handleApiError(error)
-    }
-}
-
-export async function getMyQuotesAPI() {
-    try {
-        const { data } = await customerApi.get("/quotes/mine")
-        return myQuotesResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
     }

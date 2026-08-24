@@ -14,7 +14,7 @@ type CreateUnitFormProps = {
     watch: UseFormWatch<CreateUnitInput>
 }
 
-export function CreateUnitForm({ register, errors, watch }: CreateUnitFormProps) {
+export function CreateUnitForm({ register, errors, watch }: Readonly<CreateUnitFormProps>) {
     const { t } = useTranslation()
 
     // No dejar elegir dos veces la misma unidad del catálogo (ej. dos filas "Kilogramo") --

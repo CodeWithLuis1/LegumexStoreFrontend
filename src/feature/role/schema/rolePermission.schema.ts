@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const syncRolePermissionsSchema = z.object({
+const syncRolePermissionsSchema = z.object({
     permissionIds: z.array(z.number().int().positive()),
 })
 

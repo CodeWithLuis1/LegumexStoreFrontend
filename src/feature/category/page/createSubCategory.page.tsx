@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createSubCategorySchema } from "@/feature/category/schema/subCategory.schema"
 import type { CreateSubCategoryInput } from "@/feature/category/schema/subCategory.schema"
 import { createSubCategoryAPI } from "@/feature/category/api/subCategory.api"
-import { CreateSubCategoryForm } from "@/feature/category/component/createSubCategory.component"
+import { SubCategoryForm } from "@/feature/category/component/subCategoryForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreateSubCategoryPage() {
     const { t } = useTranslation()
@@ -53,7 +54,7 @@ export function CreateSubCategoryPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateSubCategoryForm register={register} control={control} errors={errors} />
+                    <SubCategoryForm register={register} control={control} errors={errors} />
                     <Button type="submit" disabled={createSubCategoryMutation.isPending}>
                         {createSubCategoryMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

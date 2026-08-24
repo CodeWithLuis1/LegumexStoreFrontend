@@ -12,7 +12,7 @@ const toneClasses: Record<ChipTone, string> = {
     neutral: "bg-gris-campo text-texto-suave",
 }
 
-export function Chip({ tone = "neutral", className = "", ...props }: ChipProps) {
+export function Chip({ tone = "neutral", className = "", ...props }: Readonly<ChipProps>) {
     return (
         <span
             className={`inline-flex items-center gap-1 rounded-chip px-2 py-1 text-xs font-medium ${toneClasses[tone]} ${className}`}

@@ -8,11 +8,12 @@ import { toast } from "sonner"
 import { updateRoleSchema } from "@/feature/role/schema/role.schema"
 import type { RoleResponse, UpdateRoleInput } from "@/feature/role/schema/role.schema"
 import { getRoleByIdAPI, updateRoleAPI } from "@/feature/role/api/role.api"
-import { EditRoleForm } from "@/feature/role/component/editRole.component"
+import { RoleForm } from "@/feature/role/component/roleForm.component"
 import { RolePermissionSection } from "@/feature/role/component/rolePermissionSection.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 function toFormValues(role: RoleResponse): UpdateRoleInput {
     return {
@@ -77,7 +78,7 @@ export function EditRolePage() {
 
                 {roleQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditRoleForm register={register} errors={errors} />
+                        <RoleForm register={register} errors={errors} />
                         <Button type="submit" disabled={updateRoleMutation.isPending}>
                             {updateRoleMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

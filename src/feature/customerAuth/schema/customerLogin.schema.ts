@@ -2,7 +2,7 @@ import { z } from "zod"
 import { apiItemResponseSchema } from "@/shared/api/apiResponse.schema"
 
 export const customerLoginRequestSchema = z.object({
-    email: z.string().trim().min(1).email(),
+    email: z.string().trim().min(1).pipe(z.email()),
     password: z.string().min(1),
 })
 

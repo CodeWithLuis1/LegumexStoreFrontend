@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createRoleSchema } from "@/feature/role/schema/role.schema"
 import type { CreateRoleInput } from "@/feature/role/schema/role.schema"
 import { createRoleAPI } from "@/feature/role/api/role.api"
-import { CreateRoleForm } from "@/feature/role/component/createRole.component"
+import { RoleForm } from "@/feature/role/component/roleForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreateRolePage() {
     const { t } = useTranslation()
@@ -52,7 +53,7 @@ export function CreateRolePage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateRoleForm register={register} errors={errors} />
+                    <RoleForm register={register} errors={errors} />
                     <Button type="submit" disabled={createRoleMutation.isPending}>
                         {createRoleMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

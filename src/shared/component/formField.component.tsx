@@ -9,7 +9,7 @@ type FormFieldProps = {
     children: ReactNode
 }
 
-export function FormField({ label, htmlFor, error, children }: FormFieldProps) {
+export function FormField({ label, htmlFor, error, children }: Readonly<FormFieldProps>) {
     return (
         <div className="mb-5">
             <Label htmlFor={htmlFor}>{label}</Label>

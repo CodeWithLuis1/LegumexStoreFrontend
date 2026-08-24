@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { Leaf } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import { buttonClassName } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 import { SiteContainer } from "@/shared/component/siteContainer.component"
 
 export function HeroSection() {

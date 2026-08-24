@@ -1,17 +1,19 @@
 import api from "@/shared/api/api"
 import { handleApiError } from "@/shared/api/handleApiError"
-import { apiItemResponseSchema, apiListResponseSchema, apiMessageResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
+import { apiItemResponseSchema, apiMutationResponseSchema, apiPaginatedListResponseSchema } from "@/shared/api/apiResponse.schema"
 import { responseCustomerSchema } from "@/feature/customer/schema/customer.schema"
 import type { CreateCustomerInput, UpdateCustomerInput } from "@/feature/customer/schema/customer.schema"
 
-const customerListResponseSchema = apiListResponseSchema(responseCustomerSchema)
+const customerPaginatedListResponseSchema = apiPaginatedListResponseSchema(responseCustomerSchema)
 const customerItemResponseSchema = apiItemResponseSchema(responseCustomerSchema)
 const customerMutationResponseSchema = apiMutationResponseSchema(responseCustomerSchema)
 
-export async function getCustomersAPI() {
+export async function getCustomersPaginatedAPI(params: { page: number; limit?: number; search?: string }) {
     try {
-        const { data } = await api.get("/customers")
-        return customerListResponseSchema.parse(data)
+        const { data } = await api.get("/customers", {
+            params: { page: params.page, limit: params.limit, search: params.search || undefined },
+        })
+        return customerPaginatedListResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
     }
@@ -44,10 +46,10 @@ export async function updateCustomerAPI(id: number, formData: UpdateCustomerInpu
     }
 }
 
-export async function deleteCustomerAPI(id: number) {
+export async function updateCustomerStatusAPI(id: number, isActive: boolean) {
     try {
-        const { data } = await api.delete(`/customers/${id}`)
-        return apiMessageResponseSchema.parse(data)
+        const { data } = await api.patch(`/customers/${id}/status`, { isActive })
+        return customerMutationResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
     }

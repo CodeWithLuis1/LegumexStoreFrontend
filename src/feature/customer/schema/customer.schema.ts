@@ -4,7 +4,7 @@ import { baseCatalogSchema } from "@/shared/schema/baseCatalog.schema"
 export const createCustomerSchema = z.object({
     name: z.string().trim().min(1).max(100),
     companyName: z.string().trim().max(100).optional(),
-    email: z.string().trim().min(1).email(),
+    email: z.string().trim().min(1).pipe(z.email()),
     password: z.string().min(8),
 })
 

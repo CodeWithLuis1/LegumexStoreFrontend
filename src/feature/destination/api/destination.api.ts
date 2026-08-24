@@ -1,17 +1,19 @@
 import api from "@/shared/api/api"
 import { handleApiError } from "@/shared/api/handleApiError"
-import { apiItemResponseSchema, apiListResponseSchema, apiMessageResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
+import { apiItemResponseSchema, apiMutationResponseSchema, apiPaginatedListResponseSchema } from "@/shared/api/apiResponse.schema"
 import { responseDestinationSchema } from "@/feature/destination/schema/destination.schema"
 import type { CreateDestinationInput, UpdateDestinationInput } from "@/feature/destination/schema/destination.schema"
 
-const destinationListResponseSchema = apiListResponseSchema(responseDestinationSchema)
+const destinationPaginatedListResponseSchema = apiPaginatedListResponseSchema(responseDestinationSchema)
 const destinationItemResponseSchema = apiItemResponseSchema(responseDestinationSchema)
 const destinationMutationResponseSchema = apiMutationResponseSchema(responseDestinationSchema)
 
-export async function getDestinationsAPI() {
+export async function getDestinationsPaginatedAPI(params: { page: number; limit?: number; search?: string }) {
     try {
-        const { data } = await api.get("/destinations")
-        return destinationListResponseSchema.parse(data)
+        const { data } = await api.get("/destinations", {
+            params: { page: params.page, limit: params.limit, search: params.search || undefined },
+        })
+        return destinationPaginatedListResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
     }
@@ -39,15 +41,6 @@ export async function updateDestinationAPI(id: number, formData: UpdateDestinati
     try {
         const { data } = await api.put(`/destinations/${id}`, formData)
         return destinationMutationResponseSchema.parse(data)
-    } catch (error) {
-        handleApiError(error)
-    }
-}
-
-export async function deleteDestinationAPI(id: number) {
-    try {
-        const { data } = await api.delete(`/destinations/${id}`)
-        return apiMessageResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
     }

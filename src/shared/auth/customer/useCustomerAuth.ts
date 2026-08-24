@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { CustomerAuthContext } from "@/shared/auth/customer/CustomerAuthContext"
+import { CustomerAuthContext } from "@/shared/auth/customer/customerAuthContextValue"
 
 export function useCustomerAuth() {
     const context = useContext(CustomerAuthContext)

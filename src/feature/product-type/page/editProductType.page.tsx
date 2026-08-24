@@ -8,10 +8,11 @@ import { toast } from "sonner"
 import { updateProductTypeSchema } from "@/feature/product-type/schema/productType.schema"
 import type { ProductTypeResponse, UpdateProductTypeInput } from "@/feature/product-type/schema/productType.schema"
 import { getProductTypeByIdAPI, updateProductTypeAPI } from "@/feature/product-type/api/productType.api"
-import { EditProductTypeForm } from "@/feature/product-type/component/editProductType.component"
+import { ProductTypeForm } from "@/feature/product-type/component/productTypeForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 function toFormValues(productType: ProductTypeResponse): UpdateProductTypeInput {
     return {
@@ -79,7 +80,7 @@ export function EditProductTypePage() {
 
                 {productTypeQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditProductTypeForm register={register} errors={errors} />
+                        <ProductTypeForm register={register} errors={errors} />
                         <Button type="submit" disabled={updateProductTypeMutation.isPending}>
                             {updateProductTypeMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

@@ -6,19 +6,17 @@ export const createProductVariantSchema = z.object({
     presentationId: z.number().int().positive().optional(),
     packagingId: z.number().int().positive().optional(),
     skuCode: z.string().trim().max(60).optional(),
-    minimumOrderQuantity: z.number().int().optional(),
     unitsPerPallet: z.number().int().positive().optional(),
     unitsPerBox: z.number().int().positive().optional(),
 })
 
-export const updateProductVariantSchema = createProductVariantSchema.partial()
+const updateProductVariantSchema = createProductVariantSchema.partial()
 
 export const responseProductVariantSchema = baseCatalogSchema.extend({
     productId: z.number().int(),
     presentationId: z.number().int().nullable(),
     packagingId: z.number().int().nullable(),
     skuCode: z.string().nullable(),
-    minimumOrderQuantity: z.number().int().nullable(),
     unitsPerPallet: z.number().int().nullable(),
     unitsPerBox: z.number().int().nullable(),
 })

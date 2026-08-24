@@ -6,6 +6,8 @@
         "loading": "Cargando...",
         "loadError": "No se pudo cargar la información",
         "actions": "Acciones",
+        "id": "ID",
+        "updatedAt": "Última actualización",
         "edit": "Editar",
         "delete": "Eliminar",
         "cancel": "Cancelar",
@@ -13,7 +15,33 @@
         "selectPlaceholder": "Selecciona una opción",
         "searchPlaceholder": "Escribe para buscar...",
         "noOptionsFound": "No se encontraron resultados",
-        "logout": "Cerrar sesión"
+        "logout": "Cerrar sesión",
+        "closeMenu": "Cerrar menú",
+        "remove": "Quitar",
+        "status": "Estado",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "activate": "Activar",
+        "deactivate": "Desactivar",
+        "confirmDeactivate": "¿Seguro que deseas desactivar \"{{name}}\"? Dejará de estar disponible hasta que lo actives de nuevo.",
+        "uploadImage": "Subir imagen",
+        "changeImage": "Cambiar imagen",
+        "imageUpload": {
+            "title": "Tomar o subir imagen",
+            "takePhoto": "Tomar foto",
+            "uploadFile": "Subir imagen",
+            "retake": "Repetir foto",
+            "cameraUnavailable": "No se pudo acceder a la cámara. Usa la opción de subir imagen.",
+            "invalidType": "Por favor selecciona un archivo de imagen válido",
+            "invalidSize": "La imagen es demasiado grande. Máximo 5MB"
+        },
+        "pagination": {
+            "page": "Página",
+            "of": "de",
+            "previous": "Anterior",
+            "next": "Siguiente",
+            "searchPlaceholder": "Buscar..."
+        }
     },
     "errors": {
         "unexpected_response": "La respuesta del servidor no tiene el formato esperado",
@@ -90,10 +118,17 @@
             "description": "Hola {{name}}, arma tu cotización eligiendo producto, cantidad de palets y destino.",
             "form": {
                 "title": "Datos de la cotización",
+                "category": "Categoría",
                 "product": "Producto",
                 "variant": "Presentación",
                 "requestedPallets": "Palets solicitados",
+                "country": "País de destino",
+                "countryOptions": {
+                    "GT": "Guatemala",
+                    "US": "Estados Unidos"
+                },
                 "destination": "Destino",
+                "noDestinationsForCountry": "Aún no hay destinos configurados para este país.",
                 "submit": "Calcular cotización",
                 "modeFinished": "Producto terminado",
                 "modeCustomizable": "Personalizar mi producto",
@@ -106,7 +141,28 @@
                 "mixTotal": "Total: {{total}}%",
                 "mixIncomplete": "La mezcla debe sumar 100% para poder cotizar.",
                 "mixRange": "{{min}}% - {{max}}%",
-                "mixEmpty": "Este producto todavía no tiene ingredientes configurados. Contacta al administrador."
+                "mixEmpty": "Este producto todavía no tiene ingredientes configurados. Contacta al administrador.",
+                "wizard": {
+                    "back": "Atrás",
+                    "steps": {
+                        "mode": "Tipo",
+                        "category": "Categoría",
+                        "product": "Producto",
+                        "details": "Detalles"
+                    },
+                    "mode": {
+                        "title": "¿Qué quieres cotizar?",
+                        "subtitle": "Elige el tipo de producto para ver las categorías disponibles."
+                    },
+                    "category": {
+                        "title": "Elige una categoría",
+                        "subtitle": "Selecciona la categoría de producto que quieres cotizar."
+                    },
+                    "product": {
+                        "title": "Productos en {{category}}",
+                        "subtitle": "Elige el producto que quieres cotizar."
+                    }
+                }
             },
             "result": {
                 "empty": "Completa el formulario y calcula tu cotización para ver el desglose de costos aquí.",
@@ -120,19 +176,8 @@
                 "palletMaterials": "Materiales de palet",
                 "transport": "Transporte",
                 "unitsQuantity": "{{count}} unidades",
-                "palletsQuantity": "{{count}} palets",
-                "save": "Enviar y guardar cotización",
-                "saving": "Guardando...",
-                "saved": "Cotización guardada"
+                "palletsQuantity": "{{count}} palets"
             }
-        },
-        "myQuotes": {
-            "navLink": "Mis cotizaciones",
-            "backLink": "Volver a cotizador",
-            "title": "Mis cotizaciones",
-            "description": "Historial de cotizaciones que has guardado.",
-            "empty": "Todavía no has guardado ninguna cotización.",
-            "summary": "{{date}} · {{pallets}} palets · {{destination}}"
         },
         "footer": {
             "tagline": "Vegetal fresco y congelado IQF de exportación, del campo a tu cadena de frío.",
@@ -176,7 +221,12 @@
         "form": {
             "displayName": "Nombre",
             "urlSlug": "Slug de URL",
-            "fullDescription": "Descripción"
+            "fullDescription": "Descripción",
+            "image": "Imagen de portada",
+            "translationSectionTitle": "Traducción al inglés",
+            "translationSectionHint": "Opcional. Si se deja vacío, el sitio en inglés muestra el nombre/descripción en español.",
+            "displayNameEn": "Nombre (inglés)",
+            "fullDescriptionEn": "Descripción (inglés)"
         },
         "list": {
             "title": "Categorías",
@@ -255,7 +305,10 @@
                 "vegetable": "Vegetal",
                 "pulp": "Pulpa",
                 "other": "Otro"
-            }
+            },
+            "translationSectionTitle": "Traducción al inglés",
+            "translationSectionHint": "Opcional. Si se deja vacío, el sitio en inglés muestra el nombre en español.",
+            "displayNameEn": "Nombre (inglés)"
         },
         "organicTag": "Orgánico",
         "conventionalTag": "Convencional",
@@ -278,7 +331,11 @@
         "form": {
             "categoryId": "Categoría",
             "displayName": "Nombre",
-            "fullDescription": "Descripción"
+            "fullDescription": "Descripción",
+            "translationSectionTitle": "Traducción al inglés",
+            "translationSectionHint": "Opcional. Si se deja vacío, el sitio en inglés muestra el nombre/descripción en español.",
+            "displayNameEn": "Nombre (inglés)",
+            "fullDescriptionEn": "Descripción (inglés)"
         },
         "list": {
             "title": "Subcategorías",
@@ -343,6 +400,7 @@
     },
     "product": {
         "form": {
+            "image": "Foto del producto",
             "subCategoryId": "Subcategoría",
             "productTypeId": "Tipo de producto",
             "displayName": "Nombre",
@@ -351,7 +409,10 @@
             "isCustomizable": "Tipo de receta",
             "isCustomizableFinished": "Terminado (receta fija)",
             "isCustomizableCustom": "Personalizable (mezcla %)",
-            "isCustomizableHint": "Personalizable: el cliente arma la mezcla de ingredientes por porcentaje al cotizar, en vez de una receta fija."
+            "isCustomizableHint": "Personalizable: el cliente arma la mezcla de ingredientes por porcentaje al cotizar, en vez de una receta fija.",
+            "translationSectionTitle": "Traducción al inglés",
+            "translationSectionHint": "Opcional. Si se deja vacío, el sitio en inglés muestra el nombre en español.",
+            "displayNameEn": "Nombre (inglés)"
         },
         "list": {
             "title": "Productos",
@@ -373,7 +434,6 @@
             "presentationId": "Presentación",
             "packagingId": "Empaque",
             "skuCode": "SKU",
-            "minimumOrderQuantity": "Cantidad mínima de pedido",
             "unitsPerPallet": "Unidades por palet",
             "unitsPerBox": "Unidades por caja",
             "unitsPerBoxHint": "Cuántas bolsas/piezas entran en una caja. No afecta el costo, es solo para calcular cuántas cajas necesita el palet.",
@@ -412,7 +472,6 @@
         "form": {
             "packagingId": "Material de palet",
             "quantityValue": "Cantidad",
-            "quantityUnitId": "Unidad de cantidad",
             "addButton": "Agregar material"
         },
         "list": {
@@ -493,6 +552,59 @@
             "saveButton": "Guardar permisos"
         }
     },
+    "dashboard": {
+        "title": "Panel general",
+        "subtitle": "Productos más vendidos, clientes e ingredientes para el rango de fechas seleccionado.",
+        "filters": {
+            "startDate": "Desde",
+            "endDate": "Hasta",
+            "presets": {
+                "last7": "Últimos 7 días",
+                "last30": "Últimos 30 días",
+                "last90": "Últimos 90 días",
+                "allTime": "Todo el tiempo"
+            }
+        },
+        "overview": {
+            "totalQuotes": "Cotizaciones guardadas",
+            "totalRevenue": "Valor total cotizado",
+            "totalPallets": "Palets solicitados",
+            "uniqueCustomers": "Clientes activos",
+            "averageQuoteValue": "Valor promedio por cotización"
+        },
+        "trend": {
+            "title": "Cotizaciones en el tiempo",
+            "subtitleDaily": "Valor cotizado por día, según las cotizaciones guardadas.",
+            "subtitleWeekly": "Valor cotizado por semana, según las cotizaciones guardadas.",
+            "tooltipQuotes": "{{count}} cotizaciones",
+            "empty": "No hay cotizaciones en el rango seleccionado."
+        },
+        "topProducts": {
+            "title": "Productos más vendidos",
+            "subtitle": "Ordenados por unidades cotizadas (según cotizaciones guardadas).",
+            "empty": "No hay datos de productos para este rango.",
+            "secondary": "{{count}} cotizaciones · {{revenue}}",
+            "unitsLabel": "{{units}} unidades"
+        },
+        "productRevenueShare": {
+            "title": "Participación de ingresos por producto",
+            "subtitle": "Proporción del valor total cotizado, productos principales de este rango.",
+            "empty": "No hay datos de ingresos para este rango.",
+            "other": "Otros productos"
+        },
+        "topCustomers": {
+            "title": "Mejores clientes",
+            "subtitle": "Ordenados por valor total cotizado.",
+            "empty": "No hay datos de clientes para este rango.",
+            "secondary": "{{count}} cotizaciones · {{pallets}} palets"
+        },
+        "topIngredients": {
+            "title": "Ingredientes más utilizados",
+            "subtitle": "Ordenados por costo total consumido en las cotizaciones.",
+            "empty": "No hay datos de ingredientes para este rango.",
+            "secondary": "{{count}} cotizaciones"
+        }
+    },
     "adminQuote": {
         "list": {
             "title": "Cotizaciones",
@@ -506,7 +618,12 @@
     "destination": {
         "form": {
             "displayName": "Nombre",
-            "baseCost": "Costo de transporte"
+            "baseCost": "Costo de transporte",
+            "country": "País",
+            "countryOptions": {
+                "GT": "Guatemala",
+                "US": "Estados Unidos"
+            }
         },
         "list": {
             "title": "Destinos",

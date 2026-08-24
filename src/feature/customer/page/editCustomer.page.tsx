@@ -8,10 +8,11 @@ import { toast } from "sonner"
 import { updateCustomerSchema } from "@/feature/customer/schema/customer.schema"
 import type { CustomerResponse, UpdateCustomerInput } from "@/feature/customer/schema/customer.schema"
 import { getCustomerByIdAPI, updateCustomerAPI } from "@/feature/customer/api/customer.api"
-import { EditCustomerForm } from "@/feature/customer/component/editCustomer.component"
+import { CustomerForm } from "@/feature/customer/component/customerForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 function toFormValues(customer: CustomerResponse): UpdateCustomerInput {
     return {
@@ -81,7 +82,7 @@ export function EditCustomerPage() {
 
                 {customerQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditCustomerForm register={register} errors={errors} />
+                        <CustomerForm register={register} errors={errors} isEditing />
                         <Button type="submit" disabled={updateCustomerMutation.isPending}>
                             {updateCustomerMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

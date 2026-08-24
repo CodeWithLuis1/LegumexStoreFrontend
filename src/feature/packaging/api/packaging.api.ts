@@ -1,17 +1,31 @@
 import api from "@/shared/api/api"
 import { handleApiError } from "@/shared/api/handleApiError"
-import { apiItemResponseSchema, apiListResponseSchema, apiMessageResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
+import { apiItemResponseSchema, apiListResponseSchema, apiMutationResponseSchema, apiPaginatedListResponseSchema } from "@/shared/api/apiResponse.schema"
 import { responsePackagingSchema } from "@/feature/packaging/schema/packaging.schema"
 import type { CreatePackagingInput, UpdatePackagingInput } from "@/feature/packaging/schema/packaging.schema"
 
 const packagingListResponseSchema = apiListResponseSchema(responsePackagingSchema)
+const packagingPaginatedListResponseSchema = apiPaginatedListResponseSchema(responsePackagingSchema)
 const packagingItemResponseSchema = apiItemResponseSchema(responsePackagingSchema)
 const packagingMutationResponseSchema = apiMutationResponseSchema(responsePackagingSchema)
 
+// Sin params -- también la usan PackagingSelect y PalletMaterialSelect (filtran por packagingRole
+// client-side). No tocar esta firma.
 export async function getPackagingsAPI() {
     try {
         const { data } = await api.get("/packagings")
         return packagingListResponseSchema.parse(data)
+    } catch (error) {
+        handleApiError(error)
+    }
+}
+
+export async function getPackagingsPaginatedAPI(params: { page: number; limit?: number; search?: string }) {
+    try {
+        const { data } = await api.get("/packagings", {
+            params: { page: params.page, limit: params.limit, search: params.search || undefined },
+        })
+        return packagingPaginatedListResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
     }
@@ -39,15 +53,6 @@ export async function updatePackagingAPI(id: number, formData: UpdatePackagingIn
     try {
         const { data } = await api.put(`/packagings/${id}`, formData)
         return packagingMutationResponseSchema.parse(data)
-    } catch (error) {
-        handleApiError(error)
-    }
-}
-
-export async function deletePackagingAPI(id: number) {
-    try {
-        const { data } = await api.delete(`/packagings/${id}`)
-        return apiMessageResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
     }

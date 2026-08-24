@@ -12,7 +12,7 @@ type EditUnitFormProps = {
     watch: UseFormWatch<UpdateUnitInput>
 }
 
-export function EditUnitForm({ register, errors, watch }: EditUnitFormProps) {
+export function EditUnitForm({ register, errors, watch }: Readonly<EditUnitFormProps>) {
     const { t } = useTranslation()
     const selectedEntry = getUnitCatalogEntry(watch("unitKey"))
 

@@ -1,71 +1,28 @@
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { getUnitsAPI } from "@/feature/unit/api/unit.api"
-import { usePermission } from "@/shared/auth/usePermission"
-import { Input } from "@/shared/component/input.component"
-import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
+import { getUnitsPaginatedAPI } from "@/feature/unit/api/unit.api"
+import type { UnitResponse } from "@/feature/unit/schema/unit.schema"
+import { PaginatedAdminTable } from "@/shared/component/paginatedAdminTable.component"
+import { EditLink } from "@/shared/component/editLink.component"
 
 export function UnitTable() {
     const { t } = useTranslation()
-    const { hasPermission } = usePermission()
-    const [search, setSearch] = useState("")
-
-    const unitsQuery = useQuery({
-        queryKey: ["units"],
-        queryFn: getUnitsAPI,
-        retry: false,
-    })
-
-    if (unitsQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
-    if (unitsQuery.isError) return <p className="text-error-fg">{t("common.loadError")}</p>
-
-    const units = unitsQuery.data?.data ?? []
-    const filteredUnits = units.filter((unit) => unit.displayName.toLowerCase().includes(search.toLowerCase()))
 
     return (
-        <div>
-            <Input
-                type="text"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={t("unit.table.searchPlaceholder")}
-                className="mb-4 max-w-sm"
-            />
-
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <Th>{t("unit.form.unitCode")}</Th>
-                            <Th>{t("unit.form.displayName")}</Th>
-                            <Th>{t("unit.form.unitType")}</Th>
-                            <Th>{t("common.actions")}</Th>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredUnits.map((unit) => (
-                            <TableRow key={unit.id}>
-                                <Td>{unit.unitCode}</Td>
-                                <Td>{unit.displayName}</Td>
-                                <Td>{t(`unit.form.unitTypeOptions.${unit.unitType}`)}</Td>
-                                <Td>
-                                    {hasPermission("units:edit") && (
-                                        <Link
-                                            to={`/admin/units/${unit.id}/edit`}
-                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                        >
-                                            {t("common.edit")}
-                                        </Link>
-                                    )}
-                                </Td>
-                            </TableRow>
-                        ))}
-                        {filteredUnits.length === 0 && <TableEmpty message={t("unit.table.empty")} colSpan={4} />}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+        <PaginatedAdminTable<UnitResponse>
+            queryKey={["units", "paginated"]}
+            queryFn={getUnitsPaginatedAPI}
+            searchPlaceholder={t("unit.table.searchPlaceholder")}
+            emptyMessage={t("unit.table.empty")}
+            renderActions={(unit) => <EditLink to={`/admin/units/${unit.id}/edit`} permission="units:edit" />}
+            columns={[
+                { key: "unitCode", header: t("unit.form.unitCode"), render: (unit) => unit.unitCode },
+                { key: "displayName", header: t("unit.form.displayName"), render: (unit) => unit.displayName },
+                {
+                    key: "unitType",
+                    header: t("unit.form.unitType"),
+                    render: (unit) => t(`unit.form.unitTypeOptions.${unit.unitType}`),
+                },
+            ]}
+        />
     )
 }

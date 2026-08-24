@@ -5,8 +5,9 @@ import { adminQuoteSchema } from "@/feature/quote/schema/quote.schema"
 
 const adminQuoteListResponseSchema = apiListResponseSchema(adminQuoteSchema)
 
-// Panel admin (staff, permiso "quotes:view"): TODAS las cotizaciones, sin importar el cliente.
-// Usa `api` (JWT staff), no `customerApi` -- distinto de getMyQuotesAPI en quote.api.ts.
+// Panel admin (staff, permiso "quotes:view"): TODAS las cotizaciones, sin importar el cliente --
+// único listado de cotizaciones guardadas que existe (ver quote.api.ts, saveQuoteAPI). Usa
+// `api` (JWT staff), no `customerApi`.
 export async function getAllQuotesAPI() {
     try {
         const { data } = await api.get("/admin/quotes")

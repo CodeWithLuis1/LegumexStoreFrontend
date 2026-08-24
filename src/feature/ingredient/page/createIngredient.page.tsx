@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createIngredientSchema } from "@/feature/ingredient/schema/ingredient.schema"
 import type { CreateIngredientInput } from "@/feature/ingredient/schema/ingredient.schema"
 import { createIngredientAPI } from "@/feature/ingredient/api/ingredient.api"
-import { CreateIngredientForm } from "@/feature/ingredient/component/createIngredient.component"
+import { IngredientForm } from "@/feature/ingredient/component/ingredientForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreateIngredientPage() {
     const { t } = useTranslation()
@@ -52,7 +53,7 @@ export function CreateIngredientPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateIngredientForm register={register} errors={errors} />
+                    <IngredientForm register={register} errors={errors} />
                     <Button type="submit" disabled={createIngredientMutation.isPending}>
                         {createIngredientMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

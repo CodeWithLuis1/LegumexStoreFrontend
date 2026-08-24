@@ -1,21 +1,18 @@
 import type { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
-import { Truck, Wheat, PackageOpen, Layers, FileSpreadsheet, Check } from "lucide-react"
+import { Truck, Wheat, PackageOpen, Layers, FileSpreadsheet } from "lucide-react"
 import type { QuoteCalculation } from "@/feature/quote/schema/quote.schema"
 import { Card } from "@/shared/component/card.component"
 import { Spinner } from "@/shared/component/spinner.component"
-import { Button } from "@/shared/component/button.component"
 import { formatCurrency } from "@/shared/format/currency"
 
 type QuoteResultCardProps = {
     result: QuoteCalculation | null
     isPending: boolean
-    onSave?: () => void
-    isSaving?: boolean
-    isSaved?: boolean
+    showCostBreakdown?: boolean
 }
 
-function CostRow({ label, quantityLabel, lineTotal }: { label: string; quantityLabel?: string; lineTotal: number }) {
+function CostRow({ label, quantityLabel, lineTotal }: Readonly<{ label: string; quantityLabel?: string; lineTotal: number }>) {
     return (
         <div className="flex items-start justify-between gap-3 py-1.5 text-sm">
             <div>
@@ -32,12 +29,12 @@ function CostSection({
     title,
     subtotal,
     children,
-}: {
+}: Readonly<{
     icon: ReactNode
     title: string
     subtotal: number
     children: ReactNode
-}) {
+}>) {
     return (
         <div className="border-t border-gris-campo pt-4 first:border-t-0 first:pt-0">
             <div className="mb-2 flex items-center justify-between">
@@ -52,7 +49,7 @@ function CostSection({
     )
 }
 
-export function QuoteResultCard({ result, isPending, onSave, isSaving, isSaved }: QuoteResultCardProps) {
+export function QuoteResultCard({ result, isPending, showCostBreakdown = true }: Readonly<QuoteResultCardProps>) {
     const { t } = useTranslation()
 
     if (isPending) {
@@ -108,7 +105,7 @@ export function QuoteResultCard({ result, isPending, onSave, isSaving, isSaved }
             </div>
 
             <div className="space-y-4">
-                {breakdown.rawMaterials.length > 0 && (
+                {showCostBreakdown && breakdown.rawMaterials.length > 0 && (
                     <CostSection
                         icon={<Wheat size={15} />}
                         title={t("site.quoteRequest.result.rawMaterials")}
@@ -127,7 +124,7 @@ export function QuoteResultCard({ result, isPending, onSave, isSaving, isSaved }
                     </CostSection>
                 )}
 
-                {breakdown.unitPackaging && (
+                {showCostBreakdown && breakdown.unitPackaging && (
                     <CostSection
                         icon={<PackageOpen size={15} />}
                         title={t("site.quoteRequest.result.unitPackaging")}
@@ -143,7 +140,7 @@ export function QuoteResultCard({ result, isPending, onSave, isSaving, isSaved }
                     </CostSection>
                 )}
 
-                {breakdown.palletMaterials.length > 0 && (
+                {showCostBreakdown && breakdown.palletMaterials.length > 0 && (
                     <CostSection
                         icon={<Layers size={15} />}
                         title={t("site.quoteRequest.result.palletMaterials")}
@@ -164,28 +161,6 @@ export function QuoteResultCard({ result, isPending, onSave, isSaving, isSaved }
                     <CostRow label={breakdown.transport.displayName} lineTotal={result.transportCost} />
                 </CostSection>
             </div>
-
-            {onSave && (
-                <div className="mt-6 border-t border-gris-campo pt-5">
-                    <Button
-                        type="button"
-                        onClick={onSave}
-                        disabled={isSaving || isSaved}
-                        className="w-full"
-                    >
-                        {isSaved ? (
-                            <>
-                                <Check size={16} />
-                                {t("site.quoteRequest.result.saved")}
-                            </>
-                        ) : isSaving ? (
-                            t("site.quoteRequest.result.saving")
-                        ) : (
-                            t("site.quoteRequest.result.save")
-                        )}
-                    </Button>
-                </div>
-            )}
         </Card>
     )
 }

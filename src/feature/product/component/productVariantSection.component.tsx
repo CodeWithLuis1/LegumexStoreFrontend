@@ -32,19 +32,15 @@ function toFormValues(variant: ProductVariantResponse): VariantFormInput {
         presentationId: variant.presentationId ?? undefined,
         packagingId: variant.packagingId ?? undefined,
         skuCode: variant.skuCode ?? undefined,
-        minimumOrderQuantity: variant.minimumOrderQuantity ?? undefined,
         unitsPerPallet: variant.unitsPerPallet ?? undefined,
         unitsPerBox: variant.unitsPerBox ?? undefined,
     }
 }
 
-export function ProductVariantSection({ productId }: { productId: number }) {
+export function ProductVariantSection({ productId }: Readonly<{ productId: number }>) {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const [editingId, setEditingId] = useState<number | null>(null)
-    // Fuerza a que el <form> se desmonte/remonte tras guardar -- reset({}) limpia el estado de
-    // react-hook-form, pero los <select> personalizados (PresentationSelect/PackagingSelect) son
-    // no controlados; remontarlos garantiza que el DOM quede realmente en blanco.
     const [formResetKey, setFormResetKey] = useState(0)
 
     const variantsQuery = useQuery({ queryKey: ["productVariants"], queryFn: getProductVariantsAPI })
@@ -191,19 +187,6 @@ export function ProductVariantSection({ productId }: { productId: number }) {
                     error={getFieldErrorMessage(t, errors.skuCode)}
                 >
                     <Input id="skuCode" hasError={!!errors.skuCode} {...register("skuCode")} />
-                </FormField>
-
-                <FormField
-                    label={t("productVariant.form.minimumOrderQuantity")}
-                    htmlFor="minimumOrderQuantity"
-                    error={getFieldErrorMessage(t, errors.minimumOrderQuantity)}
-                >
-                    <Input
-                        id="minimumOrderQuantity"
-                        type="number"
-                        hasError={!!errors.minimumOrderQuantity}
-                        {...register("minimumOrderQuantity", { setValueAs: toOptionalNumber })}
-                    />
                 </FormField>
 
                 <FormField

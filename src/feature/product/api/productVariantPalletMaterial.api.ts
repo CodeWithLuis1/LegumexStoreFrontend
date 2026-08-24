@@ -1,6 +1,6 @@
 import api from "@/shared/api/api"
 import { handleApiError } from "@/shared/api/handleApiError"
-import { apiItemResponseSchema, apiListResponseSchema, apiMessageResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
+import { apiListResponseSchema, apiMessageResponseSchema, apiMutationResponseSchema } from "@/shared/api/apiResponse.schema"
 import { responseProductVariantPalletMaterialSchema } from "@/feature/product/schema/productVariantPalletMaterial.schema"
 import type {
     CreateProductVariantPalletMaterialInput,
@@ -8,22 +8,12 @@ import type {
 } from "@/feature/product/schema/productVariantPalletMaterial.schema"
 
 const productVariantPalletMaterialListResponseSchema = apiListResponseSchema(responseProductVariantPalletMaterialSchema)
-const productVariantPalletMaterialItemResponseSchema = apiItemResponseSchema(responseProductVariantPalletMaterialSchema)
 const productVariantPalletMaterialMutationResponseSchema = apiMutationResponseSchema(responseProductVariantPalletMaterialSchema)
 
 export async function getProductVariantPalletMaterialsAPI() {
     try {
         const { data } = await api.get("/product-variant-pallet-materials")
         return productVariantPalletMaterialListResponseSchema.parse(data)
-    } catch (error) {
-        handleApiError(error)
-    }
-}
-
-export async function getProductVariantPalletMaterialByIdAPI(id: number) {
-    try {
-        const { data } = await api.get(`/product-variant-pallet-materials/${id}`)
-        return productVariantPalletMaterialItemResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
     }

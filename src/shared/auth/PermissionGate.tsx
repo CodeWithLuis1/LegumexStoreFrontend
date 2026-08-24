@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { usePermission } from "@/shared/auth/usePermission"
-import { buttonClassName } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function AccessDenied() {
     const { t } = useTranslation()
@@ -18,7 +18,7 @@ export function AccessDenied() {
     )
 }
 
-export function PermissionGate({ permission, children }: { permission: string; children: ReactNode }) {
+export function PermissionGate({ permission, children }: Readonly<{ permission: string; children: ReactNode }>) {
     const { hasPermission } = usePermission()
 
     if (!hasPermission(permission)) return <AccessDenied />

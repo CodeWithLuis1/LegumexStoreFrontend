@@ -8,15 +8,17 @@ import { toast } from "sonner"
 import { updateDestinationSchema } from "@/feature/destination/schema/destination.schema"
 import type { DestinationResponse, UpdateDestinationInput } from "@/feature/destination/schema/destination.schema"
 import { getDestinationByIdAPI, updateDestinationAPI } from "@/feature/destination/api/destination.api"
-import { EditDestinationForm } from "@/feature/destination/component/editDestination.component"
+import { DestinationForm } from "@/feature/destination/component/destinationForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 function toFormValues(destination: DestinationResponse): UpdateDestinationInput {
     return {
         displayName: destination.displayName,
         baseCost: Number(destination.baseCost),
+        country: destination.country,
     }
 }
 
@@ -79,7 +81,7 @@ export function EditDestinationPage() {
 
                 {destinationQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditDestinationForm register={register} errors={errors} />
+                        <DestinationForm register={register} errors={errors} />
                         <Button type="submit" disabled={updateDestinationMutation.isPending}>
                             {updateDestinationMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

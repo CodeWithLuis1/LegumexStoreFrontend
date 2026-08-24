@@ -8,15 +8,23 @@ import { toast } from "sonner"
 import { updateCategorySchema } from "@/feature/category/schema/category.schema"
 import type { CategoryResponse, UpdateCategoryInput } from "@/feature/category/schema/category.schema"
 import { getCategoryByIdAPI, updateCategoryAPI } from "@/feature/category/api/category.api"
-import { EditCategoryForm } from "@/feature/category/component/editCategory.component"
+import { CategoryForm } from "@/feature/category/component/categoryForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 function toFormValues(category: CategoryResponse): UpdateCategoryInput {
+    const englishTranslation = category.translations.find((translation) => translation.language === "en")
     return {
         displayName: category.displayName,
         fullDescription: category.fullDescription ?? undefined,
+        translations: {
+            en: {
+                displayName: englishTranslation?.displayName ?? "",
+                fullDescription: englishTranslation?.fullDescription ?? "",
+            },
+        },
     }
 }
 
@@ -35,6 +43,7 @@ export function EditCategoryPage() {
 
     const {
         register,
+        control,
         handleSubmit,
         reset,
         formState: { errors },
@@ -79,7 +88,12 @@ export function EditCategoryPage() {
 
                 {categoryQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditCategoryForm register={register} errors={errors} />
+                        <CategoryForm
+                            register={register}
+                            control={control}
+                            errors={errors}
+                            currentImageUrl={categoryQuery.data.data.imageUrl}
+                        />
                         <Button type="submit" disabled={updateCategoryMutation.isPending}>
                             {updateCategoryMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

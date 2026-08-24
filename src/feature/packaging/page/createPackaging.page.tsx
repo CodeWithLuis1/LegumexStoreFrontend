@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createPackagingSchema } from "@/feature/packaging/schema/packaging.schema"
 import type { CreatePackagingInput } from "@/feature/packaging/schema/packaging.schema"
 import { createPackagingAPI } from "@/feature/packaging/api/packaging.api"
-import { CreatePackagingForm } from "@/feature/packaging/component/createPackaging.component"
+import { PackagingForm } from "@/feature/packaging/component/packagingForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreatePackagingPage() {
     const { t } = useTranslation()
@@ -52,7 +53,7 @@ export function CreatePackagingPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreatePackagingForm register={register} errors={errors} />
+                    <PackagingForm register={register} errors={errors} />
                     <Button type="submit" disabled={createPackagingMutation.isPending}>
                         {createPackagingMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

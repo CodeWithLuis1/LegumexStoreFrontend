@@ -1,73 +1,45 @@
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { getCategoriesAPI } from "@/feature/category/api/category.api"
+import { getCategoriesPaginatedAPI, updateCategoryStatusAPI } from "@/feature/category/api/category.api"
+import type { CategoryResponse } from "@/feature/category/schema/category.schema"
 import { usePermission } from "@/shared/auth/usePermission"
-import { Input } from "@/shared/component/input.component"
-import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
+import { PaginatedAdminTable } from "@/shared/component/paginatedAdminTable.component"
+import { EditLink } from "@/shared/component/editLink.component"
+import { StatusBadge } from "@/shared/component/statusBadge.component"
+import { StatusToggleButton } from "@/shared/component/statusToggleButton.component"
+import { useStatusToggle } from "@/shared/hook/useStatusToggle"
 
 export function CategoryTable() {
     const { t } = useTranslation()
     const { hasPermission } = usePermission()
-    const [search, setSearch] = useState("")
-
-    const categoriesQuery = useQuery({
-        queryKey: ["categories"],
-        queryFn: getCategoriesAPI,
-        retry: false,
-    })
-
-    if (categoriesQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
-    if (categoriesQuery.isError) return <p className="text-error-fg">{t("common.loadError")}</p>
-
-    const categories = categoriesQuery.data?.data ?? []
-    const filteredCategories = categories.filter((category) =>
-        category.displayName.toLowerCase().includes(search.toLowerCase())
-    )
+    const { isPending, toggle } = useStatusToggle({ mutationFn: updateCategoryStatusAPI, invalidateKey: "categories" })
 
     return (
-        <div>
-            <Input
-                type="text"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={t("category.table.searchPlaceholder")}
-                className="mb-4 max-w-sm"
-            />
-
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <Th>{t("category.form.displayName")}</Th>
-                            <Th>{t("category.form.urlSlug")}</Th>
-                            <Th>{t("common.actions")}</Th>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredCategories.map((category) => (
-                            <TableRow key={category.id}>
-                                <Td>{category.displayName}</Td>
-                                <Td>{category.urlSlug}</Td>
-                                <Td>
-                                    {hasPermission("categories:edit") && (
-                                        <Link
-                                            to={`/admin/categories/${category.id}/edit`}
-                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                        >
-                                            {t("common.edit")}
-                                        </Link>
-                                    )}
-                                </Td>
-                            </TableRow>
-                        ))}
-                        {filteredCategories.length === 0 && (
-                            <TableEmpty message={t("category.table.empty")} colSpan={3} />
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+        <PaginatedAdminTable<CategoryResponse>
+            queryKey={["categories", "paginated"]}
+            queryFn={getCategoriesPaginatedAPI}
+            searchPlaceholder={t("category.table.searchPlaceholder")}
+            emptyMessage={t("category.table.empty")}
+            renderActions={(category) => (
+                <div className="flex items-center gap-4">
+                    <EditLink to={`/admin/categories/${category.id}/edit`} permission="categories:edit" />
+                    {hasPermission("categories:edit") && (
+                        <StatusToggleButton
+                            isActive={category.isActive}
+                            isPending={isPending}
+                            onToggle={() => toggle(category.id, category.displayName, category.isActive)}
+                        />
+                    )}
+                </div>
+            )}
+            columns={[
+                { key: "displayName", header: t("category.form.displayName"), render: (category) => category.displayName },
+                { key: "urlSlug", header: t("category.form.urlSlug"), render: (category) => category.urlSlug },
+                {
+                    key: "status",
+                    header: t("common.status"),
+                    render: (category) => <StatusBadge isActive={category.isActive} />,
+                },
+            ]}
+        />
     )
 }

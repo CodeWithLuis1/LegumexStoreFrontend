@@ -1,78 +1,53 @@
-import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { getUsersAPI } from "@/feature/user/api/user.api"
+import { getUsersPaginatedAPI, updateUserStatusAPI } from "@/feature/user/api/user.api"
 import { getRolesAPI } from "@/feature/role/api/role.api"
+import type { UserResponse } from "@/feature/user/schema/user.schema"
 import { usePermission } from "@/shared/auth/usePermission"
-import { Input } from "@/shared/component/input.component"
-import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
+import { PaginatedAdminTable } from "@/shared/component/paginatedAdminTable.component"
+import { EditLink } from "@/shared/component/editLink.component"
+import { StatusBadge } from "@/shared/component/statusBadge.component"
+import { StatusToggleButton } from "@/shared/component/statusToggleButton.component"
+import { useStatusToggle } from "@/shared/hook/useStatusToggle"
 
 export function UserTable() {
     const { t } = useTranslation()
     const { hasPermission } = usePermission()
-    const [search, setSearch] = useState("")
+    const { isPending, toggle } = useStatusToggle({ mutationFn: updateUserStatusAPI, invalidateKey: "users" })
 
-    const usersQuery = useQuery({
-        queryKey: ["users"],
-        queryFn: getUsersAPI,
-        retry: false,
-    })
+    // Lookup para mostrar el nombre del rol -- necesita el catálogo completo, sigue usando
+    // getRolesAPI() sin paginar.
     const rolesQuery = useQuery({ queryKey: ["roles"], queryFn: getRolesAPI })
     const roleNameById = new Map((rolesQuery.data?.data ?? []).map((role) => [role.id, role.name]))
 
-    if (usersQuery.isLoading) return <p className="text-texto-suave">{t("common.loading")}</p>
-    if (usersQuery.isError) return <p className="text-error-fg">{t("common.loadError")}</p>
-
-    const users = usersQuery.data?.data ?? []
-    const filteredUsers = users.filter(
-        (user) =>
-            user.name.toLowerCase().includes(search.toLowerCase()) ||
-            user.username.toLowerCase().includes(search.toLowerCase())
-    )
-
     return (
-        <div>
-            <Input
-                type="text"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={t("user.table.searchPlaceholder")}
-                className="mb-4 max-w-sm"
-            />
-
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <Th>{t("user.form.name")}</Th>
-                            <Th>{t("user.form.username")}</Th>
-                            <Th>{t("user.form.roleId")}</Th>
-                            <Th>{t("common.actions")}</Th>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredUsers.map((user) => (
-                            <TableRow key={user.id}>
-                                <Td>{user.name}</Td>
-                                <Td>{user.username}</Td>
-                                <Td>{roleNameById.get(user.role_id) ?? "-"}</Td>
-                                <Td>
-                                    {hasPermission("users:edit") && (
-                                        <Link
-                                            to={`/admin/users/${user.id}/edit`}
-                                            className="font-medium text-verde-profundo underline decoration-dorado underline-offset-4 hover:text-verde-tinta"
-                                        >
-                                            {t("common.edit")}
-                                        </Link>
-                                    )}
-                                </Td>
-                            </TableRow>
-                        ))}
-                        {filteredUsers.length === 0 && <TableEmpty message={t("user.table.empty")} colSpan={4} />}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+        <PaginatedAdminTable<UserResponse>
+            queryKey={["users", "paginated"]}
+            queryFn={getUsersPaginatedAPI}
+            searchPlaceholder={t("user.table.searchPlaceholder")}
+            emptyMessage={t("user.table.empty")}
+            renderActions={(user) => (
+                <div className="flex items-center gap-4">
+                    <EditLink to={`/admin/users/${user.id}/edit`} permission="users:edit" />
+                    {hasPermission("users:edit") && (
+                        <StatusToggleButton
+                            isActive={user.isActive}
+                            isPending={isPending}
+                            onToggle={() => toggle(user.id, user.name, user.isActive)}
+                        />
+                    )}
+                </div>
+            )}
+            columns={[
+                { key: "name", header: t("user.form.name"), render: (user) => user.name },
+                { key: "username", header: t("user.form.username"), render: (user) => user.username },
+                { key: "roleId", header: t("user.form.roleId"), render: (user) => roleNameById.get(user.role_id) ?? "-" },
+                {
+                    key: "status",
+                    header: t("common.status"),
+                    render: (user) => <StatusBadge isActive={user.isActive} />,
+                },
+            ]}
+        />
     )
 }

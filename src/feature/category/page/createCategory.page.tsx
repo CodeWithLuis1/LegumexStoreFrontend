@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createCategorySchema } from "@/feature/category/schema/category.schema"
 import type { CreateCategoryInput } from "@/feature/category/schema/category.schema"
 import { createCategoryAPI } from "@/feature/category/api/category.api"
-import { CreateCategoryForm } from "@/feature/category/component/createCategory.component"
+import { CategoryForm } from "@/feature/category/component/categoryForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreateCategoryPage() {
     const { t } = useTranslation()
@@ -19,6 +20,7 @@ export function CreateCategoryPage() {
 
     const {
         register,
+        control,
         handleSubmit,
         formState: { errors },
     } = useForm<CreateCategoryInput>({
@@ -52,7 +54,7 @@ export function CreateCategoryPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateCategoryForm register={register} errors={errors} />
+                    <CategoryForm register={register} control={control} errors={errors} />
                     <Button type="submit" disabled={createCategoryMutation.isPending}>
                         {createCategoryMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import type { ReactNode } from "react"
 import type { CustomerAuthUser } from "@/shared/auth/customer/customerAuthUser.type"
 import {
@@ -7,17 +7,9 @@ import {
     writeCustomerAuthSession,
 } from "@/shared/auth/customer/customerAuthStorage"
 import { CUSTOMER_SESSION_EXPIRED_EVENT } from "@/shared/auth/customer/customerAuthEvents"
+import { CustomerAuthContext } from "@/shared/auth/customer/customerAuthContextValue"
 
-type CustomerAuthContextValue = {
-    customer: CustomerAuthUser | null
-    isAuthenticated: boolean
-    login: (session: { token: string; customer: CustomerAuthUser }) => void
-    logout: () => void
-}
-
-export const CustomerAuthContext = createContext<CustomerAuthContextValue | null>(null)
-
-export function CustomerAuthProvider({ children }: { children: ReactNode }) {
+export function CustomerAuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     const [customer, setCustomer] = useState<CustomerAuthUser | null>(
         () => readCustomerAuthSession()?.customer ?? null
     )

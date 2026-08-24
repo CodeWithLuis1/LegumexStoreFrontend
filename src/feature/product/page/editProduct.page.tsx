@@ -8,21 +8,27 @@ import { toast } from "sonner"
 import { updateProductSchema } from "@/feature/product/schema/product.schema"
 import type { ProductResponse, UpdateProductInput } from "@/feature/product/schema/product.schema"
 import { getProductByIdAPI, updateProductAPI } from "@/feature/product/api/product.api"
-import { EditProductForm } from "@/feature/product/component/editProduct.component"
+import { ProductForm } from "@/feature/product/component/productForm.component"
 import { ProductVariantSection } from "@/feature/product/component/productVariantSection.component"
 import { ProductIngredientSection } from "@/feature/product/component/productIngredientSection.component"
 import { ProductVariantPalletMaterialSection } from "@/feature/product/component/productVariantPalletMaterialSection.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 function toFormValues(product: ProductResponse): UpdateProductInput {
+    // Ver el mismo comentario en editCategory.page.tsx::toFormValues.
+    const englishTranslation = product.translations.find((translation) => translation.language === "en")
     return {
         subCategoryId: product.subCategoryId,
         productTypeId: product.productTypeId,
         displayName: product.displayName,
         isOrganic: product.isOrganic,
         isCustomizable: product.isCustomizable,
+        translations: {
+            en: { displayName: englishTranslation?.displayName ?? "" },
+        },
     }
 }
 
@@ -86,7 +92,12 @@ export function EditProductPage() {
 
                 {productQuery.data && (
                     <form onSubmit={onSubmit}>
-                        <EditProductForm register={register} control={control} errors={errors} />
+                        <ProductForm
+                            register={register}
+                            control={control}
+                            errors={errors}
+                            currentImageUrl={productQuery.data.data.imageUrl}
+                        />
                         <Button type="submit" disabled={updateProductMutation.isPending}>
                             {updateProductMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>

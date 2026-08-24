@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { createUserSchema } from "@/feature/user/schema/user.schema"
 import type { CreateUserInput } from "@/feature/user/schema/user.schema"
 import { createUserAPI } from "@/feature/user/api/user.api"
-import { CreateUserForm } from "@/feature/user/component/createUser.component"
+import { UserForm } from "@/feature/user/component/userForm.component"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Card } from "@/shared/component/card.component"
-import { Button, buttonClassName } from "@/shared/component/button.component"
+import { Button } from "@/shared/component/button.component"
+import { buttonClassName } from "@/shared/component/buttonClassName"
 
 export function CreateUserPage() {
     const { t } = useTranslation()
@@ -52,7 +53,7 @@ export function CreateUserPage() {
 
             <Card>
                 <form onSubmit={onSubmit}>
-                    <CreateUserForm register={register} errors={errors} />
+                    <UserForm register={register} errors={errors} />
                     <Button type="submit" disabled={createUserMutation.isPending}>
                         {createUserMutation.isPending ? t("common.saving") : t("common.save")}
                     </Button>

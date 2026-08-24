@@ -20,7 +20,6 @@ import { PalletMaterialSelect } from "@/feature/packaging/component/palletMateri
 import { Select } from "@/shared/component/select.component"
 import { FormField } from "@/shared/component/formField.component"
 import { Input } from "@/shared/component/input.component"
-import { UnitSelect } from "@/feature/unit/component/unitSelect.component"
 import { Button } from "@/shared/component/button.component"
 import { Table, TableBody, TableContainer, TableEmpty, TableHead, TableRow, Td, Th } from "@/shared/component/table.component"
 import { getFieldErrorMessage } from "@/shared/i18n/getFieldErrorMessage"
@@ -34,18 +33,14 @@ function toFormValues(item: ProductVariantPalletMaterialResponse): Partial<Palle
     return {
         packagingId: item.packagingId,
         quantityValue: item.quantityValue !== null ? Number(item.quantityValue) : undefined,
-        quantityUnitId: item.quantityUnitId ?? undefined,
     }
 }
 
-export function ProductVariantPalletMaterialSection({ productId }: { productId: number }) {
+export function ProductVariantPalletMaterialSection({ productId }: Readonly<{ productId: number }>) {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null)
     const [editingId, setEditingId] = useState<number | null>(null)
-    // Fuerza a que el <form> se desmonte/remonte tras guardar -- reset({}) limpia el estado de
-    // react-hook-form, pero los <select> personalizados (PalletMaterialSelect/UnitSelect) son
-    // no controlados; remontarlos garantiza que el DOM quede realmente en blanco.
     const [formResetKey, setFormResetKey] = useState(0)
 
     const variantsQuery = useQuery({ queryKey: ["productVariants"], queryFn: getProductVariantsAPI })
@@ -73,8 +68,6 @@ export function ProductVariantPalletMaterialSection({ productId }: { productId: 
         (item) => item.productVariantId === activeVariantId
     )
 
-    // Ayuda para no calcular "cajas por palet" de memoria al cargar la fila de la caja
-    // (ver ProductVariant.unitsPerBox) -- puramente informativo, no se guarda en ningún lado.
     const boxesPerPallet =
         activeVariant?.unitsPerPallet && activeVariant?.unitsPerBox
             ? activeVariant.unitsPerPallet / activeVariant.unitsPerBox
@@ -223,18 +216,6 @@ export function ProductVariantPalletMaterialSection({ productId }: { productId: 
                         id="packagingId"
                         hasError={!!errors.packagingId}
                         {...register("packagingId", { setValueAs: toOptionalNumber })}
-                    />
-                </FormField>
-
-                <FormField
-                    label={t("productVariantPalletMaterial.form.quantityUnitId")}
-                    htmlFor="quantityUnitId"
-                    error={getFieldErrorMessage(t, errors.quantityUnitId)}
-                >
-                    <UnitSelect
-                        id="quantityUnitId"
-                        hasError={!!errors.quantityUnitId}
-                        {...register("quantityUnitId", { setValueAs: toOptionalNumber })}
                     />
                 </FormField>
 
