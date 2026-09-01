@@ -42,7 +42,6 @@ export async function getUnitByIdAPI(id: number) {
 export async function createUnitAPI(formData: CreateUnitInput) {
     try {
         const { data } = await api.post("/units", formData)
-        console.log("createUnitAPI data:", data)
         return unitMutationResponseSchema.parse(data)
     } catch (error) {
         handleApiError(error)
