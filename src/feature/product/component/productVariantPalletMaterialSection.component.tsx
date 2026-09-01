@@ -68,9 +68,21 @@ export function ProductVariantPalletMaterialSection({ productId }: Readonly<{ pr
         (item) => item.productVariantId === activeVariantId
     )
 
+    // Si la variante tiene empaque intermedio (bolsa grande que agrupa varias unidades, ver
+    // ProductVariant.intermediatePackagingId), el conteo de "cajas por palet" ya no sale directo
+    // de unitsPerPallet -- primero hay que bajar de unidades a bolsas grandes, y de ahí a cajas.
+    // La bolsa grande NO se carga como material de palet acá: su costo ya lo calcula
+    // quoteService.calculateQuote solo, a partir de unitsPerIntermediatePackage -- este hint es
+    // puramente informativo para ayudar a llenar la fila de la caja.
+    const hasIntermediatePackaging = !!activeVariant?.intermediatePackagingId && !!activeVariant?.unitsPerIntermediatePackage
+    const intermediatePackagesPerPallet =
+        hasIntermediatePackaging && activeVariant?.unitsPerPallet && activeVariant?.unitsPerIntermediatePackage
+            ? activeVariant.unitsPerPallet / activeVariant.unitsPerIntermediatePackage
+            : null
+    const unitsFeedingBoxCount = hasIntermediatePackaging ? intermediatePackagesPerPallet : activeVariant?.unitsPerPallet ?? null
     const boxesPerPallet =
-        activeVariant?.unitsPerPallet && activeVariant?.unitsPerBox
-            ? activeVariant.unitsPerPallet / activeVariant.unitsPerBox
+        unitsFeedingBoxCount && activeVariant?.unitsPerBox
+            ? unitsFeedingBoxCount / activeVariant.unitsPerBox
             : null
 
     const {
@@ -157,13 +169,28 @@ export function ProductVariantPalletMaterialSection({ productId }: Readonly<{ pr
                 </Select>
             </FormField>
 
+            {hasIntermediatePackaging && intermediatePackagesPerPallet !== null && (
+                <p className="mb-1 -mt-2 text-sm text-texto-suave">
+                    {t("productVariantPalletMaterial.intermediatePackagesPerPalletHint", {
+                        unitsPerPallet: activeVariant?.unitsPerPallet,
+                        unitsPerIntermediatePackage: activeVariant?.unitsPerIntermediatePackage,
+                        intermediatePackagesPerPallet,
+                    })}
+                </p>
+            )}
+
             {boxesPerPallet !== null && (
                 <p className="mb-4 -mt-2 text-sm text-texto-suave">
-                    {t("productVariantPalletMaterial.boxesPerPalletHint", {
-                        unitsPerPallet: activeVariant?.unitsPerPallet,
-                        unitsPerBox: activeVariant?.unitsPerBox,
-                        boxesPerPallet,
-                    })}
+                    {t(
+                        hasIntermediatePackaging
+                            ? "productVariantPalletMaterial.boxesPerPalletFromIntermediateHint"
+                            : "productVariantPalletMaterial.boxesPerPalletHint",
+                        {
+                            unitsPerPallet: activeVariant?.unitsPerPallet,
+                            unitsPerBox: activeVariant?.unitsPerBox,
+                            boxesPerPallet,
+                        }
+                    )}
                 </p>
             )}
 

@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { baseCatalogSchema } from "@/shared/schema/baseCatalog.schema"
 
-const packagingRoleEnum = z.enum(["unit", "pallet"])
+const packagingRoleEnum = z.enum(["unit", "intermediate", "pallet"])
 
 export const createPackagingSchema = z.object({
     displayName: z.string().trim().min(1).max(80),

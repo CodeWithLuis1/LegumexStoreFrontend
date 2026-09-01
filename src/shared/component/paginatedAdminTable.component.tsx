@@ -23,17 +23,9 @@ type PaginatedAdminTableProps<T extends { id: number }> = {
     columns: Column<T>[]
     searchPlaceholder: string
     emptyMessage: string
-    // Celda final de cada fila -- normalmente un link de "editar" (ver customerTable.component.tsx),
-    // pero queda como render prop en vez de editPath/editPermission fijos para que las tablas con
-    // más de una acción (activar/desactivar, ver categoryTable.component.tsx) también puedan
-    // reusar este esqueleto sin llenarlo de props condicionales. Nombre "renderActions" (no
-    // "actions") para calzar con la excepción de Sonar a la regla de no crear componentes dentro
-    // de props -- se invoca como función (renderActions(item)), no se renderiza como elemento.
     renderActions: (item: T) => ReactNode
 }
 
-// Skeleton compartido por las tablas admin: búsqueda con debounce + paginado + columnas +
-// acciones por fila (ver usePaginatedSearch.ts).
 export function PaginatedAdminTable<T extends { id: number }>({
     queryKey,
     queryFn,

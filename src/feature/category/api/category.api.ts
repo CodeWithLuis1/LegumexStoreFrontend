@@ -10,9 +10,6 @@ const categoryItemResponseSchema = apiItemResponseSchema(responseCategorySchema)
 const categoryCreateResponseSchema = apiMutationResponseSchema(responseCategorySchema)
 const categoryUpdateResponseSchema = apiMutationResponseSchema(responseCategorySchema)
 
-// Sin params -- trae la lista completa. La usan CategoryTable (antes de tener paginación) y
-// CategorySelect, que necesita ver todas las categorías para el combo. No tocar esta firma: sigue
-// siendo la que consume el select.
 export async function getCategoriesAPI() {
     try {
         const { data } = await api.get("/categories")
@@ -22,8 +19,7 @@ export async function getCategoriesAPI() {
     }
 }
 
-// Con page -- el backend responde en modo paginado (ver category.controller.ts). Sólo la usa
-// CategoryTable.
+
 export async function getCategoriesPaginatedAPI(params: { page: number; limit?: number; search?: string }) {
     try {
         const { data } = await api.get("/categories", {

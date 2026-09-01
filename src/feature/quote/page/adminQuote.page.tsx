@@ -11,10 +11,7 @@ import { getAllQuotesAPI } from "@/feature/quote/api/adminQuote.api"
 import { QuoteResultCard } from "@/feature/quote/component/quoteResultCard.component"
 import { formatCurrency } from "@/shared/format/currency"
 
-// Panel admin: todas las cotizaciones que llegan, sin importar el cliente que las generó --
-// única pantalla donde se listan cotizaciones guardadas (el cliente ya no tiene un "mis
-// cotizaciones" propio, ver quoteRequest.page.tsx). Reusa QuoteResultCard para el detalle
-// expandible.
+
 export function AdminQuoteListPage() {
     const { t } = useTranslation()
     const [search, setSearch] = useState("")

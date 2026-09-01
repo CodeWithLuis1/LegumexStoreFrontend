@@ -3,8 +3,6 @@ import { LogIn, ShieldAlert } from "lucide-react"
 import { Button } from "@/shared/component/button.component"
 
 type AuthCardProps = {
-    // Esquina superior derecha del header con gradiente -- solo el login admin lo usa (selector
-    // de idioma), el login de cliente no.
     headerExtra?: ReactNode
     brandTitle: string
     brandSubtitle: string
@@ -20,10 +18,6 @@ type AuthCardProps = {
     outsideFooter?: ReactNode
 }
 
-// Shell visual compartido por login.page.tsx (admin) y customerLogin.page.tsx (cliente) -- fondo
-// con blobs, tarjeta, header con logo/marca, banner de cuenta bloqueada y botón de submit son
-// idénticos entre los dos; lo que cambia (campos del form, hooks de auth, schema, textos) se pasa
-// como children/props en vez de vivir acá.
 export function AuthCard({
     headerExtra,
     brandTitle,

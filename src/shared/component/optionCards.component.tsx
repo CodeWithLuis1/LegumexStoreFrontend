@@ -5,10 +5,9 @@ export type CardOption = {
     text: string
     value: string | number 
     imageUrl?: string | null
-    // Usado como fallback cuando no hay imageUrl (ej. mientras el admin no le carga foto a un
-    // producto todavía) y como único visual en otros usos de esta card que no son fotográficos.
     icon?: ReactNode
     subtitle?: string
+    badge?: ReactNode
 }
 
 type OptionCardsProps = {
@@ -17,9 +16,6 @@ type OptionCardsProps = {
     onChange: (value: string | number) => void
     hasError?: boolean
     columnsClassName?: string
-    // Alto de la miniatura/foto. Default pensado para listas densas (ej. selector de producto
-    // dentro de un form); las galerías a pantalla completa del cotizador (ver
-    // quoteCalculatorForm.component.tsx) usan un valor más grande para sentirse "vitrina".
     imageHeightClassName?: string
 }
 
@@ -29,9 +25,6 @@ function cardBorderClassName(isSelected: boolean, hasError: boolean | undefined)
     return "border-gris-campo bg-hueso hover:border-verde-profundo/50"
 }
 
-// Card visual controlada (value/onChange), pensada para reusarse tanto suelta (estado local,
-// ver quoteCalculatorForm.component.tsx) como envuelta en <Controller> para un campo real de
-// react-hook-form (ver cardsFormField.component.tsx).
 export function OptionCards({
     options,
     value,
@@ -86,6 +79,8 @@ export function OptionCards({
                         >
                             <Check size={14} />
                         </div>
+
+                        {option.badge && <div className="absolute left-2.5 top-2.5 z-10">{option.badge}</div>}
 
                         {media}
 

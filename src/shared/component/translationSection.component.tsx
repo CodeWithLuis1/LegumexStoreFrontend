@@ -20,16 +20,10 @@ type TranslationSectionProps<T extends TranslatableInput> = {
     title: string
     hint: string
     displayNameLabel: string
-    // Si se pasa, el bloque agrega el campo de descripción larga (category/subCategory). Si se
-    // omite, trae solo el nombre (product/ingredient no tienen descripción larga que traducir).
     fullDescriptionLabel?: string
     className?: string
 }
 
-// Bloque de traducción a inglés opcional -- repetido igual (mismos textos, misma estructura,
-// solo cambia el namespace de t()) en category/subCategory/product/ingredient. El español de
-// arriba sigue siendo la fuente de verdad (ver shared/utils/translation.util.ts en el backend);
-// dejar vacío = el sitio en inglés muestra el contenido en español tal cual.
 export function TranslationSection<T extends TranslatableInput>({
     register,
     errors,

@@ -26,8 +26,6 @@ export function Header({ onMenuClick }: Readonly<HeaderProps>) {
 
             <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-4">
                 <LanguageSwitch />
-                {/* Nombre truncado y oculto en pantallas muy chicas -- con nombres largos + el
-                    idioma + el botón de salir no entran todos en un celular angosto. */}
                 {user && (
                     <span className="hidden max-w-36 truncate text-sm font-medium text-verde-profundo sm:inline">
                         {user.name}

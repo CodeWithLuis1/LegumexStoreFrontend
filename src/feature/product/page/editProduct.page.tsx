@@ -123,6 +123,7 @@ export function EditProductPage() {
                         <ProductIngredientSection
                             productId={productId}
                             isCustomizable={productQuery.data.data.isCustomizable}
+                            isOrganic={productQuery.data.data.isOrganic}
                         />
                     </Card>
 

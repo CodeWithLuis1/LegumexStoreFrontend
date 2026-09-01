@@ -11,9 +11,6 @@ type PasswordInputProps = UseFormRegisterReturn & {
     showPasswordLabel: string
 }
 
-// Campo de password con toggle mostrar/ocultar -- compartido por login.page.tsx (admin) y
-// customerLogin.page.tsx (cliente), único elemento visual repetido entre esos dos forms que no es
-// solo el shell (ver authCard.component.tsx). El estado de visibilidad es local a cada instancia.
 export function PasswordInput({
     id,
     placeholder,

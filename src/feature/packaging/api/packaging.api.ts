@@ -1,6 +1,7 @@
 import api from "@/shared/api/api"
 import { handleApiError } from "@/shared/api/handleApiError"
 import { apiItemResponseSchema, apiListResponseSchema, apiMutationResponseSchema, apiPaginatedListResponseSchema } from "@/shared/api/apiResponse.schema"
+import { getBulkImportTemplate, postBulkImportFile } from "@/shared/api/bulkImport.api"
 import { responsePackagingSchema } from "@/feature/packaging/schema/packaging.schema"
 import type { CreatePackagingInput, UpdatePackagingInput } from "@/feature/packaging/schema/packaging.schema"
 
@@ -57,3 +58,9 @@ export async function updatePackagingAPI(id: number, formData: UpdatePackagingIn
         handleApiError(error)
     }
 }
+
+// Ambas reusan el plumbing genérico de shared/api/bulkImport.api.ts (mismo diseño para todos los
+// catálogos con carga masiva -- ver esa entrada de memoria del proyecto); lo único específico de
+// Empaques acá es la URL.
+export const bulkImportPackagingsAPI = (file: File) => postBulkImportFile("/packagings/bulk-import", file)
+export const downloadPackagingImportTemplateAPI = () => getBulkImportTemplate("/packagings/bulk-import/template")

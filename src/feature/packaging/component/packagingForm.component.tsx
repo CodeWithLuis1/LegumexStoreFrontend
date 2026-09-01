@@ -39,6 +39,7 @@ export function PackagingForm<T extends UpdatePackagingInput>({ register, errors
                     {...register("packagingRole" as Path<T>)}
                 >
                     <option value="unit">{t("packaging.form.packagingRoleOptions.unit")}</option>
+                    <option value="intermediate">{t("packaging.form.packagingRoleOptions.intermediate")}</option>
                     <option value="pallet">{t("packaging.form.packagingRoleOptions.pallet")}</option>
                 </Select>
             </FormField>

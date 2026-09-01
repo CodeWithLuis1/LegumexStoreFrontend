@@ -6,8 +6,6 @@ type StatusToggleButtonProps = {
     onToggle: () => void
 }
 
-// Botón activar/desactivar de las tablas admin con catálogo público (categoría, producto,
-// subcategoría) -- ver useStatusToggle.ts para la mutación/confirmación que lo alimenta.
 export function StatusToggleButton({ isActive, isPending, onToggle }: Readonly<StatusToggleButtonProps>) {
     const { t } = useTranslation()
 

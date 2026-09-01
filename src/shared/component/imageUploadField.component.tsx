@@ -5,13 +5,8 @@ import { UploadImages } from "@/shared/component/uploadImages.component"
 
 type Props = {
     label: string
-    // "value" sigue el mismo contrato que el campo "image" del schema (createProductSchema/
-    // createCategorySchema): string base64 = foto nueva elegida en esta sesión, null = el
-    // usuario la quitó explícitamente, undefined = no se tocó (todavía).
     value: string | null | undefined
     onChange: (next: string | null) => void
-    // URL ya guardada en el registro (solo aplica en edición) -- se muestra como preview
-    // mientras "value" siga undefined, es decir, mientras el usuario no elija ni quite nada.
     initialImageUrl?: string | null
     errorMessage?: string
 }
@@ -20,7 +15,6 @@ export function ImageUploadField({ label, value, onChange, initialImageUrl, erro
     const { t } = useTranslation()
     const [isPickerOpen, setIsPickerOpen] = useState(false)
 
-    // value === undefined -> todavía no se tocó el campo, se muestra lo que ya había guardado.
     const previewSrc = value === undefined ? (initialImageUrl ?? null) : value
 
     const handleRemove = () => {

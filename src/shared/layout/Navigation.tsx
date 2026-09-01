@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom"
 import {
+    Calculator,
     Carrot,
     ClipboardList,
     FolderTree,
@@ -21,6 +22,7 @@ import { usePermission } from "@/shared/auth/usePermission"
 const NAV_ITEMS = [
     { url: "/admin/dashboard", labelKey: "dashboard.title", icon: LayoutDashboard, permission: "dashboard:view" },
     { url: "/admin/quotes", labelKey: "adminQuote.list.title", icon: ClipboardList, permission: "quotes:view" },
+    { url: "/admin/quotes/calculator", labelKey: "adminQuoteCalculator.title", icon: Calculator, permission: "quotes:calculate" },
     { url: "/admin/products", labelKey: "product.list.title", icon: ShoppingBag, permission: "products:view" },
     { url: "/admin/customers", labelKey: "customer.list.title", icon: Users, permission: "customers:view" },
     { url: "/admin/users", labelKey: "user.list.title", icon: UserCog, permission: "users:view" },

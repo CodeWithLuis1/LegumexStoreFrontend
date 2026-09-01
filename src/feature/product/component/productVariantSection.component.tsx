@@ -17,6 +17,7 @@ import { getPresentationsAPI } from "@/feature/presentation/api/presentation.api
 import { getPackagingsAPI } from "@/feature/packaging/api/packaging.api"
 import { PresentationSelect } from "@/feature/presentation/component/presentationSelect.component"
 import { PackagingSelect } from "@/feature/packaging/component/packagingSelect.component"
+import { IntermediatePackagingSelect } from "@/feature/packaging/component/intermediatePackagingSelect.component"
 import { FormField } from "@/shared/component/formField.component"
 import { Input } from "@/shared/component/input.component"
 import { Button } from "@/shared/component/button.component"
@@ -31,9 +32,11 @@ function toFormValues(variant: ProductVariantResponse): VariantFormInput {
     return {
         presentationId: variant.presentationId ?? undefined,
         packagingId: variant.packagingId ?? undefined,
+        intermediatePackagingId: variant.intermediatePackagingId ?? undefined,
         skuCode: variant.skuCode ?? undefined,
         unitsPerPallet: variant.unitsPerPallet ?? undefined,
         unitsPerBox: variant.unitsPerBox ?? undefined,
+        unitsPerIntermediatePackage: variant.unitsPerIntermediatePackage ?? undefined,
     }
 }
 
@@ -122,6 +125,8 @@ export function ProductVariantSection({ productId }: Readonly<{ productId: numbe
                             <Th>{t("productVariant.form.packagingId")}</Th>
                             <Th>{t("productVariant.form.unitsPerPallet")}</Th>
                             <Th>{t("productVariant.form.unitsPerBox")}</Th>
+                            <Th>{t("productVariant.form.intermediatePackagingId")}</Th>
+                            <Th>{t("productVariant.form.unitsPerIntermediatePackage")}</Th>
                             <Th>{t("common.actions")}</Th>
                         </TableRow>
                     </TableHead>
@@ -133,6 +138,12 @@ export function ProductVariantSection({ productId }: Readonly<{ productId: numbe
                                 <Td>{variant.packagingId ? packagingNameById.get(variant.packagingId) ?? "-" : "-"}</Td>
                                 <Td>{variant.unitsPerPallet ?? "-"}</Td>
                                 <Td>{variant.unitsPerBox ?? "-"}</Td>
+                                <Td>
+                                    {variant.intermediatePackagingId
+                                        ? packagingNameById.get(variant.intermediatePackagingId) ?? "-"
+                                        : "-"}
+                                </Td>
+                                <Td>{variant.unitsPerIntermediatePackage ?? "-"}</Td>
                                 <Td className="space-x-3">
                                     <button
                                         type="button"
@@ -151,7 +162,7 @@ export function ProductVariantSection({ productId }: Readonly<{ productId: numbe
                                 </Td>
                             </TableRow>
                         ))}
-                        {variants.length === 0 && <TableEmpty message={t("productVariant.table.empty")} colSpan={6} />}
+                        {variants.length === 0 && <TableEmpty message={t("productVariant.table.empty")} colSpan={8} />}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -216,6 +227,34 @@ export function ProductVariantSection({ productId }: Readonly<{ productId: numbe
                 </FormField>
                 <p className="mb-5 -mt-3 text-sm text-texto-suave sm:col-span-2">
                     {t("productVariant.form.unitsPerBoxHint")}
+                </p>
+
+                <FormField
+                    label={t("productVariant.form.intermediatePackagingId")}
+                    htmlFor="intermediatePackagingId"
+                    error={getFieldErrorMessage(t, errors.intermediatePackagingId)}
+                >
+                    <IntermediatePackagingSelect
+                        id="intermediatePackagingId"
+                        hasError={!!errors.intermediatePackagingId}
+                        {...register("intermediatePackagingId", { setValueAs: toOptionalNumber })}
+                    />
+                </FormField>
+
+                <FormField
+                    label={t("productVariant.form.unitsPerIntermediatePackage")}
+                    htmlFor="unitsPerIntermediatePackage"
+                    error={getFieldErrorMessage(t, errors.unitsPerIntermediatePackage)}
+                >
+                    <Input
+                        id="unitsPerIntermediatePackage"
+                        type="number"
+                        hasError={!!errors.unitsPerIntermediatePackage}
+                        {...register("unitsPerIntermediatePackage", { setValueAs: toOptionalNumber })}
+                    />
+                </FormField>
+                <p className="mb-5 -mt-3 text-sm text-texto-suave sm:col-span-2">
+                    {t("productVariant.form.unitsPerIntermediatePackageHint")}
                 </p>
 
                 <div className="flex gap-3 sm:col-span-2">

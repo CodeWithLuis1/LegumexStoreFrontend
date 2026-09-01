@@ -3,11 +3,10 @@ import type { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 import { useQuery, useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { ClipboardList, LogOut } from "lucide-react"
-import { useCustomerAuth } from "@/shared/auth/customer/useCustomerAuth"
-import { SiteContainer } from "@/shared/component/siteContainer.component"
+import { Calculator } from "lucide-react"
+import { PageContainer } from "@/shared/component/pageContainer.component"
 import { Spinner } from "@/shared/component/spinner.component"
-import { getQuoteProductsAPI, getQuoteDestinationsAPI, saveQuoteAPI, sendQuotePdfEmailAPI } from "@/feature/quote/api/quote.api"
+import { getAdminQuoteProductsAPI, getAdminQuoteDestinationsAPI, previewAdminQuoteAPI, sendAdminQuotePdfEmailAPI } from "@/feature/quote/api/adminQuote.api"
 import { QuoteCalculatorForm } from "@/feature/quote/component/quoteCalculatorForm.component"
 import type { QuoteWizardStep } from "@/feature/quote/component/quoteCalculatorForm.component"
 import { QuoteResultCard } from "@/feature/quote/component/quoteResultCard.component"
@@ -15,27 +14,34 @@ import { QuotedOrderSummary } from "@/feature/quote/component/quotedOrderSummary
 import { QuotePdfButton } from "@/feature/quote/component/quotePdfButton.component"
 import type { CalculateQuoteInput, QuoteCalculation } from "@/feature/quote/schema/quote.schema"
 
-export function QuoteRequestPage() {
+// Cotizador interno del admin (2026-08-24, permiso "quotes:calculate") -- mismo wizard y mismo
+// QuoteResultCard que usa el cliente en site/quoteRequest.page.tsx, pero: (1) usa las rutas
+// /admin/quotes/* (JWT staff, ver adminQuote.api.ts) en vez de /quotes/* (JWT customer); (2)
+// llama a previewAdminQuoteAPI, que NUNCA persiste -- no hay botón de guardar, no se crea
+// ninguna fila en `Quote`, así que esto no puede mezclarse ni contaminar el listado real de
+// cotizaciones de clientes (AdminQuoteListPage) ni las métricas del dashboard; (3) no pasa
+// showCostBreakdown={false} -- el admin SÍ ve el desglose completo (materia prima, empaque,
+// materiales de palet, transporte), a diferencia del cliente final.
+export function AdminQuoteCalculatorPage() {
     const { t } = useTranslation()
-    const { customer, logout } = useCustomerAuth()
-
+    // Mismo patrón "pedido en curso" que quoteRequest.page.tsx (cliente, ver esa entrada de
+    // memoria del proyecto) -- currentResult es lo recién calculado en este paso, quotedLines es
+    // todo lo acumulado en la sesión. Acá con más razón es 100% de pantalla: previewAdminQuoteAPI
+    // no guarda nada, así que quotedLines nunca tuvo una contraparte persistida que vincular.
     const [currentResult, setCurrentResult] = useState<QuoteCalculation | null>(null)
     const [quotedLines, setQuotedLines] = useState<QuoteCalculation[]>([])
     const [wizardStep, setWizardStep] = useState<QuoteWizardStep>("mode")
-
     const [formResetKey, setFormResetKey] = useState(0)
 
-    const productsQuery = useQuery({ queryKey: ["quoteProducts"], queryFn: getQuoteProductsAPI })
-    const destinationsQuery = useQuery({ queryKey: ["quoteDestinations"], queryFn: getQuoteDestinationsAPI })
-
+    const productsQuery = useQuery({ queryKey: ["adminQuoteProducts"], queryFn: getAdminQuoteProductsAPI })
+    const destinationsQuery = useQuery({ queryKey: ["adminQuoteDestinations"], queryFn: getAdminQuoteDestinationsAPI })
 
     const calculateMutation = useMutation({
-        mutationFn: saveQuoteAPI,
+        mutationFn: previewAdminQuoteAPI,
         onSuccess: (response) => {
             if (!response) return
             setCurrentResult(response.data)
             setQuotedLines((lines) => [...lines, response.data])
-            toast.success(response.message)
         },
         onError: (error) => {
             setCurrentResult(null)
@@ -48,12 +54,10 @@ export function QuoteRequestPage() {
     const isLoadingCatalog = productsQuery.isLoading || destinationsQuery.isLoading
     const hasCatalogError = productsQuery.isError || destinationsQuery.isError
 
-
     const handleSubmit = (formData: CalculateQuoteInput) => {
         setCurrentResult(null)
         calculateMutation.mutate(formData)
     }
-
 
     const handleStepChange = (nextStep: QuoteWizardStep) => {
         setWizardStep(nextStep)
@@ -90,20 +94,14 @@ export function QuoteRequestPage() {
                     onStepChange={handleStepChange}
                 />
                 <div className="space-y-6">
-                    <QuoteResultCard result={currentResult} isPending={calculateMutation.isPending} showCostBreakdown={false} />
+                    <QuoteResultCard result={currentResult} isPending={calculateMutation.isPending} />
                     {quotedLines.length > 0 && (
-                        <QuotedOrderSummary
-                            lines={quotedLines}
-                            onQuoteAnother={handleQuoteAnother}
-                            onClear={handleClearOrder}
-                            showCostBreakdown={false}
-                        />
+                        <QuotedOrderSummary lines={quotedLines} onQuoteAnother={handleQuoteAnother} onClear={handleClearOrder} />
                     )}
                 </div>
             </div>
         )
     } else {
-
         content = (
             <div className="mx-auto max-w-3xl space-y-6">
                 <QuoteCalculatorForm
@@ -115,45 +113,28 @@ export function QuoteRequestPage() {
                     onStepChange={handleStepChange}
                 />
                 {quotedLines.length > 0 && (
-                    <QuotedOrderSummary
-                        lines={quotedLines}
-                        onQuoteAnother={handleQuoteAnother}
-                        onClear={handleClearOrder}
-                        showCostBreakdown={false}
-                    />
+                    <QuotedOrderSummary lines={quotedLines} onQuoteAnother={handleQuoteAnother} onClear={handleClearOrder} />
                 )}
             </div>
         )
     }
 
     return (
-        <SiteContainer className="py-12 sm:py-16">
-            <header className="mb-10 flex flex-col gap-4 border-b border-gris-campo pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <PageContainer wide>
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex items-start gap-3">
-                    <ClipboardList className="mt-1 h-8 w-8 shrink-0 text-dorado" />
+                    <Calculator className="mt-1 h-7 w-7 shrink-0 text-dorado" />
                     <div>
-                        <h1 className="font-display text-2xl font-bold text-verde-profundo sm:text-3xl">
-                            {t("site.quoteRequest.title")}
-                        </h1>
-                        <p className="mt-1 max-w-xl text-texto-suave">
-                            {t("site.quoteRequest.description", { name: customer?.name ?? "" })}
-                        </p>
+                        <h1 className="text-2xl font-semibold text-verde-profundo">{t("adminQuoteCalculator.title")}</h1>
+                        <p className="mt-1 max-w-2xl text-texto-suave">{t("adminQuoteCalculator.description")}</p>
                     </div>
                 </div>
-                <div className="flex shrink-0 items-center gap-5">
-                    <QuotePdfButton lines={quotedLines} showCostBreakdown={false} sendEmailAPI={sendQuotePdfEmailAPI} />
-                    <button
-                        onClick={logout}
-                        type="button"
-                        className="flex items-center gap-1.5 text-sm font-medium text-texto-suave transition hover:text-verde-profundo"
-                    >
-                        <LogOut size={16} />
-                        {t("common.logout")}
-                    </button>
+                <div className="shrink-0">
+                    <QuotePdfButton lines={quotedLines} sendEmailAPI={sendAdminQuotePdfEmailAPI} />
                 </div>
-            </header>
+            </div>
 
             {content}
-        </SiteContainer>
+        </PageContainer>
     )
 }

@@ -1,6 +1,7 @@
 import api from "@/shared/api/api"
 import { handleApiError } from "@/shared/api/handleApiError"
 import { apiItemResponseSchema, apiListResponseSchema, apiMutationResponseSchema, apiPaginatedListResponseSchema } from "@/shared/api/apiResponse.schema"
+import { getBulkImportTemplate, postBulkImportFile } from "@/shared/api/bulkImport.api"
 import { responseIngredientSchema } from "@/feature/ingredient/schema/ingredient.schema"
 import type { CreateIngredientInput, UpdateIngredientInput } from "@/feature/ingredient/schema/ingredient.schema"
 
@@ -56,3 +57,8 @@ export async function updateIngredientAPI(id: number, formData: UpdateIngredient
         handleApiError(error)
     }
 }
+
+// Reusan el plumbing genérico de shared/api/bulkImport.api.ts (mismo diseño que Empaques -- ver
+// esa entrada de memoria del proyecto); lo único específico de Ingredientes acá es la URL.
+export const bulkImportIngredientsAPI = (file: File) => postBulkImportFile("/ingredients/bulk-import", file)
+export const downloadIngredientImportTemplateAPI = () => getBulkImportTemplate("/ingredients/bulk-import/template")

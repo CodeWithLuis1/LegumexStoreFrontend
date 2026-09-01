@@ -1,8 +1,5 @@
 import { useTranslation } from "react-i18next"
 
-// Insignia de estado activo/inactivo -- usada en las tablas de catálogos (producto, categoría,
-// subcategoría, ...) junto al botón de activar/desactivar. Ver BaseCatalogModel.isActive en el
-// backend: el toggle nunca borra el registro, solo lo oculta del cotizador.
 export function StatusBadge({ isActive }: Readonly<{ isActive: boolean }>) {
     const { t } = useTranslation()
 

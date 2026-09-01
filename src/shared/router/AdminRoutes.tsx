@@ -115,6 +115,9 @@ const DashboardPage = lazy(() =>
 const AdminQuoteListPage = lazy(() =>
     import("@/feature/quote/page/adminQuote.page").then((module) => ({ default: module.AdminQuoteListPage }))
 )
+const AdminQuoteCalculatorPage = lazy(() =>
+    import("@/feature/quote/page/adminQuoteCalculator.page").then((module) => ({ default: module.AdminQuoteCalculatorPage }))
+)
 
 const CustomerListPage = lazy(() =>
     import("@/feature/customer/page/customer.page").then((module) => ({ default: module.CustomerListPage }))
@@ -130,6 +133,7 @@ const routes = [
     { path: "dashboard", component: DashboardPage, permission: "dashboard:view" },
 
     { path: "quotes", component: AdminQuoteListPage, permission: "quotes:view" },
+    { path: "quotes/calculator", component: AdminQuoteCalculatorPage, permission: "quotes:calculate" },
 
     { path: "categories", component: CategoryListPage, permission: "categories:view" },
     { path: "categories/create", component: CreateCategoryPage, permission: "categories:create" },

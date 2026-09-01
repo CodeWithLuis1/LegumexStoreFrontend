@@ -127,7 +127,7 @@
                 "modeCustomizableHint": "Build your own mix: pick the % of each ingredient until it adds up to 100%.",
                 "noProductsFinished": "There are no ready-made products available to quote yet.",
                 "noProductsCustomizable": "There are no customizable products available to quote yet.",
-                "organicBadge": "Organic",
+                "organicBadge": "100% Organic",
                 "mixTitle": "Build your mix",
                 "mixTotal": "Total: {{total}}%",
                 "mixIncomplete": "The mix must total 100% before you can request a quote.",
@@ -164,10 +164,15 @@
                 "perPallet": "Per pallet",
                 "rawMaterials": "Raw materials",
                 "unitPackaging": "Unit packaging",
+                "intermediatePackaging": "Intermediate packaging",
                 "palletMaterials": "Pallet materials",
                 "transport": "Transport",
                 "unitsQuantity": "{{count}} units",
-                "palletsQuantity": "{{count}} pallets"
+                "palletsQuantity": "{{count}} pallets",
+                "intermediatePackagesQuantity": "{{count}} intermediate packages",
+                "currencyGtq": "Quetzales",
+                "currencyUsd": "Dollars",
+                "exchangeRateError": "Could not fetch the exchange rate."
             }
         },
         "footer": {
@@ -325,6 +330,15 @@
         "table": {
             "searchPlaceholder": "Search by name...",
             "empty": "No ingredients registered"
+        },
+        "bulkImport": {
+            "title": "Bulk import from Excel",
+            "description": "Download the template, fill it in with your ingredients, and upload it. The whole file is validated first: if a single row has an error, nothing is imported -- fix the file and upload it again. \"Cost unit\" must be the exact name of a Unit that already exists in the catalog.",
+            "downloadTemplate": "Download template",
+            "importButton": "Import file",
+            "importing": "Importing...",
+            "rowErrorsTitle": "The file has {{count}} error(s). No ingredient was imported:",
+            "rowErrorItem": "Row {{row}}: {{message}}"
         }
     },
     "subCategory": {
@@ -358,6 +372,7 @@
             "packagingRole": "What is this material used for?",
             "packagingRoleOptions": {
                 "unit": "Unit packaging",
+                "intermediate": "Intermediate packaging (large bag)",
                 "pallet": "Palletizing material."
             },
             "unitCost": "Cost per unit (Q)"
@@ -375,6 +390,15 @@
         "table": {
             "searchPlaceholder": "Search by name...",
             "empty": "No packagings registered"
+        },
+        "bulkImport": {
+            "title": "Bulk import from Excel",
+            "description": "Download the template, fill it in with your materials, and upload it. The whole file is validated first: if a single row has an error, nothing is imported -- fix the file and upload it again.",
+            "downloadTemplate": "Download template",
+            "importButton": "Import file",
+            "importing": "Importing...",
+            "rowErrorsTitle": "The file has {{count}} error(s). No material was imported:",
+            "rowErrorItem": "Row {{row}}: {{message}}"
         }
     },
     "presentation": {
@@ -406,6 +430,7 @@
             "displayName": "Name",
             "urlSlug": "URL slug",
             "isOrganic": "Organic",
+            "isOrganicHint": "If you check this box, the ingredient selector below will only offer organic variants (plus water/salt/sugar or other items with no variant). Customers will see a \"100% Organic\" badge when they pick this product.",
             "isCustomizable": "Recipe type",
             "isCustomizableFinished": "Ready-made (fixed recipe)",
             "isCustomizableCustom": "Customizable (% mix)",
@@ -437,6 +462,9 @@
             "unitsPerPallet": "Units per pallet",
             "unitsPerBox": "Units per box",
             "unitsPerBoxHint": "How many bags/pieces fit in one box. Doesn't affect cost, it's only used to work out how many boxes the pallet needs.",
+            "intermediatePackagingId": "Intermediate packaging (large bag)",
+            "unitsPerIntermediatePackage": "Units per intermediate package",
+            "unitsPerIntermediatePackageHint": "Only if this product uses nested packaging (e.g. several small bags inside one large bag, which then goes into the box). How many small units fit inside one large bag -- this DOES affect cost.",
             "addButton": "Add variant"
         },
         "list": {
@@ -469,6 +497,8 @@
         "selectVariant": "Variant",
         "noVariants": "Add a variant first so you can define its palletizing materials",
         "boxesPerPalletHint": "With {{unitsPerBox}} units per box and {{unitsPerPallet}} units per pallet, this pallet needs {{boxesPerPallet}} boxes.",
+        "intermediatePackagesPerPalletHint": "With {{unitsPerIntermediatePackage}} units per intermediate package and {{unitsPerPallet}} units per pallet, this pallet needs {{intermediatePackagesPerPallet}} intermediate packages (not loaded here, their cost is already calculated automatically).",
+        "boxesPerPalletFromIntermediateHint": "With {{unitsPerBox}} intermediate packages per box, this pallet needs {{boxesPerPallet}} boxes.",
         "form": {
             "packagingId": "Pallet material",
             "quantityValue": "Quantity",
@@ -613,6 +643,66 @@
             "empty": "No quote has been saved yet.",
             "noMatches": "No quote matches the search.",
             "summary": "{{date}} · {{pallets}} pallets · {{destination}}"
+        }
+    },
+    "adminQuoteCalculator": {
+        "title": "Internal calculator",
+        "description": "Calculate quotes with the full cost breakdown (raw materials, packaging, pallet materials and transport). Nothing is saved -- it's just a lookup tool, it doesn't appear in \"Quotes\" and it doesn't affect the dashboard."
+    },
+    "quote": {
+        "orderSummary": {
+            "title": "Order in progress",
+            "itemCount": "{{count}} products quoted",
+            "total": "Order total",
+            "lineSummary": "{{destination}} · {{pallets}} pallets",
+            "quoteAnother": "Quote another product",
+            "clear": "Start a new order"
+        },
+        "pdf": {
+            "button": "Download quote PDF",
+            "modal": {
+                "title": "Download quote",
+                "description": "Enter the name and email of the client this quote is for to generate the PDF summary.",
+                "clientNameLabel": "Client name",
+                "clientNamePlaceholder": "E.g. El Campo Distributors Inc.",
+                "required": "Enter the client's name",
+                "clientEmailLabel": "Client email",
+                "clientEmailPlaceholder": "E.g. contact@distributors.com",
+                "emailRequired": "Enter the client's email",
+                "emailInvalid": "Enter a valid email",
+                "generate": "Generate PDF",
+                "generating": "Generating PDF...",
+                "ready": "Your PDF is ready.",
+                "open": "Open PDF",
+                "download": "Download PDF",
+                "sendEmail": "Send by email",
+                "sending": "Sending email...",
+                "sendSuccess": "Email sent to {{email}} with the PDF attached.",
+                "emailHint": "An email will be sent to {{email}} with this PDF already attached -- no need to attach it by hand.",
+                "emailSubject": "Legumex Quote – {{clientName}}",
+                "emailBody": "Hello,\n\nPlease find attached the quote requested for {{clientName}}.\n\nQuote date: {{quoteDate}}\nValid until: {{validUntil}}\nOrder total: {{total}}\n\nBest regards,\nLegumex",
+                "error": "The PDF could not be generated. Please try again."
+            },
+            "document": {
+                "title": "Legumex",
+                "subtitle": "Quote summary",
+                "client": "Client",
+                "quoteDate": "Quote date",
+                "validUntil": "Valid until",
+                "pallets": "Pallets",
+                "units": "Units",
+                "perPallet": "Per pallet",
+                "rawMaterials": "Raw materials",
+                "unitPackaging": "Unit packaging",
+                "intermediatePackaging": "Intermediate packaging",
+                "palletMaterials": "Pallet materials",
+                "transport": "Transport",
+                "lineTotal": "Line total",
+                "orderTotal": "Order total",
+                "restrictionsTitle": "Restrictions",
+                "restrictionsText": "This quote is valid for {{days}} days only from its issue date. After this period prices may change and a new quote must be requested.",
+                "generatedAt": "Document generated on {{date}}"
+            }
         }
     },
     "destination": {

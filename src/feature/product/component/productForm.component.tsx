@@ -89,9 +89,10 @@ export function ProductForm<T extends UpdateProductInput>({
                 <Input id="displayName" hasError={!!errors.displayName} {...register("displayName" as Path<T>)} />
             </FormField>
 
-            <div className="mb-5 flex gap-6">
+            <div className="mb-1 flex gap-6">
                 <Checkbox id="isOrganic" label={t("product.form.isOrganic")} {...register("isOrganic" as Path<T>)} />
             </div>
+            <p className="mb-5 text-sm text-texto-suave">{t("product.form.isOrganicHint")}</p>
 
             <FormField
                 label={t("product.form.isCustomizable")}

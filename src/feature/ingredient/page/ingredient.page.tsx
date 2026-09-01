@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { IngredientTable } from "@/feature/ingredient/component/ingredientTable.component"
+import { bulkImportIngredientsAPI, downloadIngredientImportTemplateAPI } from "@/feature/ingredient/api/ingredient.api"
 import { usePermission } from "@/shared/auth/usePermission"
 import { PageContainer } from "@/shared/component/pageContainer.component"
 import { buttonClassName } from "@/shared/component/buttonClassName"
+import { BulkImportPanel } from "@/shared/component/bulkImportPanel.component"
 
 export function IngredientListPage() {
     const { t } = useTranslation()
@@ -19,6 +21,17 @@ export function IngredientListPage() {
                     </Link>
                 )}
             </div>
+            {/* Misma permission que "Crear ingrediente" -- la carga masiva es otra forma de
+                crear, no una acción distinta. */}
+            {hasPermission("ingredients:create") && (
+                <BulkImportPanel
+                    translationNamespace="ingredient.bulkImport"
+                    templateFilename="plantilla-ingredientes.xlsx"
+                    downloadTemplate={downloadIngredientImportTemplateAPI}
+                    bulkImport={bulkImportIngredientsAPI}
+                    invalidateQueryKey={["ingredients"]}
+                />
+            )}
             <IngredientTable />
         </PageContainer>
     )

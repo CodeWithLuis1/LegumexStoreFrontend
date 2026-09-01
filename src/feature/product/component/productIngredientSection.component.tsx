@@ -56,9 +56,13 @@ type ProductIngredientSectionProps = {
     // Producto terminado -> receta fija (quantityValue). Producto personalizable ->
     // pool de ingredientes permitidos con % mín/máx opcionales (ver Product.isCustomizable).
     isCustomizable: boolean
+    // Si el producto está marcado como orgánico (Product.isOrganic), el selector solo debe
+    // ofrecer variantes orgánicas o insumos tipo "other" (agua, sal, azúcar...) -- ver
+    // ingredientSelect.component.tsx (onlyOrganicCompatible).
+    isOrganic: boolean
 }
 
-export function ProductIngredientSection({ productId, isCustomizable }: Readonly<ProductIngredientSectionProps>) {
+export function ProductIngredientSection({ productId, isCustomizable, isOrganic }: Readonly<ProductIngredientSectionProps>) {
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const [editingId, setEditingId] = useState<number | null>(null)
@@ -193,6 +197,7 @@ export function ProductIngredientSection({ productId, isCustomizable }: Readonly
                         id="ingredientId"
                         hasError={!!errors.ingredientId}
                         onlyMixable={isCustomizable}
+                        onlyOrganicCompatible={isOrganic}
                         {...register("ingredientId", { setValueAs: toOptionalNumber })}
                     />
                 </FormField>

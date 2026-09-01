@@ -12,16 +12,24 @@ type IngredientSelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
     // como capa, así que no debe aparecer como opción del pool. El backend revalida esto
     // igual (ver productIngredient.service.ts), esto es solo para no mostrar opciones inválidas.
     onlyMixable?: boolean
+    // Productos marcados como orgánicos (Product.isOrganic) solo pueden usar ingredientes que
+    // SEAN la variante orgánica (Ingredient.isOrganic), o insumos tipo "other" (agua, sal,
+    // azúcar...) que por naturaleza no tienen variante orgánica/convencional -- ver el
+    // comentario en Ingredient.model.ts. El backend revalida esto igual (ver
+    // productIngredient.service.ts::assertIngredientIsOrganicCompatibleIfNeeded).
+    onlyOrganicCompatible?: boolean
 }
 
 export const IngredientSelect = forwardRef<HTMLSelectElement, IngredientSelectProps>(function IngredientSelect(
-    { hasError, onlyMixable = false, ...props },
+    { hasError, onlyMixable = false, onlyOrganicCompatible = false, ...props },
     ref
 ) {
     const { t } = useTranslation()
     const ingredientsQuery = useQuery({ queryKey: ["ingredients"], queryFn: getIngredientsAPI })
     const allIngredients = ingredientsQuery.data?.data ?? []
-    const ingredients = onlyMixable ? allIngredients.filter((ingredient) => ingredient.isMixable) : allIngredients
+    const ingredients = allIngredients
+        .filter((ingredient) => !onlyMixable || ingredient.isMixable)
+        .filter((ingredient) => !onlyOrganicCompatible || ingredient.isOrganic || ingredient.ingredientType === "other")
 
     return (
         <Select ref={ref} hasError={hasError} defaultValue="" {...props}>

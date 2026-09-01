@@ -24,24 +24,13 @@ type QuoteCalculatorFormProps = {
     destinations: QuoteDestination[]
     onSubmit: (formData: CalculateQuoteInput) => void
     isSubmitting: boolean
-    // El wizard vive dentro de este componente (ver QuoteWizardStep abajo), pero el layout de la
-    // página (feature/quote/page/quoteRequest.page.tsx) necesita saber en qué paso está para
-    // decidir si muestra el panel de resultado al lado (solo tiene sentido en "details") o deja
-    // la galería a pantalla completa.
     onStepChange?: (step: QuoteWizardStep) => void
 }
 
 const MIX_PERCENTAGE_TOLERANCE = 0.5
 
-// El admin ya clasifica cada producto como terminado o personalizable (Product.isCustomizable);
-// se lo preguntamos al cliente primero para no mezclar ambos catálogos en un solo selector.
-// Es un filtro puramente visual sobre datos que el cliente ya recibió completos: el backend
-// revalida productId/ingredientMix igual sin importar qué modo haya elegido la UI.
 type QuoteMode = "finished" | "customizable"
 
-// Flujo tipo "vitrina": Modo -> Categoría (galería de fotos) -> Producto (galería de fotos) ->
-// Detalles (form corto + resultado). Cada paso ocupa la pantalla completa, no se amontonan
-// todos los selectores en un solo formulario largo.
 export type QuoteWizardStep = "mode" | "category" | "product" | "details"
 
 function variantLabel(variant: QuotableProduct["variants"][number]): string {
@@ -60,14 +49,7 @@ export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmit
     const [mode, setMode] = useState<QuoteMode>("finished")
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null)
-    // Solo se usa en modo "customizable": % que el cliente arma a mano por ingrediente del
-    // pool (ver QuotableProduct.ingredientPool). Vive fuera de react-hook-form porque el set
-    // de inputs cambia dinámicamente según el producto seleccionado.
     const [mixPercentages, setMixPercentages] = useState<Record<number, string>>({})
-    // País de destino elegido por el cliente: cada destino pertenece a un solo país (ver
-    // Destination.country), así que el selector de destino solo muestra los que calzan con
-    // este valor. Vive fuera de react-hook-form como el resto de la UI del wizard -- solo
-    // destinationId viaja al backend.
     const [selectedCountry, setSelectedCountry] = useState<DestinationCountry>("GT")
 
     useEffect(() => {
@@ -86,9 +68,6 @@ export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmit
         () => products.filter((product) => product.isCustomizable === (mode === "customizable")),
         [products, mode]
     )
-
-    // Paso 1 del selector visual: categorías derivadas de los productos del modo elegido (no
-    // hay endpoint aparte -- ver decisión en la memoria del proyecto, SubCategoría queda fuera).
     const categories = useMemo(() => {
         const byId = new Map<number, CardOption>()
         modeProducts.forEach((product) => {
@@ -110,6 +89,11 @@ export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmit
         text: product.displayName,
         imageUrl: product.imageUrl,
         subtitle: product.productTypeName ?? undefined,
+        badge: product.isOrganic ? (
+            <span className="inline-flex items-center rounded-chip bg-brote px-2 py-1 text-xs font-semibold text-verde-profundo shadow-sm">
+                {t("site.quoteRequest.form.organicBadge")}
+            </span>
+        ) : undefined,
     }))
 
     const selectedProduct = categoryProducts.find((product) => product.id === selectedProductId)
@@ -158,8 +142,6 @@ export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmit
         setMixPercentages((current) => ({ ...current, [ingredientId]: value }))
     }
 
-    // Cambiar de país invalida el destino ya elegido (pertenecía al otro país): se limpia para
-    // no dejar seleccionado un destino que ya no aparece en la lista filtrada.
     const handleCountryChange = (country: DestinationCountry) => {
         setSelectedCountry(country)
         setValue("destinationId", undefined as unknown as number)
@@ -176,8 +158,6 @@ export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmit
         onSubmit({ ...formData, ingredientMix })
     })
 
-    // Migas de pan clicables: solo se puede saltar a un paso cuyo requisito previo ya está
-    // resuelto (ej. no se puede ir a "Producto" sin categoría elegida).
     const crumbs: { key: QuoteWizardStep; label: string; enabled: boolean }[] = [
         { key: "mode", label: t("site.quoteRequest.form.wizard.steps.mode"), enabled: true },
         { key: "category", label: t("site.quoteRequest.form.wizard.steps.category"), enabled: true },
@@ -332,7 +312,9 @@ export function QuoteCalculatorForm({ products, destinations, onSubmit, isSubmit
                         {(selectedProduct.productTypeName || selectedProduct.isOrganic) && (
                             <div className="mb-5 flex flex-wrap gap-2">
                                 {selectedProduct.productTypeName && <Chip>{selectedProduct.productTypeName}</Chip>}
-                                {selectedProduct.isOrganic && <Chip>{t("site.quoteRequest.form.organicBadge")}</Chip>}
+                                {selectedProduct.isOrganic && (
+                                    <Chip tone="fresh">{t("site.quoteRequest.form.organicBadge")}</Chip>
+                                )}
                             </div>
                         )}
 

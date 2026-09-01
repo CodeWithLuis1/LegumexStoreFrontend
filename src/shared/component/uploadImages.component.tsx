@@ -13,17 +13,11 @@ type Props = {
 
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024 // 5MB -- mismo límite que el resto del catálogo de fotos (ver imageUploadField.component.tsx)
 
-// Modal genérico "tomar o subir imagen" -- cámara (react-webcam) con fallback a selector de
-// archivos, usado por cualquier campo de foto del catálogo (Producto, Categoría, y lo que se
-// agregue después). No sabe nada de a qué campo pertenece la foto: solo entrega un base64 al
-// padre vía onSave, igual que el file input simple que reemplaza.
 export function UploadImages({ onClose, onSave }: Readonly<Props>) {
     const { t } = useTranslation()
     const webcamRef = useRef<Webcam>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [preview, setPreview] = useState<string | null>(null)
-    // La cámara no siempre está disponible (permiso denegado, sin dispositivo, desktop sin
-    // webcam) -- si react-webcam no logra montar el stream, se cae a solo mostrar "Subir imagen".
     const [isCameraUnavailable, setIsCameraUnavailable] = useState(false)
 
     const capture = useCallback(() => {
@@ -33,7 +27,7 @@ export function UploadImages({ onClose, onSave }: Readonly<Props>) {
 
     const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
-        event.target.value = "" // permite volver a elegir el mismo archivo si lo descarta y lo repone
+        event.target.value = "" 
 
         if (!file) return
         if (!file.type.startsWith("image/")) {
@@ -58,9 +52,6 @@ export function UploadImages({ onClose, onSave }: Readonly<Props>) {
 
     return (
         <div className="fixed inset-0 z-60 flex items-center justify-center bg-verde-profundo/50 p-3 sm:p-4">
-            {/* max-h-[90vh] + overflow-y-auto: red de seguridad para pantallas muy bajas (celular
-                en horizontal, ventanas chicas); el límite de alto del preview/cámara de abajo es
-                lo que evita que el modal crezca de más en el caso normal. */}
             <div className="flex max-h-[90vh] w-full max-w-md flex-col overflow-y-auto rounded-2xl bg-crema p-4 shadow-solid sm:p-6">
                 <div className="mb-4 flex items-center justify-between">
                     <h2 className="font-display text-lg font-bold text-verde-profundo">{t("common.imageUpload.title")}</h2>

@@ -7,7 +7,6 @@ type EditLinkProps = {
     permission: string
 }
 
-// Acción de "editar" repetida en todas las tablas admin -- link + chequeo de permiso.
 export function EditLink({ to, permission }: Readonly<EditLinkProps>) {
     const { t } = useTranslation()
     const { hasPermission } = usePermission()

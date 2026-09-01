@@ -9,9 +9,6 @@ type PaginationProps = {
 
 const MAX_VISIBLE_PAGES = 7
 
-// Ventana de páginas con elipsis -- 1 2 3 4 5 ... N cerca del principio, 1 ... N-4..N cerca del
-// final, 1 ... p-1 p p+1 ... N en el medio. Devuelve números de página o el string "..." como
-// separador (con un índice propio para la key, dos elipsis pueden coexistir en la misma lista).
 function getPageNumbers(currentPage: number, totalPages: number): (number | "...")[] {
     if (totalPages <= MAX_VISIBLE_PAGES) {
         return Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -25,11 +22,6 @@ function getPageNumbers(currentPage: number, totalPages: number): (number | "...
     return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages]
 }
 
-// Paginador compartido por todas las tablas admin -- ver shared/hook/usePaginatedSearch.ts para el
-// estado de página/búsqueda que normalmente lo alimenta. Mismos tokens de color que el resto de la
-// UI (dorado como acento activo, verde-profundo/texto-suave/gris-campo del resto de los inputs y
-// botones -- ver input.component.tsx y buttonClassName.ts) en vez del cyan/blue del diseño de
-// referencia.
 export function PaginationComponent({ currentPage, totalPages, onPageChange }: Readonly<PaginationProps>) {
     const { t } = useTranslation()
 

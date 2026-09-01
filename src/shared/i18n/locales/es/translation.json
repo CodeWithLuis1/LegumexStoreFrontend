@@ -136,7 +136,7 @@
                 "modeCustomizableHint": "Arma tu propio mix: eliges el % de cada ingrediente hasta llegar a 100%.",
                 "noProductsFinished": "Aún no hay productos terminados disponibles para cotizar.",
                 "noProductsCustomizable": "Aún no hay productos personalizables disponibles para cotizar.",
-                "organicBadge": "Orgánico",
+                "organicBadge": "100% Orgánico",
                 "mixTitle": "Arma tu mezcla",
                 "mixTotal": "Total: {{total}}%",
                 "mixIncomplete": "La mezcla debe sumar 100% para poder cotizar.",
@@ -173,10 +173,15 @@
                 "perPallet": "Por palet",
                 "rawMaterials": "Materia prima",
                 "unitPackaging": "Empaque unitario",
+                "intermediatePackaging": "Empaque intermedio",
                 "palletMaterials": "Materiales de palet",
                 "transport": "Transporte",
                 "unitsQuantity": "{{count}} unidades",
-                "palletsQuantity": "{{count}} palets"
+                "palletsQuantity": "{{count}} palets",
+                "intermediatePackagesQuantity": "{{count}} empaques intermedios",
+                "currencyGtq": "Quetzales",
+                "currencyUsd": "Dólares",
+                "exchangeRateError": "No se pudo obtener el tipo de cambio."
             }
         },
         "footer": {
@@ -325,6 +330,15 @@
         "table": {
             "searchPlaceholder": "Buscar por nombre...",
             "empty": "No hay ingredientes registrados"
+        },
+        "bulkImport": {
+            "title": "Carga masiva desde Excel",
+            "description": "Descarga la plantilla, complétala con tus ingredientes y súbela. Se valida todo el archivo primero: si una sola fila tiene un error, no se importa nada -- corrige el archivo y vuelve a subirlo. La \"Unidad de costo\" debe ser el nombre exacto de una Unidad que ya exista en el catálogo.",
+            "downloadTemplate": "Descargar plantilla",
+            "importButton": "Importar archivo",
+            "importing": "Importando...",
+            "rowErrorsTitle": "El archivo tiene {{count}} error(es). No se importó ningún ingrediente:",
+            "rowErrorItem": "Fila {{row}}: {{message}}"
         }
     },
     "subCategory": {
@@ -358,6 +372,7 @@
             "packagingRole": "¿Para qué se usa este material?",
             "packagingRoleOptions": {
                 "unit": "Empaque individual",
+                "intermediate": "Empaque intermedio (bolsa grande)",
                 "pallet": "Material de paletización"
             },
             "unitCost": "Costo por unidad (Q)"
@@ -375,6 +390,15 @@
         "table": {
             "searchPlaceholder": "Buscar por nombre...",
             "empty": "No hay empaques registrados"
+        },
+        "bulkImport": {
+            "title": "Carga masiva desde Excel",
+            "description": "Descarga la plantilla, complétala con tus materiales y súbela. Se valida todo el archivo primero: si una sola fila tiene un error, no se importa nada -- corrige el archivo y vuelve a subirlo.",
+            "downloadTemplate": "Descargar plantilla",
+            "importButton": "Importar archivo",
+            "importing": "Importando...",
+            "rowErrorsTitle": "El archivo tiene {{count}} error(es). No se importó ningún material:",
+            "rowErrorItem": "Fila {{row}}: {{message}}"
         }
     },
     "presentation": {
@@ -406,6 +430,7 @@
             "displayName": "Nombre",
             "urlSlug": "Slug de URL",
             "isOrganic": "Orgánico",
+            "isOrganicHint": "Si marcas esta casilla, el selector de ingredientes de abajo solo va a ofrecer variantes orgánicas (y agua/sal/azúcar u otros insumos sin variante). El cliente verá una insignia \"100% Orgánico\" al elegir este producto.",
             "isCustomizable": "Tipo de receta",
             "isCustomizableFinished": "Terminado (receta fija)",
             "isCustomizableCustom": "Personalizable (mezcla %)",
@@ -437,6 +462,9 @@
             "unitsPerPallet": "Unidades por palet",
             "unitsPerBox": "Unidades por caja",
             "unitsPerBoxHint": "Cuántas bolsas/piezas entran en una caja. No afecta el costo, es solo para calcular cuántas cajas necesita el palet.",
+            "intermediatePackagingId": "Empaque intermedio (bolsa grande)",
+            "unitsPerIntermediatePackage": "Unidades por empaque intermedio",
+            "unitsPerIntermediatePackageHint": "Solo si este producto usa empaque anidado (ej. varias bolsitas dentro de una bolsa grande, que a su vez va en la caja). Cuántas unidades pequeñas entran en una bolsa grande -- este dato SÍ afecta el costo.",
             "addButton": "Agregar variante"
         },
         "list": {
@@ -469,6 +497,8 @@
         "selectVariant": "Variante",
         "noVariants": "Primero agrega una variante para poder definir sus materiales de paletización",
         "boxesPerPalletHint": "Con {{unitsPerBox}} unidades por caja y {{unitsPerPallet}} unidades por palet, este palet necesita {{boxesPerPallet}} cajas.",
+        "intermediatePackagesPerPalletHint": "Con {{unitsPerIntermediatePackage}} unidades por empaque intermedio y {{unitsPerPallet}} unidades por palet, este palet necesita {{intermediatePackagesPerPallet}} empaques intermedios (no se cargan aquí, su costo ya se calcula solo).",
+        "boxesPerPalletFromIntermediateHint": "Con {{unitsPerBox}} empaques intermedios por caja, este palet necesita {{boxesPerPallet}} cajas.",
         "form": {
             "packagingId": "Material de palet",
             "quantityValue": "Cantidad",
@@ -613,6 +643,66 @@
             "empty": "Todavía no hay ninguna cotización guardada.",
             "noMatches": "Ninguna cotización coincide con la búsqueda.",
             "summary": "{{date}} · {{pallets}} palets · {{destination}}"
+        }
+    },
+    "adminQuoteCalculator": {
+        "title": "Cotizador interno",
+        "description": "Calcula cotizaciones con el desglose completo de costos (materia prima, empaque, materiales de palet y transporte). No se guarda ningún registro -- es solo una herramienta de consulta, no aparece en \"Cotizaciones\" ni afecta el panel de indicadores."
+    },
+    "quote": {
+        "orderSummary": {
+            "title": "Pedido en curso",
+            "itemCount": "{{count}} productos cotizados",
+            "total": "Total del pedido",
+            "lineSummary": "{{destination}} · {{pallets}} palets",
+            "quoteAnother": "Cotizar otro producto",
+            "clear": "Empezar un pedido nuevo"
+        },
+        "pdf": {
+            "button": "Descargar PDF de cotización",
+            "modal": {
+                "title": "Descargar cotización",
+                "description": "Ingresa el nombre y el correo del cliente al que se le está cotizando para generar el resumen en PDF.",
+                "clientNameLabel": "Nombre del cliente",
+                "clientNamePlaceholder": "Ej. Distribuidora El Campo S.A.",
+                "required": "Ingresa el nombre del cliente",
+                "clientEmailLabel": "Correo del cliente",
+                "clientEmailPlaceholder": "Ej. contacto@distribuidora.com",
+                "emailRequired": "Ingresa el correo del cliente",
+                "emailInvalid": "Ingresa un correo válido",
+                "generate": "Generar PDF",
+                "generating": "Generando PDF...",
+                "ready": "Tu PDF está listo.",
+                "open": "Abrir PDF",
+                "download": "Descargar PDF",
+                "sendEmail": "Enviar por correo",
+                "sending": "Enviando correo...",
+                "sendSuccess": "Correo enviado a {{email}} con el PDF adjunto.",
+                "emailHint": "Se enviará un correo a {{email}} con este PDF ya adjunto -- no hace falta adjuntarlo a mano.",
+                "emailSubject": "Cotización Legumex – {{clientName}}",
+                "emailBody": "Hola,\n\nAdjunto la cotización solicitada para {{clientName}}.\n\nFecha de cotización: {{quoteDate}}\nVálida hasta: {{validUntil}}\nTotal del pedido: {{total}}\n\nSaludos,\nLegumex",
+                "error": "No se pudo generar el PDF. Intenta de nuevo."
+            },
+            "document": {
+                "title": "Legumex",
+                "subtitle": "Resumen de cotización",
+                "client": "Cliente",
+                "quoteDate": "Fecha de cotización",
+                "validUntil": "Válida hasta",
+                "pallets": "Palets",
+                "units": "Unidades",
+                "perPallet": "Por palet",
+                "rawMaterials": "Materia prima",
+                "unitPackaging": "Empaque unitario",
+                "intermediatePackaging": "Empaque intermedio",
+                "palletMaterials": "Materiales de palet",
+                "transport": "Transporte",
+                "lineTotal": "Total de la línea",
+                "orderTotal": "Total del pedido",
+                "restrictionsTitle": "Restricciones",
+                "restrictionsText": "Esta cotización es válida únicamente por {{days}} días a partir de su fecha de emisión. Transcurrido este período, los precios pueden variar y deberá solicitarse una nueva cotización.",
+                "generatedAt": "Documento generado el {{date}}"
+            }
         }
     },
     "destination": {

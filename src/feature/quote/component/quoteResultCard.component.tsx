@@ -1,10 +1,13 @@
+import { useState } from "react"
 import type { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
-import { Truck, Wheat, PackageOpen, Layers, FileSpreadsheet } from "lucide-react"
+import { useQuery } from "@tanstack/react-query"
+import { Truck, Wheat, PackageOpen, PackagePlus, Layers, FileSpreadsheet, Loader2 } from "lucide-react"
 import type { QuoteCalculation } from "@/feature/quote/schema/quote.schema"
+import { getExchangeRateAPI } from "@/feature/quote/api/quote.api"
 import { Card } from "@/shared/component/card.component"
 import { Spinner } from "@/shared/component/spinner.component"
-import { formatCurrency } from "@/shared/format/currency"
+import { formatCurrency, formatUsd, convertGtqToUsd } from "@/shared/format/currency"
 
 type QuoteResultCardProps = {
     result: QuoteCalculation | null
@@ -12,14 +15,49 @@ type QuoteResultCardProps = {
     showCostBreakdown?: boolean
 }
 
-function CostRow({ label, quantityLabel, lineTotal }: Readonly<{ label: string; quantityLabel?: string; lineTotal: number }>) {
+type DisplayCurrency = "GTQ" | "USD"
+
+// Toggle Quetzales/Dólares: el desglose que llega en `result` SIEMPRE está en GTQ (es el
+// snapshot congelado que devuelve/guarda el backend, ver quoteService.calculateQuote) -- esto
+// solo convierte lo que se PINTA en pantalla usando la tasa de Banguat (GET
+// /quotes/exchange-rate), nunca recalcula ni cambia lo que se guarda. Estado local (no
+// contexto/URL) a propósito: es una preferencia de vista de esta tarjeta puntual, no algo que
+// otras partes de la app necesiten leer.
+function useCurrencyToggle() {
+    const [currency, setCurrency] = useState<DisplayCurrency>("GTQ")
+
+    const exchangeRateQuery = useQuery({
+        queryKey: ["quoteExchangeRate"],
+        queryFn: getExchangeRateAPI,
+        enabled: currency === "USD",
+        staleTime: 30 * 60 * 1000, // 30 min -- el tipo de cambio no se mueve de un momento a otro
+    })
+
+    const rate = exchangeRateQuery.data?.data.rate
+    const isConverting = currency === "USD" && exchangeRateQuery.isLoading
+    const hasError = currency === "USD" && exchangeRateQuery.isError
+
+    const format = (valueInGtq: number): string => {
+        if (currency === "USD" && rate) return formatUsd(convertGtqToUsd(valueInGtq, rate))
+        return formatCurrency(valueInGtq)
+    }
+
+    return { currency, setCurrency, format, isConverting, hasError }
+}
+
+function CostRow({
+    label,
+    quantityLabel,
+    lineTotal,
+    format,
+}: Readonly<{ label: string; quantityLabel?: string; lineTotal: number; format: (value: number) => string }>) {
     return (
         <div className="flex items-start justify-between gap-3 py-1.5 text-sm">
             <div>
                 <p className="text-verde-profundo">{label}</p>
                 {quantityLabel && <p className="text-xs text-texto-suave">{quantityLabel}</p>}
             </div>
-            <p className="shrink-0 font-medium text-verde-profundo">{formatCurrency(lineTotal)}</p>
+            <p className="shrink-0 font-medium text-verde-profundo">{format(lineTotal)}</p>
         </div>
     )
 }
@@ -28,11 +66,13 @@ function CostSection({
     icon,
     title,
     subtotal,
+    format,
     children,
 }: Readonly<{
     icon: ReactNode
     title: string
     subtotal: number
+    format: (value: number) => string
     children: ReactNode
 }>) {
     return (
@@ -42,19 +82,67 @@ function CostSection({
                     {icon}
                     {title}
                 </div>
-                <p className="text-sm font-semibold text-verde-profundo">{formatCurrency(subtotal)}</p>
+                <p className="text-sm font-semibold text-verde-profundo">{format(subtotal)}</p>
             </div>
             <div className="divide-y divide-gris-campo/60">{children}</div>
         </div>
     )
 }
 
+// Segmented control Quetzales/Dólares. `isConverting` deshabilita el botón USD mientras se
+// resuelve la tasa (evita doble click disparando dos fetches, aunque react-query ya dedupe por
+// queryKey) y `hasError` lo marca en rojo si Banguat no respondió -- el usuario puede reintentar
+// haciendo click de nuevo (refetchOnMount/staleTime no lo hará solo).
+function CurrencyToggle({
+    currency,
+    onChange,
+    isConverting,
+    hasError,
+}: Readonly<{
+    currency: DisplayCurrency
+    onChange: (currency: DisplayCurrency) => void
+    isConverting: boolean
+    hasError: boolean
+}>) {
+    const { t } = useTranslation()
+
+    return (
+        <div className="flex items-center gap-2">
+            <div className="inline-flex rounded-full border border-gris-campo bg-crema p-0.5 text-xs font-semibold">
+                <button
+                    type="button"
+                    onClick={() => onChange("GTQ")}
+                    className={`rounded-full px-3 py-1 transition ${
+                        currency === "GTQ" ? "bg-verde-profundo text-white" : "text-texto-suave hover:text-verde-profundo"
+                    }`}
+                >
+                    {t("site.quoteRequest.result.currencyGtq")}
+                </button>
+                <button
+                    type="button"
+                    onClick={() => onChange("USD")}
+                    className={`rounded-full px-3 py-1 transition ${
+                        currency === "USD" ? "bg-verde-profundo text-white" : "text-texto-suave hover:text-verde-profundo"
+                    } ${hasError ? "text-error-fg" : ""}`}
+                >
+                    {t("site.quoteRequest.result.currencyUsd")}
+                </button>
+            </div>
+            {isConverting && <Loader2 size={14} className="animate-spin text-texto-suave" />}
+            {hasError && <span className="text-xs text-error-fg">{t("site.quoteRequest.result.exchangeRateError")}</span>}
+        </div>
+    )
+}
+
 export function QuoteResultCard({ result, isPending, showCostBreakdown = true }: Readonly<QuoteResultCardProps>) {
     const { t } = useTranslation()
+    // Hook siempre se ejecuta, sin importar el estado -- no puede ir después de un return
+    // temprano o React ve un número distinto de hooks entre renders (Rules of Hooks).
+    const { currency, setCurrency, format, isConverting, hasError } = useCurrencyToggle()
 
     if (isPending) {
         return (
-            <Card className="flex min-h-[320px] items-center justify-center">
+            <Card className="flex min-h-80 items-center justify-center">
                 <Spinner />
             </Card>
         )
@@ -62,7 +150,7 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
 
     if (!result) {
         return (
-            <Card className="flex min-h-[320px] flex-col items-center justify-center gap-3 text-center">
+            <Card className="flex min-h-80 flex-col items-center justify-center gap-3 text-center">
                 <FileSpreadsheet className="h-10 w-10 text-gris-campo" />
                 <p className="max-w-xs text-texto-suave">{t("site.quoteRequest.result.empty")}</p>
             </Card>
@@ -74,6 +162,10 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
 
     return (
         <Card>
+            <div className="mb-4 flex justify-end">
+                <CurrencyToggle currency={currency} onChange={setCurrency} isConverting={isConverting} hasError={hasError} />
+            </div>
+
             <div className="mb-5 flex items-start justify-between gap-3 border-b border-gris-campo pb-5">
                 <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-texto-suave">
@@ -85,7 +177,7 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
                     <p className="text-xs font-semibold uppercase tracking-wide text-texto-suave">
                         {t("site.quoteRequest.result.total")}
                     </p>
-                    <p className="font-display text-2xl font-extrabold text-verde-profundo">{formatCurrency(result.totalCost)}</p>
+                    <p className="font-display text-2xl font-extrabold text-verde-profundo">{format(result.totalCost)}</p>
                 </div>
             </div>
 
@@ -99,7 +191,7 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
                     <p className="text-xs text-texto-suave">{t("site.quoteRequest.result.units")}</p>
                 </div>
                 <div className="rounded-[10px] bg-crema p-3">
-                    <p className="text-lg font-bold text-verde-profundo">{formatCurrency(costPerPallet)}</p>
+                    <p className="text-lg font-bold text-verde-profundo">{format(costPerPallet)}</p>
                     <p className="text-xs text-texto-suave">{t("site.quoteRequest.result.perPallet")}</p>
                 </div>
             </div>
@@ -110,6 +202,7 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
                         icon={<Wheat size={15} />}
                         title={t("site.quoteRequest.result.rawMaterials")}
                         subtotal={result.rawMaterialCost}
+                        format={format}
                     >
                         {breakdown.rawMaterials.map((line) => (
                             <CostRow
@@ -119,6 +212,7 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
                                     count: line.totalUnits.toLocaleString("es-MX"),
                                 })}
                                 lineTotal={line.lineTotal}
+                                format={format}
                             />
                         ))}
                     </CostSection>
@@ -129,6 +223,7 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
                         icon={<PackageOpen size={15} />}
                         title={t("site.quoteRequest.result.unitPackaging")}
                         subtotal={result.unitPackagingCost}
+                        format={format}
                     >
                         <CostRow
                             label={breakdown.unitPackaging.displayName}
@@ -136,6 +231,25 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
                                 count: breakdown.unitPackaging.totalUnits.toLocaleString("es-MX"),
                             })}
                             lineTotal={breakdown.unitPackaging.lineTotal}
+                            format={format}
+                        />
+                    </CostSection>
+                )}
+
+                {showCostBreakdown && breakdown.intermediatePackaging && (
+                    <CostSection
+                        icon={<PackagePlus size={15} />}
+                        title={t("site.quoteRequest.result.intermediatePackaging")}
+                        subtotal={result.intermediatePackagingCost}
+                        format={format}
+                    >
+                        <CostRow
+                            label={breakdown.intermediatePackaging.displayName}
+                            quantityLabel={t("site.quoteRequest.result.intermediatePackagesQuantity", {
+                                count: breakdown.intermediatePackaging.packagesNeeded.toLocaleString("es-MX"),
+                            })}
+                            lineTotal={breakdown.intermediatePackaging.lineTotal}
+                            format={format}
                         />
                     </CostSection>
                 )}
@@ -145,6 +259,7 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
                         icon={<Layers size={15} />}
                         title={t("site.quoteRequest.result.palletMaterials")}
                         subtotal={result.palletMaterialCost}
+                        format={format}
                     >
                         {breakdown.palletMaterials.map((line) => (
                             <CostRow
@@ -152,13 +267,19 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
                                 label={line.displayName}
                                 quantityLabel={t("site.quoteRequest.result.palletsQuantity", { count: line.requestedPallets })}
                                 lineTotal={line.lineTotal}
+                                format={format}
                             />
                         ))}
                     </CostSection>
                 )}
 
-                <CostSection icon={<Truck size={15} />} title={t("site.quoteRequest.result.transport")} subtotal={result.transportCost}>
-                    <CostRow label={breakdown.transport.displayName} lineTotal={result.transportCost} />
+                <CostSection
+                    icon={<Truck size={15} />}
+                    title={t("site.quoteRequest.result.transport")}
+                    subtotal={result.transportCost}
+                    format={format}
+                >
+                    <CostRow label={breakdown.transport.displayName} lineTotal={result.transportCost} format={format} />
                 </CostSection>
             </div>
         </Card>
