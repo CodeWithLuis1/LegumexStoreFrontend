@@ -94,6 +94,12 @@ const transportLineSchema = z.object({
     baseCost: z.number(),
 })
 
+const adjustmentLineSchema = z.object({
+    unitCost: z.number(),
+    totalUnits: z.number(),
+    lineTotal: z.number(),
+})
+
 export const quoteCalculationSchema = z.object({
     productVariantId: z.number().int(),
     destinationId: z.number().int(),
@@ -106,6 +112,9 @@ export const quoteCalculationSchema = z.object({
     intermediatePackagingCost: z.coerce.number(),
     palletMaterialCost: z.coerce.number(),
     transportCost: z.coerce.number(),
+    // Optional para no romper cotizaciones guardadas antes de este campo (mismo criterio que
+    // intermediatePackagingCost/intermediatePackaging arriba).
+    adjustmentCost: z.coerce.number().optional(),
     totalCost: z.coerce.number(),
     breakdown: z.object({
         rawMaterials: z.array(rawMaterialLineSchema),
@@ -113,6 +122,7 @@ export const quoteCalculationSchema = z.object({
         intermediatePackaging: intermediatePackagingLineSchema.nullable().optional(),
         palletMaterials: z.array(palletMaterialLineSchema),
         transport: transportLineSchema,
+        adjustment: adjustmentLineSchema.nullable().optional(),
         language: z.enum(["es", "en"]).optional(),
     }),
 })

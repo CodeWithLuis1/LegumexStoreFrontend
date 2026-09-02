@@ -15,6 +15,9 @@ export const createProductSchema = z.object({
     displayName: z.string().trim().min(1).max(120),
     isOrganic: z.boolean().optional(),
     isCustomizable: z.boolean().optional(),
+    // Ajuste manual de costo por unidad (costos aún no definidos en el catálogo). Nullable a
+    // propósito: mandar null lo "elimina" -- ver productForm.component.tsx / toNullableNumber.
+    additionalCostPerUnit: z.number().nonnegative().nullable().optional(),
     image: imageInputSchema,
     translations: z.object({ en: productTranslationInputSchema.optional() }).optional(),
 })
@@ -28,6 +31,7 @@ export const responseProductSchema = baseCatalogSchema.extend({
     urlSlug: z.string(),
     isOrganic: z.boolean(),
     isCustomizable: z.boolean(),
+    additionalCostPerUnit: z.coerce.number().nullable(),
     imageUrl: z.string().nullable(),
     translations: z.array(z.object({
         language: z.string(),

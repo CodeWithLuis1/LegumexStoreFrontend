@@ -98,7 +98,7 @@
     },
     "site": {
         "announcementBar": {
-            "message": "Aquí podemos mostrar cualquier información de LEGUMEX STORE. Esto es solo un ejemplo que agregué para realizar pruebas",
+            "message": "Bienvenido a LEGUMEX. Descubre nuestros productos y solicita una cotización personalizada.",
             "dismiss": "Cerrar aviso"
         },
         "nav": {
@@ -176,6 +176,7 @@
                 "intermediatePackaging": "Empaque intermedio",
                 "palletMaterials": "Materiales de palet",
                 "transport": "Transporte",
+                "adjustment": "Ajuste adicional",
                 "unitsQuantity": "{{count}} unidades",
                 "palletsQuantity": "{{count}} palets",
                 "intermediatePackagesQuantity": "{{count}} empaques intermedios",
@@ -435,6 +436,8 @@
             "isCustomizableFinished": "Terminado (receta fija)",
             "isCustomizableCustom": "Personalizable (mezcla %)",
             "isCustomizableHint": "Personalizable: el cliente arma la mezcla de ingredientes por porcentaje al cotizar, en vez de una receta fija.",
+            "additionalCostPerUnit": "Costo adicional por unidad (opcional)",
+            "additionalCostPerUnitHint": "Para costos que todavía no están bien definidos. Se suma al costo de cada unidad al cotizar. Deja el campo vacío para quitarlo.",
             "translationSectionTitle": "Traducción al inglés",
             "translationSectionHint": "Opcional. Si se deja vacío, el sitio en inglés muestra el nombre en español.",
             "displayNameEn": "Nombre (inglés)"
@@ -697,6 +700,7 @@
                 "intermediatePackaging": "Empaque intermedio",
                 "palletMaterials": "Materiales de palet",
                 "transport": "Transporte",
+                "adjustment": "Ajuste adicional",
                 "lineTotal": "Total de la línea",
                 "orderTotal": "Total del pedido",
                 "restrictionsTitle": "Restricciones",

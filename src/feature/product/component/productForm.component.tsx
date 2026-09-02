@@ -8,6 +8,7 @@ import { Input } from "@/shared/component/input.component"
 import { Select } from "@/shared/component/select.component"
 import { Checkbox } from "@/shared/component/checkbox.component"
 import { toOptionalNumber } from "@/shared/form/toOptionalNumber"
+import { toNullableNumber } from "@/shared/form/toNullableNumber"
 import { toBoolean } from "@/shared/form/toBoolean"
 import { SubCategorySelect } from "@/feature/category/component/subCategorySelect.component"
 import { ProductTypeSelect } from "@/feature/product-type/component/productTypeSelect.component"
@@ -110,6 +111,23 @@ export function ProductForm<T extends UpdateProductInput>({
                 </Select>
             </FormField>
             <p className="mb-5 -mt-3 text-sm text-texto-suave">{t("product.form.isCustomizableHint")}</p>
+
+            <FormField
+                label={t("product.form.additionalCostPerUnit")}
+                htmlFor="additionalCostPerUnit"
+                error={getFieldErrorMessage(t, errors.additionalCostPerUnit as FieldError | undefined)}
+            >
+                <Input
+                    id="additionalCostPerUnit"
+                    type="number"
+                    step="0.01"
+                    min={0}
+                    placeholder="0.00"
+                    hasError={!!errors.additionalCostPerUnit}
+                    {...register("additionalCostPerUnit" as Path<T>, { setValueAs: toNullableNumber })}
+                />
+            </FormField>
+            <p className="mb-5 -mt-3 text-sm text-texto-suave">{t("product.form.additionalCostPerUnitHint")}</p>
 
             <TranslationSection
                 register={register}

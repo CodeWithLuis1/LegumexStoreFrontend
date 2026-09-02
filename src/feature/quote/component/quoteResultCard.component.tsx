@@ -2,7 +2,7 @@ import { useState } from "react"
 import type { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 import { useQuery } from "@tanstack/react-query"
-import { Truck, Wheat, PackageOpen, PackagePlus, Layers, FileSpreadsheet, Loader2 } from "lucide-react"
+import { Truck, Wheat, PackageOpen, PackagePlus, Layers, FileSpreadsheet, Loader2, SlidersHorizontal } from "lucide-react"
 import type { QuoteCalculation } from "@/feature/quote/schema/quote.schema"
 import { getExchangeRateAPI } from "@/feature/quote/api/quote.api"
 import { Card } from "@/shared/component/card.component"
@@ -281,6 +281,24 @@ export function QuoteResultCard({ result, isPending, showCostBreakdown = true }:
                 >
                     <CostRow label={breakdown.transport.displayName} lineTotal={result.transportCost} format={format} />
                 </CostSection>
+
+                {showCostBreakdown && breakdown.adjustment && (
+                    <CostSection
+                        icon={<SlidersHorizontal size={15} />}
+                        title={t("site.quoteRequest.result.adjustment")}
+                        subtotal={breakdown.adjustment.lineTotal}
+                        format={format}
+                    >
+                        <CostRow
+                            label={t("site.quoteRequest.result.adjustment")}
+                            quantityLabel={t("site.quoteRequest.result.unitsQuantity", {
+                                count: breakdown.adjustment.totalUnits.toLocaleString("es-MX"),
+                            })}
+                            lineTotal={breakdown.adjustment.lineTotal}
+                            format={format}
+                        />
+                    </CostSection>
+                )}
             </div>
         </Card>
     )

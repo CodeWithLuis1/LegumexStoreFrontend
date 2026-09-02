@@ -118,6 +118,12 @@ export function QuotePdfDocument({ clientName, quoteDate, lines, showCostBreakdo
                                     <Text style={styles.breakdownLabel}>{t("quote.pdf.document.transport")}</Text>
                                     <Text style={styles.breakdownValue}>{formatCurrency(line.transportCost)}</Text>
                                 </View>
+                                {line.breakdown.adjustment && (
+                                    <View style={styles.breakdownRow}>
+                                        <Text style={styles.breakdownLabel}>{t("quote.pdf.document.adjustment")}</Text>
+                                        <Text style={styles.breakdownValue}>{formatCurrency(line.breakdown.adjustment.lineTotal)}</Text>
+                                    </View>
+                                )}
                             </View>
                         )}
 

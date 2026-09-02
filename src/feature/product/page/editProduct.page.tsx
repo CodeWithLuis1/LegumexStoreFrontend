@@ -26,6 +26,7 @@ function toFormValues(product: ProductResponse): UpdateProductInput {
         displayName: product.displayName,
         isOrganic: product.isOrganic,
         isCustomizable: product.isCustomizable,
+        additionalCostPerUnit: product.additionalCostPerUnit ?? undefined,
         translations: {
             en: { displayName: englishTranslation?.displayName ?? "" },
         },
